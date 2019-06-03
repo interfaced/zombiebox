@@ -1,0 +1,11 @@
+/**
+ * @dict
+ */
+export default {
+	"name": "zb-test",
+	"version": "0.0.0",
+	"dependencies": {
+		"zombiebox": "*",
+		"zombiebox-platform-pc": "*"
+	}
+};

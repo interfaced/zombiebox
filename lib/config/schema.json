@@ -1,0 +1,250 @@
+{
+  "title": "ZombieBox Project Config",
+  "description": "ZombieBox project configuration schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ZombieBoxConfig",
+  "type": "object",
+  "required": ["project"],
+  "additionalProperties": false,
+
+  "definitions": {
+    "project": {
+      "title": "Basic configuration",
+      "description": "Vital project configuration",
+      "$id": "ProjectConfig",
+      "type": "object",
+      "required": ["name", "entry", "src"],
+      "additionalProperties": false,
+
+      "properties": {
+        "name": {
+          "description": "Project name; Will be used as alias name for all project sources",
+          "type": "string"
+        },
+
+        "entry": {
+          "description": "Absolute path to application entry point class file path; Must provide a default export",
+          "type": "string"
+        },
+
+        "src": {
+          "description": "Absolute path to directory with application sources; Will be aliased as project name",
+          "type": "string"
+        },
+
+        "dist": {
+          "description": "Absolute path to output directory; Build artifacts will be put here",
+          "type": "string"
+        }
+      }
+    },
+
+    "entity": {
+      "title": "Entity",
+      "description": "Additional resources",
+      "$id": "EntityConfig",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Entity name; Not used for any purposes whatsoever",
+          "type": "string"
+        },
+
+        "css": {
+          "description": "File paths to CSS files to be bundled via PostCSS",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+
+        "externalCss": {
+          "description": "URIs of CSS files to be included as link references",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+
+        "modules": {
+          "description": "File paths to JS module files to be compiled",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+
+        "inlineScripts": {
+          "description": "File paths to JS scripts to be inlined into html via `<script>` tags",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+
+        "externalScripts": {
+          "description": "URIs of JS scripts to be included as link references",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+
+        "externs": {
+          "description": "File paths to GCC externs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+
+        "static": {
+          "description": "Map of extra static files to be included into build; Key: web path, value: file system path",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+
+        "aliases": {
+          "description": "Map of modules aliases; Key: alias name, value: File system path to its root",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+
+    "postcss": {
+      "title": "PostCSS options",
+      "description": "Configures CSS files processing and bundling",
+      "$id": "PostCSSConfig",
+      "type": "object",
+      "additionalProperties": false,
+
+      "properties": {
+        "presetEnv": {
+          "description": "[postcss-preset-env options](https://github.com/csstools/postcss-preset-env#options)",
+          "type": "object"
+        },
+
+        "extraPlugins": {
+          "description": "Any additional plugin instances",
+          "type": "array"
+        },
+
+        "url": {
+          "description": "[postcss-url options](https://github.com/postcss/postcss-url#options-combinations)",
+          "type": "object"
+        },
+
+        "csso": {
+          "description": "[CSSO optimizer options](https://github.com/css/csso#compressast-options)",
+          "type": "object"
+        }
+      }
+    },
+
+    "devServer": {
+      "title": "Development server options",
+      "description": "Development server options",
+      "$id": "DevServerConfig",
+      "type": "object",
+      "additionalProperties": false,
+
+      "properties": {
+        "port": {
+          "description": "HTTP port",
+          "type": "number"
+        },
+
+        "proxy": {
+          "description": "Map of urls to proxy",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+
+        "enableRawProxy": {
+          "description": "Enables proxy at `/proxy?url=`",
+          "type": "boolean"
+        },
+
+        "backdoor": {
+          "description": "Path to a JS module file that will be include in dev server only",
+          "type": "string"
+        }
+      }
+    }
+  },
+
+  "properties": {
+    "project": {"$ref": "#/definitions/project"},
+
+    "gcc": {
+      "description": "[Closure Compiler flags](https://github.com/google/closure-compiler/wiki/Flags-and-Options).\nSome flags (`--js`, `--externs` et al.) are set internally by ZombieBox,\noverriding them might break everything.",
+      "type": "object",
+
+      "additionalProperties": true
+    },
+
+    "postcss": {"$ref": "#/definitions/postcss" },
+
+    "include": {
+      "description": "Resources, source and other files for additional entities (libraries, extra scripts and static files)",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/entity"
+      }
+    },
+
+    "extensions": {
+      "description": "ZombieBox extensions specific configuration options",
+      "type": "object",
+      "additionalProperties": true
+    },
+
+    "platforms": {
+      "description": "ZombieBox platforms specific configuration options",
+      "type": "object",
+      "additionalProperties": true
+    },
+
+    "aliases": {
+      "description": "A map of any additional aliases",
+      "type": "object",
+
+      "additionalProperties": {
+        "type": "string",
+        "description": "Key: alias name, value: Absolute file system path to directory with modules"
+      }
+    },
+
+    "define": {
+      "description": "Compilation time defines that will be added as runtime constants",
+      "type": "object"
+    },
+
+    "devServer": {"$ref": "#/definitions/devServer"},
+
+    "skipVersionsCheck": {
+      "description": "Whether to assert all of ZombieBox components satisfy each other's peerDependencies, true by default",
+      "type": "boolean"
+    },
+
+    "generatedCode": {
+      "description": "Absolute path to directory that will contain code generated in runtime",
+      "type": "string"
+    },
+
+    "templates": {
+      "description": "Directories to search for server-side templates for (used in scaffolding)",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

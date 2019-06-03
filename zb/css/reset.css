@@ -1,0 +1,65 @@
+/* Author: Htmlhero (http://htmlhero.ru) */
+
+/* Reset
+*******************************/
+
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td,
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+	padding: 0;
+	margin: 0;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+table, fieldset, img {
+	border: 0;
+}
+address, caption, cite, code, dfn, th, var {
+	font-weight: normal;
+	font-style: normal;
+}
+caption, th {
+	text-align: left;
+}
+tr {
+	vertical-align: top;
+}
+ul, ol {
+	list-style: none;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-size: 100%;
+	font-weight: normal;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after, q:before, q:after {
+	content: '';
+	content: none;
+}
+input, textarea, select, button {
+	font-family: inherit;
+	font-size: 100%;
+}
+textarea {
+	overflow: auto;
+	resize: vertical;
+}
+button {
+	width: auto;
+	overflow: visible;
+	cursor: pointer;
+}
+button::-moz-focus-inner {
+	padding: 0;
+	border: 0;
+}
+img {
+	vertical-align: bottom;
+}
+a:active,
+:focus {
+	outline: 0;
+}

@@ -1,0 +1,7 @@
+.s-home {}
+
+	.s-home h1 {
+		padding: 30px;
+		font-size: 30px;
+		background: #555;
+	}

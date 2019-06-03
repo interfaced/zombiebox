@@ -1,0 +1,642 @@
+/*
+ * This file is part of the ZombieBox package.
+ *
+ * Copyright (c) 2012-2019, Interfaced
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+import app from 'generated/app';
+import Direction, {Value} from '../geometry/direction';
+import IFocusable from '../interfaces/i-focusable';
+import IKeyHandler from '../interfaces/i-key-handler';
+import InputDispatcher from '../input-dispatcher';
+import Keys from '../device/input/keys';
+import EventPublisher from '../events/event-publisher';
+import IStateful from '../history/interfaces/i-stateful';
+import Point from '../geometry/point';
+import Rect from '../geometry/rect';
+import INavigation from './interfaces/i-navigation';
+import IWidget from './interfaces/i-widget';
+import SpatialNavigation from './navigation/spatial-navigation';
+
+
+/**
+ * @implements {IKeyHandler}
+ * @implements {IStateful}
+ * @implements {IFocusable}
+ */
+export default class Container extends EventPublisher {
+	/**
+	 */
+	constructor() {
+		super();
+
+		const defaultRecursionFilter = () => true;
+
+		/**
+		 * The array of widgets - basic user-controlled elements
+		 * @type {Array<IWidget>}
+		 * @protected
+		 */
+		this._widgets = [];
+
+		/**
+		 * The array of widgets - basic user-controlled elements
+		 * @type {!Object<string, IWidget>}
+		 * @protected
+		 */
+		this._namedWidgets = {};
+
+		/**
+		 * @type {INavigation}
+		 * @protected
+		 */
+		this._navigation = this._createNavigation();
+
+		/**
+		 * Current active widget
+		 * @type {IWidget}
+		 * @protected
+		 */
+		this._activeWidget = null;
+
+		/**
+		 * @type {?IWidget}
+		 * @protected
+		 */
+		this._defaultWidget = null;
+
+		/**
+		 * @type {string}
+		 * @protected
+		 */
+		this._theme = '';
+
+		/**
+		 * @type {boolean}
+		 * @protected
+		 */
+		this._navigationDebug = false;
+
+		/**
+		 * @type {RecursionFilter}
+		 * @protected
+		 */
+		this._themeRecursionFilter = defaultRecursionFilter;
+
+		/**
+		 * Defines whether the container is focused
+		 * @type {boolean}
+		 * @private
+		 */
+		this._focused = false;
+
+		/**
+		 * @const {string}
+		 */
+		this.THEME_NONE = '';
+
+		/**
+		 * @const {string}
+		 */
+		this.THEME_DEFAULT = 'default';
+
+		this._onWidgetWantToFocus = this._onWidgetWantToFocus.bind(this);
+
+		this._setupDefaultTheme();
+	}
+
+	/**
+	 * @override
+	 */
+	processKey(zbKey, opt_e) {
+		if (this._doDip(zbKey, opt_e)) {
+			return true;
+		}
+
+		return this._processKey(zbKey, opt_e);
+	}
+
+	/**
+	 * @override
+	 */
+	takeSnapshot() {
+		return this._takeWidgetsSnapshot();
+	}
+
+	/**
+	 * @override
+	 */
+	focus(prevRect) {
+		this._focused = true;
+
+		if (this.hasWidgets()) {
+			let activeWidget = this.getActiveWidget();
+			if (activeWidget && !activeWidget.isFocusable()) {
+				activeWidget = null;
+			}
+
+			if (!activeWidget && this._defaultWidget && this._defaultWidget.isFocusable()) {
+				activeWidget = this._defaultWidget;
+			}
+
+			if (!activeWidget && prevRect && this._navigation instanceof SpatialNavigation) {
+				const sortedByDistanceWidgets = this._navigation.sortWidgetsByDistance(prevRect)
+					.filter((widget) => widget.isFocusable());
+
+				activeWidget = sortedByDistanceWidgets[0] || null;
+			}
+
+			this.activateWidget(activeWidget || this.getFirstFocusableWidget(), prevRect);
+		}
+	}
+
+	/**
+	 * @override
+	 */
+	blur() {
+		this._focused = false;
+
+		if (this._activeWidget) {
+			this._activeWidget.blur();
+		}
+	}
+
+	/**
+	 * @override
+	 */
+	isFocused() {
+		return this._focused;
+	}
+
+	/**
+	 * @param {IWidget} widget
+	 */
+	setDefaultWidget(widget) {
+		this.isMyWidget(widget);
+
+		this._defaultWidget = widget;
+	}
+
+	/**
+	 * Get widget index
+	 * @param {IWidget} widget
+	 * @return {number}
+	 */
+	widgetIndex(widget) {
+		return this._widgets.indexOf(widget);
+	}
+
+	/**
+	 * Membership test
+	 * @param {IWidget} widget
+	 * @throws {Error}
+	 */
+	isMyWidget(widget) {
+		if (this.widgetIndex(widget) === -1) {
+			throw new Error('Foreign widget!');
+		}
+	}
+
+	/**
+	 * @return {?IWidget}
+	 */
+	getActiveWidget() {
+		return this._activeWidget;
+	}
+
+	/**
+	 * @return {?IWidget}
+	 */
+	getFirstFocusableWidget() {
+		if (this.hasWidgets()) {
+			for (let i = 0; i < this._widgets.length; i++) {
+				if (this._widgets[i].isFocusable()) {
+					return this._widgets[i];
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * @return {!Object<string, IWidget>}
+	 */
+	getNamedWidgets() {
+		return this._namedWidgets;
+	}
+
+	/**
+	 * @return {Array<IWidget>}
+	 */
+	getWidgets() {
+		return this._widgets;
+	}
+
+	/**
+	 * @return {boolean}
+	 */
+	hasWidgets() {
+		return this._widgets.length > 0;
+	}
+
+	/**
+	 * @return {boolean}
+	 */
+	hasVisibleWidgets() {
+		return this.getVisibleWidgets().length > 0;
+	}
+
+	/**
+	 * @return {Array<IWidget>}
+	 */
+	getVisibleWidgets() {
+		return this._widgets.filter((widget) => widget.isVisible());
+	}
+
+	/**
+	 * @return {boolean}
+	 */
+	hasFocusableWidgets() {
+		return this.getFocusableWidgets().length > 0;
+	}
+
+	/**
+	 * @return {Array<IWidget>}
+	 */
+	getFocusableWidgets() {
+		return this._widgets.filter((widget) => widget.isFocusable());
+	}
+
+	/**
+	 * Append widget to the container
+	 * @param {IWidget} widget
+	 * @param {string=} opt_name
+	 * @return {boolean}
+	 */
+	appendWidget(widget, opt_name) {
+		this._widgets.push(widget);
+
+		this._navigation.addWidget(widget);
+
+		if (opt_name) {
+			this._namedWidgets[opt_name] = widget;
+		}
+
+		widget.on(widget.EVENT_WANT_FOCUS, this._onWidgetWantToFocus);
+
+		const widgetContainer = widget.getContainer();
+		if (widgetContainer) {
+			this._getInputDispatcher().addMouseHoverArea(widget, widgetContainer);
+		}
+
+		this._applyThemeToChildWidget(widget);
+
+		return true;
+	}
+
+	/**
+	 * @param {string} theme
+	 * @param {RecursionFilter=} opt_recursionFilter
+	 */
+	setTheme(theme, opt_recursionFilter) {
+		this._theme = theme;
+
+		if (opt_recursionFilter) {
+			this._themeRecursionFilter = opt_recursionFilter;
+		}
+
+		for (let i = 0; i < this._widgets.length; i++) {
+			this._applyThemeToChildWidget(this._widgets[i]);
+		}
+	}
+
+	/**
+	 * @return {string}
+	 */
+	getTheme() {
+		return this._theme;
+	}
+
+	/**
+	 * @param {IWidget} widget
+	 * @return {boolean}
+	 */
+	removeWidget(widget) {
+		const index = this.widgetIndex(widget);
+		if (index === -1) {
+			return false;
+		}
+
+		this._widgets.splice(index, 1);
+		this._navigation.removeWidget(widget);
+
+		widget.off(widget.EVENT_WANT_FOCUS, this._onWidgetWantToFocus);
+
+		const widgetContainer = widget.getContainer();
+		if (widgetContainer) {
+			this._getInputDispatcher().removeMouseHoverArea(widget, widgetContainer);
+		}
+
+		for (const name in this._namedWidgets) {
+			if (this._namedWidgets.hasOwnProperty(name)) {
+				if (this._namedWidgets[name] === widget) {
+					delete this._namedWidgets[name];
+				}
+			}
+		}
+
+		if (this.getActiveWidget() === widget) {
+			this.activateWidget(null);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Remove all appended widgets
+	 */
+	removeAllWidgets() {
+		for (let widgetIndex = this._widgets.length; widgetIndex--;) {
+			this.removeWidget(this._widgets[widgetIndex]);
+		}
+
+		this.activateWidget(null);
+	}
+
+	/**
+	 * @param {?IWidget} widget
+	 * @return {string}
+	 */
+	findNameByWidget(widget) {
+		for (const p in this._namedWidgets) {
+			if (this._namedWidgets.hasOwnProperty(p) && this._namedWidgets[p] === widget) {
+				return p;
+			}
+		}
+
+		return '';
+	}
+
+	/**
+	 * @param {string} name
+	 * @return {?IWidget}
+	 */
+	findWidgetByName(name) {
+		return this._namedWidgets[name] || null;
+	}
+
+	/**
+	 * @param {IWidget} widget
+	 * @param {Value} direction
+	 * @param {?IWidget} widgetTo When null is given this mean "stop navigation"
+	 * @param {boolean=} opt_bidirectional
+	 */
+	setNavigationRule(widget, direction, widgetTo, opt_bidirectional) {
+		this._navigation.setRule(widget, direction, widgetTo);
+
+		if (opt_bidirectional) {
+			const opposite = (new Direction(direction))
+				.invert()
+				.getKey();
+
+			this._navigation.setRule(widgetTo, opposite, widget);
+		}
+	}
+
+	/**
+	 * @param {IWidget} widget
+	 * @param {Value} direction
+	 */
+	removeNavigationRule(widget, direction) {
+		this._navigation.removeRule(widget, direction);
+	}
+
+	/**
+	 * Drop all navigation rules
+	 */
+	dropNavigation() {
+		this._navigation.clearRules();
+	}
+
+	/**
+	 * Set widget active
+	 * @param {?IWidget} widget
+	 * @param {?Rect=} opt_prevRect
+	 * @return {boolean}
+	 */
+	activateWidget(widget, opt_prevRect) {
+		const selfFocused = this.isFocused();
+
+		if (widget === this._activeWidget) {
+			if (selfFocused && widget && !widget.isFocused()) {
+				widget.focus(opt_prevRect);
+			}
+
+			return true;
+		}
+
+		if (widget) {
+			this.isMyWidget(widget);
+
+			if (!widget.isFocusable()) {
+				return false;
+			}
+		}
+
+		if (this._activeWidget) {
+			this._activeWidget.blur();
+		}
+
+		const oldWidget = this._activeWidget;
+		const oldFocusedRect = oldWidget ? oldWidget.getFocusedRect() : null;
+
+		this._activeWidget = widget;
+		if (this._activeWidget && selfFocused) {
+			this._activeWidget.focus(opt_prevRect || oldFocusedRect);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Set widget active
+	 * @param {Rect|Point} rectOrPoint
+	 * @return {boolean}
+	 */
+	activateNearestWidget(rectOrPoint) {
+		let widgets = [];
+
+		if (this._navigation instanceof SpatialNavigation) {
+			widgets = this._navigation.sortWidgetsByDistance(rectOrPoint);
+		}
+
+		return widgets.length > 0 && this.activateWidget(widgets[0]);
+	}
+
+	/**
+	 * @param {boolean} on
+	 */
+	setNavigationDebug(on) {
+		this._navigationDebug = on;
+	}
+
+	/**
+	 * @return {INavigation}
+	 * @protected
+	 */
+	_createNavigation() {
+		return new SpatialNavigation();
+	}
+
+	/**
+	 * @return {function()}
+	 * @protected
+	 */
+	_takeWidgetsSnapshot() {
+		/** @type {!Object} */
+		const snapshots = {};
+
+		const namedWidgets = this.getNamedWidgets();
+		for (const p of Object.keys(namedWidgets)) {
+			snapshots[p] = namedWidgets[p].takeSnapshot();
+		}
+
+		const activeWidgetName = this.findNameByWidget(this.getActiveWidget());
+
+		return () => {
+			const existsWidgets = Object.keys(this.getNamedWidgets());
+
+			Object.keys(snapshots)
+				.filter((widgetName) => existsWidgets.indexOf(widgetName) !== -1)
+				.map((widgetName) => snapshots[widgetName]());
+
+			const activeWidget = this.findWidgetByName(activeWidgetName);
+			if (activeWidget) {
+				this.activateWidget(activeWidget);
+			}
+		};
+	}
+
+	/**
+	 * @return {InputDispatcher}
+	 * @protected
+	 */
+	_getInputDispatcher() {
+		return app.getInputDispatcher();
+	}
+
+	/**
+	 * Activates widget using its predefined direction
+	 * @param {Value} direction
+	 * @return {boolean}
+	 * @protected
+	 */
+	_activateByDirection(direction) {
+		const lastActiveWidget = this._activeWidget;
+
+		const widgets = this._navigation.findWidgets(this._activeWidget, direction);
+		if (!widgets) {
+			// Stop navigation
+			return true;
+		}
+
+		let widget;
+		let activated = false;
+
+		while (!activated && widgets.length) {
+			widget = widgets.shift();
+			activated = this.activateWidget(widget);
+		}
+
+		if (widget && this._inNavigationDebug() && this._navigation instanceof SpatialNavigation) {
+			this._navigation.visualize(lastActiveWidget, widget, widgets, direction);
+		}
+
+		return activated;
+	}
+
+	/**
+	 * @param {Keys} zbKey
+	 * @param {(KeyboardEvent|WheelEvent)=} opt_e
+	 * @return {boolean}
+	 * @protected
+	 */
+	_doDip(zbKey, opt_e) {
+		if (this.hasWidgets()) {
+			const activeWidget = this.getActiveWidget();
+			if (activeWidget && activeWidget.isVisible() && activeWidget.isEnabled()) {
+				return activeWidget.processKey(zbKey, opt_e);
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param {Keys} zbKey
+	 * @param {(KeyboardEvent|WheelEvent)=} opt_e
+	 * @return {boolean}
+	 * @protected
+	 */
+	_processKey(zbKey, opt_e) { // eslint-disable-line no-unused-vars
+		switch (zbKey) {
+			case Keys.LEFT:
+				return this._activateByDirection(Value.LEFT);
+			case Keys.UP:
+				return this._activateByDirection(Value.UP);
+			case Keys.RIGHT:
+				return this._activateByDirection(Value.RIGHT);
+			case Keys.DOWN:
+				return this._activateByDirection(Value.DOWN);
+		}
+
+		return false;
+	}
+
+	/**
+	 *
+	 * @param {string} event
+	 * @param {IWidget} widget
+	 * @protected
+	 */
+	_onWidgetWantToFocus(event, widget) {
+		this.activateWidget(widget);
+	}
+
+	/**
+	 * @protected
+	 */
+	_setupDefaultTheme() {
+		this._theme = this.THEME_NONE;
+		this._themeRecursionFilter = () => true;
+
+		this.setTheme(this.THEME_DEFAULT);
+	}
+
+	/**
+	 * @param {IWidget} widget
+	 * @protected
+	 */
+	_applyThemeToChildWidget(widget) {
+		if (this._themeRecursionFilter(widget)) {
+			widget.setTheme(this._theme, this._themeRecursionFilter);
+		}
+	}
+
+	/**
+	 * @return {boolean}
+	 * @private
+	 */
+	_inNavigationDebug() {
+		return this._navigationDebug;
+	}
+}
+
+
+/**
+ * @typedef {function(IWidget): boolean}
+ */
+export let RecursionFilter;
