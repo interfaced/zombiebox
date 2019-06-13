@@ -230,7 +230,7 @@
     "devServer": {"$ref": "#/definitions/devServer"},
 
     "skipVersionsCheck": {
-      "description": "Whether to assert all of ZombieBox components satisfy each other's peerDependencies, true by default",
+      "description": "Skip ZombieBox components peerDependencies compatibility check, false by default",
       "type": "boolean"
     },
 

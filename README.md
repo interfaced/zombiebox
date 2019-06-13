@@ -74,9 +74,10 @@ Archived platforms:
 [af]: https://www.npmjs.com/package/zombiebox-platform-webos
 [ag]: https://www.npmjs.com/package/zombiebox-platform-lg
 [ah]: https://www.npmjs.com/package/zombiebox-platform-mag
-[ai]: https://www.npmjs.com/package/zombiebox-platform-headless
-[aj]: https://www.npmjs.com/package/zombiebox-platform-eltex
-[ak]: https://www.npmjs.com/package/zombiebox-platform-tvip
+[ai]: https://www.npmjs.com/package/zombiebox-platform-deune
+[aj]: https://www.npmjs.com/package/zombiebox-platform-headless
+[ak]: https://www.npmjs.com/package/zombiebox-platform-eltex
+[al]: https://www.npmjs.com/package/zombiebox-platform-tvip
 
 Installation of a new platform is easy and nothing more than installation of a new npm package with further saving in the dependencies.
 

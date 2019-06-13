@@ -1,5 +1,11 @@
 # Change log
 
+## 2.0.1 (release date: 13.06.2019)
+
+#### Tools
+* Fixed exception in `BuildHelper.addDirToArchiveMap` method.
+* Added `setTemplateHelper` method to `AbstractExtension` and exposed `TeamplateHelper` class for imports. 
+
 ## 2.0.0 (release date: 03.06.2019)
 
 No changes since `rc.2`.

@@ -18,7 +18,7 @@ ZombieBox project configuration schema
 | aliases | Object<string> | A map of any additional aliases |
 | define | Object | Compilation time defines that will be added as runtime constants |
 | devServer | [`DevServerConfig`](#markdown-header-devserverconfig) | Development server options |
-| skipVersionsCheck | boolean | Whether to assert all of ZombieBox components satisfy each other's peerDependencies, true by default |
+| skipVersionsCheck | boolean | Skip ZombieBox components peerDependencies compatibility check, false by default |
 | generatedCode | string | Absolute path to directory that will contain code generated in runtime |
 | templates | Array<string> | Directories to search for server-side templates for (used in scaffolding) |
 
