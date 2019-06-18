@@ -1,5 +1,12 @@
 # Change log
 
+## 2.0.2 (release date: 18.06.2019)
+
+#### Tools
+* Fixed another exception in `BuildHelper.addDirToArchiveMap` method.
+* Moved `setTemplateHelper` method to `AbstractAddon` to allow platform use it in addition to extensions.
+
+
 ## 2.0.1 (release date: 13.06.2019)
 
 #### Tools
