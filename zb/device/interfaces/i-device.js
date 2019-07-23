@@ -8,6 +8,7 @@
  */
 import UnsupportedFeature from '../errors/unsupported-feature';
 import IEventPublisher from '../../events/interfaces/i-event-publisher';
+import Rect from '../../geometry/rect';
 import IInfo from './i-info';
 import IInput from './i-input';
 import IStorage from './i-storage';
@@ -25,10 +26,11 @@ export default class IDevice {
 	init() {}
 
 	/**
+	 * @param {Rect} rect
 	 * @return {IVideo}
 	 * @throws {UnsupportedFeature}
 	 */
-	createVideo() {}
+	createVideo(rect) {}
 
 	/**
 	 * Returns MAC address of active network connection

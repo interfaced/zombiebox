@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 import {remove, div, node} from '../../html';
+import Rect from '../../geometry/rect';
 import AbstractVideo from '../abstract-video';
 import {State} from '../interfaces/i-video';
 import HTML5ViewPort from './HTML5-view-port';
@@ -16,10 +17,10 @@ import HTML5ViewPort from './HTML5-view-port';
  */
 export default class HTML5Video extends AbstractVideo {
 	/**
-	 * @param {HTMLElement} videoContainer
+	 * @param {Rect} rect
 	 */
-	constructor(videoContainer) {
-		super(videoContainer);
+	constructor(rect) {
+		super(rect);
 
 		/**
 		 * @type {HTML5ViewPort}
@@ -28,16 +29,16 @@ export default class HTML5Video extends AbstractVideo {
 		this._viewport;
 
 		/**
+		 * @type {HTMLDivElement}
+		 * @protected
+		 */
+		this._container = this._createContainer();
+
+		/**
 		 * @type {HTMLVideoElement}
 		 * @protected
 		 */
 		this._video = this._createVideoObject();
-
-		/**
-		 * @type {HTMLDivElement}
-		 * @protected
-		 */
-		this._innerVideoContainer = this._createInnerVideoContainer();
 
 		/**
 		 * @type {!Object<string, Function>}
@@ -117,7 +118,7 @@ export default class HTML5Video extends AbstractVideo {
 	 */
 	destroy() {
 		this._removeVideoObject();
-		this._removeInnerVideoContainer();
+		this._removeContainer();
 		this._setState(State.DEINITED);
 	}
 
@@ -234,7 +235,7 @@ export default class HTML5Video extends AbstractVideo {
 	_createViewPort(containerRect) {
 		return new HTML5ViewPort(
 			containerRect,
-			this._innerVideoContainer,
+			this._container,
 			this._video
 		);
 	}
@@ -258,15 +259,15 @@ export default class HTML5Video extends AbstractVideo {
 	 * @return {HTMLDivElement}
 	 * @protected
 	 */
-	_createInnerVideoContainer() {
-		const innerContainer = div();
-		innerContainer.style.overflow = 'hidden';
-		innerContainer.style.backgroundColor = 'black';
-		innerContainer.style.position = 'absolute';
+	_createContainer() {
+		const container = div('html5-video-container');
+		container.style.backgroundColor = 'black';
+		container.style.position = 'absolute';
+		container.style.overflow = 'hidden';
 
-		this._videoContainer.appendChild(innerContainer);
+		document.body.prepend(container);
 
-		return innerContainer;
+		return container;
 	}
 
 	/**
@@ -280,7 +281,7 @@ export default class HTML5Video extends AbstractVideo {
 
 		this._source.setAttribute('src', url);
 
-		this._innerVideoContainer.appendChild(this._video);
+		this._container.appendChild(this._video);
 		this._viewport.setVideoObject(this._video);
 
 		this._initEvents();
@@ -423,8 +424,8 @@ export default class HTML5Video extends AbstractVideo {
 	_removeVideoObject() {
 		this._destroyEvents();
 
-		if (this._video && this._video.parentNode) {
-			this._video.parentNode.removeChild(this._video);
+		if (this._video) {
+			remove(this._video);
 		}
 
 		this._video = null;
@@ -434,12 +435,12 @@ export default class HTML5Video extends AbstractVideo {
 	/**
 	 * @protected
 	 */
-	_removeInnerVideoContainer() {
-		if (this._innerVideoContainer) {
-			remove(this._innerVideoContainer);
+	_removeContainer() {
+		if (this._container) {
+			remove(this._container);
 		}
 
-		this._innerVideoContainer = null;
+		this._container = null;
 	}
 
 	/**

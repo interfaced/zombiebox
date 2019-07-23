@@ -18,10 +18,10 @@ import Rect from '../../geometry/rect';
 export default class HTML5ViewPort extends AbstractViewPort {
 	/**
 	 * @param {Rect} containerRect
-	 * @param {HTMLDivElement} innerVideoContainer
+	 * @param {HTMLDivElement} videoContainer
 	 * @param {HTMLVideoElement} videoObject
 	 */
-	constructor(containerRect, innerVideoContainer, videoObject) {
+	constructor(containerRect, videoContainer, videoObject) {
 		super(containerRect);
 
 		/**
@@ -37,7 +37,7 @@ export default class HTML5ViewPort extends AbstractViewPort {
 		 * @type {HTMLDivElement}
 		 * @protected
 		 */
-		this._innerVideoContainer = innerVideoContainer;
+		this._videoContainer = videoContainer;
 
 		/**
 		 * @type {HTMLVideoElement}
@@ -86,7 +86,7 @@ export default class HTML5ViewPort extends AbstractViewPort {
 	updateViewPort() {
 		const area = this.getCurrentArea();
 
-		this._setHTMLElementRect(this._innerVideoContainer, area);
+		this._setHTMLElementRect(this._videoContainer, area);
 		this._setHTMLElementRect(this._video, this._calculateVideoArea());
 
 		this._applyCropStyles();

@@ -165,9 +165,26 @@ Use npx to access ZombieBox CLI utility: `npx zombiebox` or `npx zb`.
 
 See the [CHANGELOG.md](CHANGELOG.md).
 
+## Version policy
+
+ZombieBox is not semver compatible. We tried, but this wasn't working well. ZombieBox tries it's best to follow a version policy close to semver that makes sense.
+
+* Major versions denote major changes in code structure and APIs. It's probably either a brand new framework or requires extensive migration if major version changed.
+* Minor versions mean new features. There might be **breaking changes in minor versions**, but they likely require minor migrations like changing methods order, signatures or replacing one component with another equivalent. These should be documented in [CHANGELOG.md](CHANGELOG.md) and [migratiosn](./docs/migrations) docs.
+* Patch versions do not introduce breaking changes and either fix bugs or add neglectable improvements in non-breaking way.
+* Pre-release versions are meant to contain experimental features that are going to be introduced later and are likely to break compatibility and be generally unstable. These are only pushed to `@dev` dist-tag.
+
+All ZombieBox components declare their dependencies on each other with `peerDependencies` field in package.json. Node itself does not enforce this field, but ZombieBox does in its CLI commands.
+
+## Behind ZombieBox
+
+ZombieBox was developed and is maintained by [Interfaced](https://interfaced.tv).
+
+It was created as internal framework for numerous Smart TV and STB [applications](https://interfaced.tv/projects.html) developed for industry leaders. 
+
 ## License
 
 This library is distributed under MIT license. See [LICENSE](LICENSE).
 
-Copyright (c) 2012-2019, Interfaced. All rights reserved.
-If you have any questions about license, please write to licensing@zombiebox.tv.
+Copyright © 2012-2019, Interfaced. All rights reserved.
+If you have any questions about license, please write to [licensing@zombiebox.tv](mailto:licensing@zombiebox.tv).

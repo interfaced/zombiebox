@@ -18,16 +18,32 @@ import IViewPort from './interfaces/i-view-port';
  */
 export default class AbstractVideo extends EventPublisher {
 	/**
-	 * @param {HTMLElement} videoContainer
+	 * @param {Rect} rect
 	 */
-	constructor(videoContainer) {
+	constructor(rect) {
 		super();
 
+		/* eslint-disable */
+		// TODO: remove in 2.2.0
+		if (rect instanceof HTMLElement) {
+			console.error('AbstractVideo constructor parameter changed to Rect in 2.1.0');
+			/**
+			 * @deprecated
+			 * @type {HTMLElement}
+			 * @protected
+			 */
+			this._videoContainer = rect;
+
+			rect = Rect.createByClientRect(rect.getBoundingClientRect());
+
+		}
+		/* eslint-enable */
+
 		/**
-		 * @type {HTMLElement}
+		 * @type {Rect}
 		 * @protected
 		 */
-		this._videoContainer = videoContainer;
+		this._containerRect = rect;
 
 		/**
 		 * @type {State}
@@ -314,11 +330,7 @@ export default class AbstractVideo extends EventPublisher {
 	 * @protected
 	 */
 	_initViewPort() {
-		const videoContainer = this._videoContainer;
-
-		this._viewport = this._createViewPort(
-			Rect.createByClientRect(videoContainer.getBoundingClientRect())
-		);
+		this._viewport = this._createViewPort(this._containerRect);
 
 		// Applying default property values after both (base, platform) constructors
 		this._viewport.updateViewPort();

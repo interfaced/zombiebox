@@ -1,5 +1,20 @@
 # Change log
 
+## 2.1.0 (release date: 23.07.2019)
+
+### Framework:
+
+* Added `StateMachine` class.
+* `.zb-video-container` element was removed from base framework. This resulted in following API changes:
+    * `Application.getVideoContainer()` public method and `_videoContainer` protected property were deprecated
+    * `AbstractDevice` no longer takes `HTMLElement` in its constructors
+    * `IDevice` and `AbstractDevice` now expect a `Rect` argument in `createVideo`
+    * `AbstractVideo` now requires a `Rect` argument in constructor
+    
+    All methods have fallbacks for backward compatibility and should work if used with old code, but produce compile-time warnings and console errors.
+    See [Migration doc](./docs/migrations/2.1.0.md) for more details.  
+* `Application.getBody` method was added.
+
 ## 2.0.2 (release date: 18.06.2019)
 
 #### Tools

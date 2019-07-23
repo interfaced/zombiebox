@@ -55,7 +55,7 @@ export default class AbstractDevice extends EventPublisher {
 	 * @abstract
 	 * @override
 	 */
-	createVideo() {}
+	createVideo(rect) {}
 
 	/**
 	 * @abstract
