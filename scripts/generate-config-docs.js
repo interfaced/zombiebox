@@ -257,7 +257,7 @@ class ConfigGenerator {
 			'=',
 			b.memberExpression(
 				b.identifier('module'),
-				b.identifier('exports'),
+				b.identifier('exports')
 			),
 			b.objectExpression(
 				classes.map((object) => b.property(
@@ -271,7 +271,7 @@ class ConfigGenerator {
 }
 
 
-(async() => {
+(async () => {
 	const refParser = new RefParser();
 	await refParser.parse(rawSchema);
 

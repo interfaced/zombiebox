@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,10 +18,10 @@ const registry = {};
 export class Proportion {
 	/**
 	 * @param {string} name
-	 * @param {number=} opt_x
-	 * @param {number=} opt_y
+	 * @param {number=} x
+	 * @param {number=} y
 	 */
-	constructor(name, opt_x = NaN, opt_y = NaN) {
+	constructor(name, x = NaN, y = NaN) {
 		/**
 		 * @type {string}
 		 * @protected
@@ -32,13 +32,13 @@ export class Proportion {
 		 * @type {number}
 		 * @protected
 		 */
-		this._x = opt_x;
+		this._x = x;
 
 		/**
 		 * @type {number}
 		 * @protected
 		 */
-		this._y = opt_y;
+		this._y = y;
 
 		const proportionString = this.toString();
 
@@ -65,7 +65,6 @@ export class Proportion {
 
 	/**
 	 * @param {number} value
-	 * @return {void}
 	 * @throws {Error} Inconditionally.
 	 */
 	set x(value) {
@@ -81,7 +80,6 @@ export class Proportion {
 
 	/**
 	 * @param {number} value
-	 * @return {void}
 	 * @throws {Error} Inconditionally.
 	 */
 	set y(value) {
@@ -97,7 +95,6 @@ export class Proportion {
 
 	/**
 	 * @param {string} value
-	 * @return {void}
 	 * @throws {Error} Inconditionally.
 	 */
 	set name(value) {

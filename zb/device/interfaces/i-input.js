@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -77,16 +77,16 @@ export default class IInput {
 
 	/**
 	 * Disables pointing device
-	 * @param {number=} opt_timeout
+	 * @param {number=} timeout
 	 * @throws {UnsupportedFeature}
 	 */
-	disablePointingDevice(opt_timeout) {}
+	disablePointingDevice(timeout) {}
 
 	/**
 	 * Enables IDLE deactivation of pointing device
-	 * @param {number=} opt_timeout
+	 * @param {number=} timeout
 	 */
-	enablePointingDeviceIdle(opt_timeout) {}
+	enablePointingDeviceIdle(timeout) {}
 
 	/**
 	 * Disables IDLE deactivation of pointing device

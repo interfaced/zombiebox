@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,24 +13,21 @@ import {Proportion, Common} from './proportion';
  */
 export class AspectRatio {
 	/**
-	 * @param {Proportion=} opt_proportion
-	 * @param {Transferring=} opt_transferring
+	 * @param {Proportion=} proportion
+	 * @param {Transferring=} transferring
 	 */
-	constructor(
-		opt_proportion = Common.KEEP,
-		opt_transferring = Transferring.KEEP
-	) {
+	constructor(proportion = Common.KEEP, transferring = Transferring.KEEP) {
 		/**
 		 * @type {Proportion}
 		 * @protected
 		 */
-		this._proportion = opt_proportion;
+		this._proportion = proportion;
 
 		/**
 		 * @type {Transferring}
 		 * @protected
 		 */
-		this._transferring = opt_transferring;
+		this._transferring = transferring;
 	}
 
 	/**

@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,10 +19,10 @@ import AbstractNavigation from './abstract-navigation';
  */
 export default class SpatialNavigation extends AbstractNavigation {
 	/**
-	 * @param {boolean=} opt_isCyclicalHorizontal
-	 * @param {boolean=} opt_isCyclicalVertical
+	 * @param {boolean=} isCyclicalHorizontal
+	 * @param {boolean=} isCyclicalVertical
 	 */
-	constructor(opt_isCyclicalHorizontal, opt_isCyclicalVertical) {
+	constructor(isCyclicalHorizontal = false, isCyclicalVertical = false) {
 		super();
 
 		/**
@@ -44,7 +44,7 @@ export default class SpatialNavigation extends AbstractNavigation {
 		 */
 		this._startRect = Rect.createByNumbers(0, 0, 0, 0);
 
-		this.setCyclicalEnabled(opt_isCyclicalHorizontal, opt_isCyclicalVertical);
+		this.setCyclicalEnabled(isCyclicalHorizontal, isCyclicalVertical);
 	}
 
 	/**
@@ -97,10 +97,10 @@ export default class SpatialNavigation extends AbstractNavigation {
 
 	/**
 	 * @param {Rect|Point} sourceRect
-	 * @param {Direction=} opt_direction
+	 * @param {Direction=} direction
 	 * @return {Array<IWidget>}
 	 */
-	sortWidgetsByDistance(sourceRect, opt_direction) {
+	sortWidgetsByDistance(sourceRect, direction) {
 		let rect;
 		if (sourceRect instanceof Point) {
 			rect = Rect.createByNumbers(
@@ -113,16 +113,16 @@ export default class SpatialNavigation extends AbstractNavigation {
 			rect = /** @type {Rect} */ (sourceRect);
 		}
 
-		return this._sortWidgetsByDistance(rect, this._widgets, opt_direction);
+		return this._sortWidgetsByDistance(rect, this._widgets, direction);
 	}
 
 	/**
-	 * @param {boolean=} opt_isCyclicalHorizontal
-	 * @param {boolean=} opt_isCyclicalVertical
+	 * @param {boolean=} isCyclicalHorizontal
+	 * @param {boolean=} isCyclicalVertical
 	 */
-	setCyclicalEnabled(opt_isCyclicalHorizontal = false, opt_isCyclicalVertical = false) {
-		this._isCyclicalHorizontal = opt_isCyclicalHorizontal;
-		this._isCyclicalVertical = opt_isCyclicalVertical;
+	setCyclicalEnabled(isCyclicalHorizontal = false, isCyclicalVertical = false) {
+		this._isCyclicalHorizontal = isCyclicalHorizontal;
+		this._isCyclicalVertical = isCyclicalVertical;
 	}
 
 	/**
@@ -173,15 +173,15 @@ export default class SpatialNavigation extends AbstractNavigation {
 	/**
 	 * @param {Rect} sourceRect
 	 * @param {Array<IWidget>} widgets
-	 * @param {Direction=} opt_direction
+	 * @param {Direction=} direction
 	 * @return {Array<IWidget>}
 	 * @protected
 	 */
-	_sortWidgetsByDistance(sourceRect, widgets, opt_direction) {
+	_sortWidgetsByDistance(sourceRect, widgets, direction) {
 		const indexAndWeight = [];
 		let minDistance;
 		const findMinDistance = function(rect) {
-			const directionKey = opt_direction ? opt_direction.getKey() : undefined;
+			const directionKey = direction ? direction.getKey() : undefined;
 			const points = getNavigationPoints(sourceRect, rect, directionKey);
 			if (points) {
 				minDistance = Math.min(
@@ -324,14 +324,14 @@ export default class SpatialNavigation extends AbstractNavigation {
 /**
  * @param {Rect} fromRect
  * @param {Rect} toRect
- * @param {Value=} opt_direction
+ * @param {Value=} directionValue
  * @return {?{
  *     fromPoint: Point,
  *     toPoint: Point
  * }} returns points or null
  */
-export const getNavigationPoints = (fromRect, toRect, opt_direction) => {
-	const direction = opt_direction ? Direction.createByKey(opt_direction) : null;
+export const getNavigationPoints = (fromRect, toRect, directionValue) => {
+	const direction = directionValue ? Direction.createByKey(directionValue) : null;
 
 	if (toRect.isEmpty()) {
 		return null;

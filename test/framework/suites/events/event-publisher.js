@@ -6,15 +6,18 @@ import EventPublisher from 'zb/events/event-publisher';
 class PublicEventPublisher extends EventPublisher {
 	/**
 	 * @param {string} event
-	 * @param {...*} var_args
+	 * @param {...*} args
 	 * @protected
 	 */
-	fireEvent(event, ...var_args) {
-		this._fireEvent(event, ...var_args);
+	fireEvent(event, ...args) {
+		this._fireEvent(event, ...args);
 	}
 }
 
 
+/**
+ * @return {?}
+ */
 function createSpy() {
 	const spy = (...args) => {
 		spy.called = true;

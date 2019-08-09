@@ -1,68 +1,61 @@
-const {join, dirname} = require('path');
-
-function resolveModulePath(packageName) {
-	const packageInfoPath = require.resolve(`${packageName}/package.json`);
-	return join(dirname(packageInfoPath), require(packageInfoPath).module);
-}
-
 module.exports = {
 	extends: 'interfaced',
 	overrides: [
 		{
-			files: ['zb/**', 'test/framework/*/**', 'test/tools/addons/*/lib/**'],
+			files: ['zb/**', 'test/framework/*/**', 'test/tools/addons/*/lib/**', 'templates/**/*.js'],
+			extends: 'interfaced/esm',
 			settings: {
-				'import/resolver': {
-					alias: [
-						['zb', join(__dirname, 'zb')],
-					]
-				}
-			},
-			...require('eslint-config-interfaced/overrides/esm')
-		},
-		{
-			files: [
-				'scripts/**',
-				'bin/**',
-				'lib/**',
-				'test/tools/*.js',
-				'test/tools/helpers/**',
-				'test/tools/suites/**',
-				'test/tools/addons/*/index.js',
-				'test/framework/karma.conf.js'
-			],
-			...require('eslint-config-interfaced/overrides/node')
-		},
-		{
-			files: [
-				'scripts/**',
-				'bin/**',
-				'lib/**',
-				'test/tools/*.js',
-				'test/tools/helpers/**',
-				'test/tools/suites/**',
-				'test/tools/addons/*/index.js',
-				'test/framework/karma.conf.js'
-			],
-			rules: {
-				'node/no-unsupported-features/es-builtins': ["error", { "version": ">=8.9" }],
-				'node/no-unsupported-features/es-syntax': ["error", { "version": ">=8.9" }],
-				'node/no-unsupported-features/node-builtins': ["error", { "version": ">=8.9" }],
-				'node/no-deprecated-api': ['error', {
-					'ignoreModuleItems': [
-						'url.parse' // TODO: remove once node 8 support is dropped and the deprecation is handled
-					]
-				}]
+				'import/resolver': 'zombiebox'
 			}
 		},
 		{
-			files: ['zb/**', 'test/framework/**', 'test/tools/addons/*/lib/**'],
+			files: ['zb/**'],
+			plugins: [
+				'header'
+			],
+			'rules': {
+				'header/header': ['error', 'block', [
+					'',
+					' * This file is part of the ZombieBox package.',
+					' *',
+					{pattern: `\\* Copyright © 2012\\-${(new Date).getFullYear()}, Interfaced`},
+					' *',
+					' * For the full copyright and license information, please view the LICENSE',
+					' * file that was distributed with this source code.',
+					' '
+				]]
+			}
+		},
+		{
+			files: ['templates/**/*.js'],
 			rules: {
-				'import/no-unresolved': ['error', {ignore: ['^generated/']}]
-			},
+				'import/no-unresolved': 'off',
+				'no-useless-constructor': 'off'
+			}
+		},
+		{
+			files: ['test/framework/suites/**/*.js'],
+			rules: {
+				'import/no-unused-modules': 'off'
+			}
+		},
+		{
+			files: [
+				'scripts/**',
+				'bin/**',
+				'lib/**',
+				'.eslintrc.js',
+				'test/tools/*.js',
+				'test/tools/helpers/**',
+				'test/tools/suites/**',
+				'test/tools/addons/*/index.js',
+				'test/framework/karma.conf.js'
+			],
+			extends: 'interfaced/node'
 		},
 		{
 			files: ['test/framework/suites/**', 'test/tools/suites/**'],
-			...require('eslint-config-interfaced/overrides/mocha-chai')
+			extends: 'interfaced/mocha-chai'
 		}
 	]
 };

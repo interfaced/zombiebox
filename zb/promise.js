@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -9,13 +9,14 @@
 
 
 /**
+ * @deprecated – Use default browser Promise implementation
  * @template TYPE
- * @implements {IThenable<TYPE>}
  */
-export class Promise {
+class CustomPromise {
 	/**
+	 * @deprecated – Use default browser Promise implementation
 	 * @param {function(
-	 *     function((TYPE|IThenable<TYPE>|Thenable)),
+	 *     function((TYPE|Promise<TYPE>)),
 	 *     function(*)
 	 * )} resolver
 	 */
@@ -27,7 +28,7 @@ export class Promise {
 		this._isCanceled = false;
 
 		/**
-		 * @type {IThenable}
+		 * @type {Promise}
 		 * @protected
 		 */
 		this._promise = new Promise((resolve, reject) => {
@@ -47,14 +48,16 @@ export class Promise {
 	}
 
 	/**
+	 * @deprecated – Use default browser Promise implementation
 	 * @override
-	 * @return {!Promise<RESULT>}
+	 * @return {!Promise<TYPE>}
 	 */
-	then(opt_onResolved, opt_onRejected) {
-		return Promise.wrap(this._promise.then(opt_onResolved, opt_onRejected));
+	then(onResolved, onRejected) {
+		return Promise.wrap(this._promise.then(onResolved, onRejected));
 	}
 
 	/**
+	 * @deprecated – Use default browser Promise implementation
 	 * Cancel promise fulfilling
 	 */
 	cancel() {
@@ -62,6 +65,7 @@ export class Promise {
 	}
 
 	/**
+	 * @deprecated – Use default browser Promise implementation
 	 * @param {function(*): *} resolveOrReject
 	 * @return {!Promise}
 	 */
@@ -70,7 +74,8 @@ export class Promise {
 	}
 
 	/**
-	 * @param {IThenable} promise
+	 * @deprecated – Use default browser Promise implementation
+	 * @param {Promise} promise
 	 * @return {!Promise}
 	 */
 	static wrap(promise) {
@@ -82,16 +87,18 @@ export class Promise {
 
 
 /**
- * @param {IThenable} promise
+ * @deprecated – Use default browser Promise implementation
+ * @param {Promise} promise
  * @param {function(*): *} callback
- * @return {IThenable}
+ * @return {Promise}
  */
 export const always = (promise, callback) => promise.then(callback, callback);
 
 
 /**
- * @param {Array<IThenable>|Object<string, IThenable|*>} promises
- * @return {IThenable}
+ * @deprecated – Use default browser Promise implementation
+ * @param {Array<Promise>|Object<string, Promise|*>} promises
+ * @return {Promise}
  */
 export const all = (promises) => {
 	if (Array.isArray(promises)) {
@@ -115,3 +122,9 @@ export const all = (promises) => {
 			return obj;
 		});
 };
+
+
+/**
+ * @deprecated – Use default browser Promise implementation
+ */
+export const Promise = CustomPromise;

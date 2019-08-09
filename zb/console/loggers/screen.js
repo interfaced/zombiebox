@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,23 +14,23 @@ import BaseLogger from './base-logger';
  */
 export default class Screen extends BaseLogger {
 	/**
-	 * @param {number=} opt_liveTime
-	 * @param {number=} opt_itemRemoveDelay
+	 * @param {number=} liveTime
+	 * @param {number=} itemRemoveDelay
 	 */
-	constructor(opt_liveTime, opt_itemRemoveDelay) {
+	constructor(liveTime = DEFAULT_ITEM_LIVE_TIME, itemRemoveDelay = DEFAULT_ITEM_REMOVE_DELAY) {
 		super();
 
 		/**
 		 * @type {number}
 		 * @protected
 		 */
-		this._liveTime;
+		this._liveTime = liveTime;
 
 		/**
 		 * @type {number}
 		 * @protected
 		 */
-		this._itemRemoveDelay;
+		this._itemRemoveDelay = itemRemoveDelay;
 
 		/**
 		 * @type {?HTMLElement}
@@ -43,18 +43,6 @@ export default class Screen extends BaseLogger {
 		 * @protected
 		 */
 		this._itemsCount = 0;
-
-		if (typeof opt_liveTime === 'undefined') {
-			this._liveTime = DEFAULT_ITEM_LIVE_TIME;
-		} else {
-			this._liveTime = opt_liveTime;
-		}
-
-		if (typeof opt_itemRemoveDelay === 'undefined') {
-			this._itemRemoveDelay = DEFAULT_ITEM_REMOVE_DELAY;
-		} else {
-			this._itemRemoveDelay = opt_itemRemoveDelay;
-		}
 	}
 
 	/**

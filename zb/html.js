@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,19 +11,19 @@
 /**
  * Creates DOM Node with className and child textNode inside if text argument exists
  * @param {string} nodeName
- * @param {string=} opt_className
- * @param {string=} opt_text
+ * @param {string=} className
+ * @param {string=} text
  * @return {HTMLElement}
  */
-export const node = (nodeName, opt_className, opt_text) => {
+export const node = (nodeName, className, text) => {
 	const node = document.createElement(nodeName);
 
-	if (typeof opt_className !== 'undefined' && opt_className !== null) {
-		node.className = opt_className;
+	if (typeof className !== 'undefined' && className !== null) {
+		node.className = className;
 	}
 
-	if (typeof opt_text !== 'undefined') {
-		node.appendChild(textNode(opt_text));
+	if (typeof text !== 'undefined') {
+		node.appendChild(textNode(text));
 	}
 
 	return /** @type {HTMLElement} */ (node);
@@ -32,12 +32,12 @@ export const node = (nodeName, opt_className, opt_text) => {
 
 /**
  * Creates DIV Node with className and child textNode inside if text argument exists
- * @param {string=} opt_className
- * @param {string=} opt_text
+ * @param {string=} className
+ * @param {string=} text
  * @return {HTMLDivElement}
  */
-export const div = (opt_className, opt_text) => /** @type {HTMLDivElement} */ (
-	node('div', opt_className, opt_text)
+export const div = (className, text) => /** @type {HTMLDivElement} */ (
+	node('div', className, text)
 );
 
 
@@ -79,10 +79,10 @@ export const findFirstElementNode = (fragment) => {
  * view.innerHTML = clean;
  *
  * @param {string} html
- * @param {SanitizeFilters=} opt_filters
+ * @param {SanitizeFilters=} filters
  * @return {string}
  */
-export const sanitize = (html, opt_filters) => {
+export const sanitize = (html, filters = {}) => {
 	let doc = null;
 	let node = null;
 
@@ -107,7 +107,6 @@ export const sanitize = (html, opt_filters) => {
 		node = getElementsByTagName.call(doc, 'body')[0];
 	}
 
-	const filters = opt_filters || {};
 	filters['body'] = filters['body'] || [];
 
 	sanitizeNode(node, filters);
@@ -131,10 +130,10 @@ export const sanitize = (html, opt_filters) => {
  * view.appendChild(clean);
  *
  * @param {Node} node
- * @param {SanitizeFilters=} opt_filters
+ * @param {SanitizeFilters=} filters
  * @return {Node}
  */
-export const sanitizeNode = (node, opt_filters) => {
+export const sanitizeNode = (node, filters = {}) => {
 	// Store document/window methods into variables for prevent clobbering attack
 	const TextNode = window.Text;
 	const CommentNode = window.Comment;
@@ -257,7 +256,7 @@ export const sanitizeNode = (node, opt_filters) => {
 
 	getChildNodes(node)
 		.forEach((child) => {
-			sanitizeNode(child, node, opt_filters || {});
+			sanitizeNode(child, node, filters);
 		});
 
 	return node;
@@ -318,13 +317,13 @@ export const getCSS = (element, name) => {
 
 /**
  * @param {HTMLElement} element
- * @param {string=} opt_display
+ * @param {string=} display
  */
-export const show = (element, opt_display) => {
+export const show = (element, display = 'block') => {
 	element.style.display = element['_oldDisplay'] === 'none' ? '' : (element['_oldDisplay'] || '');
 
 	if (getCSS(element, 'display') === 'none') {
-		element.style.display = opt_display || 'block';
+		element.style.display = display;
 	}
 };
 
@@ -353,11 +352,11 @@ export const showHide = (element, isVisible) => {
 
 /**
  * Remove all child nodes of elements.
- * @param {...Node} var_args
+ * @param {...Node} args
  */
-export const empty = (...var_args) => {
-	for (let i = 0; i < var_args.length; i++) {
-		const element = var_args[i];
+export const empty = (...args) => {
+	for (let i = 0; i < args.length; i++) {
+		const element = args[i];
 		while (element.firstChild) {
 			element.removeChild(element.firstChild);
 		}
@@ -367,11 +366,11 @@ export const empty = (...var_args) => {
 
 /**
  * Remove elements itself.
- * @param {...Node} var_args
+ * @param {...Node} args
  */
-export const remove = (...var_args) => {
-	for (let i = 0; i < var_args.length; i++) {
-		const element = var_args[i];
+export const remove = (...args) => {
+	for (let i = 0; i < args.length; i++) {
+		const element = args[i];
 		if (element.parentNode) {
 			element.parentNode.removeChild(element);
 		}

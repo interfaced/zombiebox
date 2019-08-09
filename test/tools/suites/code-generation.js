@@ -8,7 +8,7 @@ describe('Code generation', () => {
 	let appContainer;
 	let app;
 
-	before(async() => {
+	before(async () => {
 		appContainer = new TemporaryApplicationContainer();
 		await appContainer.init();
 
@@ -62,31 +62,31 @@ describe('Code generation', () => {
 		await app.buildCode();
 	});
 
-	after(async() => {
+	after(async () => {
 		await appContainer.cleanup();
 	});
 
-	it('Should generate a package info', async() => {
+	it('Should generate a package info', async () => {
 		expect(await appContainer.readFile('.generated/package-info.js'))
 			.equal(readFileFromReferences('package-info.js'));
 	});
 
-	it('Should generate an entry point', async() => {
+	it('Should generate an entry point', async () => {
 		expect(await appContainer.readFile('.generated/app.js'))
 			.equal(readFileFromReferences('app.js'));
 	});
 
-	it('Should generate a base application class', async() => {
+	it('Should generate a base application class', async () => {
 		expect(await appContainer.readFile('.generated/base-application.js'))
 			.equal(readFileFromReferences('base-application.js'));
 	});
 
-	it('Should generate defines', async() => {
+	it('Should generate defines', async () => {
 		expect(await appContainer.readFile('.generated/define.js'))
 			.equal(readFileFromReferences('define.js'));
 	});
 
-	it('Should generate extensions code', async() => {
+	it('Should generate extensions code', async () => {
 		expect(await appContainer.readFile('.generated/blockchain/private-key'))
 			.equal(readFileFromAddonFixturesFixtures('zombiebox-extension-blockchain/private-key'));
 	});

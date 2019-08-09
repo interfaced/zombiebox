@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -9,9 +9,10 @@
 
 
 /**
+ * TODO: Rename this file to key.js
  * @enum {number}
  */
-const Keys = { // eslint-disable-line interfaced/singular-enum
+const Key = {
 	UNKNOWN: 0,
 	LEFT: 1,
 	UP: 2,
@@ -68,4 +69,4 @@ const Keys = { // eslint-disable-line interfaced/singular-enum
 	MOUSE_WHEEL_RIGHT: 45
 };
 
-export default Keys;
+export default Key;

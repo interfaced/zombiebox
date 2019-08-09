@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -84,14 +84,14 @@ export default class AbstractModel extends EventPublisher {
 
 	/**
 	 * @param {string} name
-	 * @param {PropertyConfig=} opt_config
+	 * @param {PropertyConfig=} config
 	 * @return {?}
 	 */
-	static prop(name, opt_config = {}) {
+	static prop(name, config = {}) {
 		return {
-			enumerable: opt_config.enumerable !== undefined ? opt_config.enumerable : true,
-			get: opt_config.getter || AbstractModel._getDefaultGetter(name),
-			set: opt_config.setter || AbstractModel._getDefaultSetter(name)
+			enumerable: config.enumerable !== undefined ? config.enumerable : true,
+			get: config.getter || AbstractModel._getDefaultGetter(name),
+			set: config.setter || AbstractModel._getDefaultSetter(name)
 		};
 	}
 
@@ -102,7 +102,7 @@ export default class AbstractModel extends EventPublisher {
 	 */
 	static _getDefaultGetter(name) {
 		return function() {
-			return this._getPureProperty(name);
+			return this._getPureProperty(name); // eslint-disable-line no-invalid-this
 		};
 	}
 
@@ -113,7 +113,7 @@ export default class AbstractModel extends EventPublisher {
 	 */
 	static _getDefaultSetter(name) {
 		return function(value) {
-			return this._setPureProperty(name, value);
+			return this._setPureProperty(name, value); // eslint-disable-line no-invalid-this
 		};
 	}
 }

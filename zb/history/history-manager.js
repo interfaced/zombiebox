@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -46,7 +46,7 @@ export default class HistoryManager {
 
 	/**
 	 * @param {number} delta
-	 * @return {IThenable}
+	 * @return {Promise}
 	 */
 	go(delta) {
 		const record = this._records[this._currentPosition + delta];
@@ -74,14 +74,14 @@ export default class HistoryManager {
 	}
 
 	/**
-	 * @return {IThenable}
+	 * @return {Promise}
 	 */
 	forward() {
 		return this.go(+1);
 	}
 
 	/**
-	 * @return {IThenable}
+	 * @return {Promise}
 	 */
 	back() {
 		return this.go(-1);
@@ -137,7 +137,7 @@ export default class HistoryManager {
 
 	/**
 	 * @param {HistoryRecord} record
-	 * @return {IThenable}
+	 * @return {Promise}
 	 * @protected
 	 */
 	_loadState(record) {

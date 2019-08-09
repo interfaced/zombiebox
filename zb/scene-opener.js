@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -47,10 +47,10 @@ export default class SceneOpener {
 
 	/**
 	 * @param {Layer} layer
-	 * @param {Function=} opt_snapshot
-	 * @return {IThenable}
+	 * @param {Function=} snapshot
+	 * @return {Promise}
 	 */
-	open(layer, opt_snapshot) {
+	open(layer, snapshot) {
 		this.historyManager.addRecord([this]);
 
 		return Promise.resolve()
@@ -58,7 +58,7 @@ export default class SceneOpener {
 			.then(() => {
 				layer.activateWidget(null); // Default widget
 
-				return opt_snapshot ? opt_snapshot() : null;
+				return snapshot ? snapshot() : null;
 			})
 			.then(() => this.layerManager.open(layer));
 	}

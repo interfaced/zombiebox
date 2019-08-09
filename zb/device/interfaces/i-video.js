@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,10 +20,10 @@ export default class IVideo {
 	/**
 	 * Starts playback from optional position in milliseconds
 	 * @param {string} url
-	 * @param {number=} opt_startFrom
+	 * @param {number=} startFrom
 	 * @throws {UnsupportedFeature}
 	 */
-	play(url, opt_startFrom) {}
+	play(url, startFrom) {}
 
 	/**
 	 * Continues playback when seeking, stopped or paused with default playback rate
@@ -118,19 +118,19 @@ export default class IVideo {
 
 	/**
 	 * Increases the volume
-	 * @param {number=} opt_stp Default 1
+	 * @param {number=} step Default 1
 	 * @return {number} volume
 	 * @throws {UnsupportedFeature}
 	 */
-	volumeUp(opt_stp) {}
+	volumeUp(step) {}
 
 	/**
 	 * Decreases the volume
-	 * @param {number=} opt_step Default 1
+	 * @param {number=} step Default 1
 	 * @return {number} volume
 	 * @throws {UnsupportedFeature}
 	 */
-	volumeDown(opt_step) {}
+	volumeDown(step) {}
 
 	/**
 	 * Sets mute state

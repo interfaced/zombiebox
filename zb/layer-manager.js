@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -143,7 +143,7 @@ export default class LayerManager extends EventPublisher {
 
 	/**
 	 * @param {Layer} layerTo
-	 * @return {IThenable}
+	 * @return {Promise}
 	 */
 	open(layerTo) {
 		console.debug('zb.Application::show: showing layer "' + layerTo + '"');
@@ -194,7 +194,7 @@ export default class LayerManager extends EventPublisher {
 
 	/**
 	 * @param {Layer} layer
-	 * @return {IThenable}
+	 * @return {Promise}
 	 * @protected
 	 */
 	_hide(layer) {
@@ -219,7 +219,7 @@ export default class LayerManager extends EventPublisher {
 
 	/**
 	 * @param {Layer} layer
-	 * @return {IThenable}
+	 * @return {Promise}
 	 * @protected
 	 */
 	_show(layer) {
@@ -247,7 +247,7 @@ export default class LayerManager extends EventPublisher {
 	/**
 	 * @param {Error} error
 	 * @param {TransitionData} eventData
-	 * @return {IThenable}
+	 * @return {Promise}
 	 * @protected
 	 */
 	_handleTransitionError(error, eventData) {

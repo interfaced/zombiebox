@@ -12,18 +12,18 @@ describe('Building', () => {
 		gcc.mock();
 	});
 
-	beforeEach(async() => {
+	beforeEach(async () => {
 		appContainer = new TemporaryApplicationContainer();
 		await appContainer.init();
 	});
 
-	afterEach(async() => {
+	afterEach(async () => {
 		await appContainer.cleanup();
 		gcc.spy.resetHistory();
 	});
 
 	describe('Scripts compressing', () => {
-		it('Should pass the default flags to the compiler', async() => {
+		it('Should pass the default flags to the compiler', async () => {
 			const app = appContainer.createZbApplication([]);
 			await app.ready();
 			await app.buildCode();
@@ -46,7 +46,7 @@ describe('Building', () => {
 			expect(args['js']).to.be.an('array').that.is.not.empty;
 		});
 
-		it('Should apply flags from the arguments', async() => {
+		it('Should apply flags from the arguments', async () => {
 			const app = appContainer.createZbApplication([]);
 			await app.ready();
 			await app.buildCode();
@@ -57,7 +57,7 @@ describe('Building', () => {
 			expect(gcc.spy.args[0][0]['compilation_level']).to.equal('SIMPLE');
 		});
 
-		it('Should compile the application code', async() => {
+		it('Should compile the application code', async () => {
 			const app = appContainer.createZbApplication([]);
 			await app.ready();
 			await app.buildCode();
@@ -69,7 +69,7 @@ describe('Building', () => {
 			expect(gcc.spy.args[0][0]['js']).include(appContainer.getFilePath('src/application.js'));
 		});
 
-		it('Should be configurable', async() => {
+		it('Should be configurable', async () => {
 			const app = appContainer.createZbApplication([{
 				include: [
 					{
@@ -101,7 +101,7 @@ describe('Building', () => {
 	});
 
 	describe('Styles compressing', () => {
-		it('Should include the application styles', async() => {
+		it('Should include the application styles', async () => {
 			const app = appContainer.createZbApplication([]);
 			await app.ready();
 			const styles = await app.getBuildHelper().getCompressedStyles('dist');
@@ -109,7 +109,7 @@ describe('Building', () => {
 			expect(styles).include('.my');
 		});
 
-		it('Should inline resources', async() => {
+		it('Should inline resources', async () => {
 			const app = appContainer.createZbApplication([{
 				postcss: {
 					url: {
@@ -126,7 +126,7 @@ describe('Building', () => {
 			);
 		});
 
-		it('Should not inline resources', async() => {
+		it('Should not inline resources', async () => {
 			const app = appContainer.createZbApplication([{
 				postcss: {
 					url: {
@@ -144,7 +144,7 @@ describe('Building', () => {
 				.to.deep.equal(backgroundContent);
 		});
 
-		it('Should be configurable', async() => {
+		it('Should be configurable', async () => {
 			const app = appContainer.createZbApplication([{
 				include: [
 					{
@@ -165,7 +165,7 @@ describe('Building', () => {
 	});
 
 	describe('Writing of index.html', () => {
-		it('Should write a html page with the compressed code and styles', async() => {
+		it('Should write a html page with the compressed code and styles', async () => {
 			const app = appContainer.createZbApplication([]);
 			const buildHelper = app.getBuildHelper();
 
@@ -187,7 +187,7 @@ describe('Building', () => {
 			expect(indexHTMLContent).include(`<style>${compressedStyles}</style>`);
 		});
 
-		it('Should be configurable', async() => {
+		it('Should be configurable', async () => {
 			const app = appContainer.createZbApplication([{
 				include: [
 					{
@@ -220,7 +220,7 @@ describe('Building', () => {
 			expect(indexHTMLContent).include(`<link rel="stylesheet" href="http://zombiebox.tv/styles.css">`);
 		});
 
-		it('Should support the page template customization', async() => {
+		it('Should support the page template customization', async () => {
 			const app = appContainer.createZbApplication([{
 				templates: ['_templates']
 			}]);
@@ -238,7 +238,7 @@ describe('Building', () => {
 	});
 
 	describe('Static files files handling', () => {
-		it('Should copy static files', async() => {
+		it('Should copy static files', async () => {
 			const app = appContainer.createZbApplication([{
 				include: [
 					{

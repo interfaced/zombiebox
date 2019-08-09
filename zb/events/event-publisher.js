@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -73,10 +73,10 @@ export default class EventPublisher {
 	 * @param {Listener} callback
 	 */
 	once(event, callback) {
-		const wrapper = (...var_args) => {
+		const wrapper = (...args) => {
 			this.off(event, wrapper);
 
-			callback(...var_args);
+			callback(...args);
 		};
 
 		if (!this._onceMapCallbacks.hasOwnProperty(event)) {
@@ -127,11 +127,11 @@ export default class EventPublisher {
 
 	/**
 	 * Remove all event listeners
-	 * @param {string=} opt_event
+	 * @param {string=} event
 	 */
-	removeAllListeners(opt_event) {
+	removeAllListeners(event) {
 		const allListeners = this._listeners;
-		const eventsToRemove = opt_event ? [opt_event] : Object.keys(allListeners);
+		const eventsToRemove = event ? [event] : Object.keys(allListeners);
 
 		eventsToRemove.forEach((event) => {
 			// "off" mutates listeners, so use a copy instead of an original array
@@ -147,7 +147,7 @@ export default class EventPublisher {
 	 * @param {string} event
 	 * @param {{
 	 *     logInfo: (boolean|undefined)
-	 * }=} opt_options
+	 * }=} options
 	 * @protected
 	 */
 	_cloneListenersOnWrite(event, {logInfo = true} = {}) {
@@ -174,19 +174,19 @@ export default class EventPublisher {
 	/**
 	 * Trigger all subscribed event listeners
 	 * @param {string} event
-	 * @param {...*} var_args
+	 * @param {...*} args
 	 * @protected
 	 */
-	_fireEvent(event, ...var_args) {
+	_fireEvent(event, ...args) {
 		// Save refs to prevent mutation during event execution
 		const eventListeners = this._listeners[event];
 		const anyEventListeners = this._listeners[this.EVENT_ANY];
 
 		this._executingEvent = event;
-		this._callListeners(eventListeners, event, var_args);
+		this._callListeners(eventListeners, event, args);
 
 		this._executingEvent = this.EVENT_ANY;
-		this._callListeners(anyEventListeners, event, var_args);
+		this._callListeners(anyEventListeners, event, args);
 
 		this._executingEvent = null;
 	}

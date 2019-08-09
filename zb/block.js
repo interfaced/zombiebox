@@ -1,12 +1,11 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import {always} from './promise';
 import EventPublisher from './events/event-publisher';
 
 
@@ -25,7 +24,7 @@ export default class Block extends EventPublisher {
 		this._isBlocked = false;
 
 		/**
-		 * @type {Array<IThenable>}
+		 * @type {Array<Promise>}
 		 * @protected
 		 */
 		this._blocks = [];
@@ -44,8 +43,8 @@ export default class Block extends EventPublisher {
 	}
 
 	/**
-	 * @param {IThenable} promise
-	 * @return {IThenable}
+	 * @param {Promise} promise
+	 * @return {Promise}
 	 */
 	block(promise) {
 		if (-1 !== this._blocks.indexOf(promise)) {
@@ -55,7 +54,7 @@ export default class Block extends EventPublisher {
 		this._blocks.push(promise);
 		this._setBlocked(true);
 
-		always(promise, this._unblock.bind(this, promise));
+		promise.finally(() => this._unblock(promise));
 
 		return promise;
 	}
@@ -86,7 +85,7 @@ export default class Block extends EventPublisher {
 	}
 
 	/**
-	 * @param {IThenable} promise
+	 * @param {Promise} promise
 	 * @protected
 	 */
 	_unblock(promise) {

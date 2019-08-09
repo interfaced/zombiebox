@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,12 +15,12 @@ import SpatialNavigation from './spatial-navigation';
  */
 export default class PrincipalAxisNavigation extends SpatialNavigation {
 	/**
-	 * @param {AxisConfig=} opt_horizontal
-	 * @param {AxisConfig=} opt_vertical
-	 * @param {boolean=} opt_enableFallback
+	 * @param {AxisConfig=} horizontal
+	 * @param {AxisConfig=} vertical
+	 * @param {boolean=} enableFallback
 	 */
-	constructor(opt_horizontal = DEFAULT_AXIS_CONFIG, opt_vertical = DEFAULT_AXIS_CONFIG, opt_enableFallback = false) {
-		super(opt_horizontal.cyclical, opt_vertical.cyclical);
+	constructor(horizontal = DEFAULT_AXIS_CONFIG, vertical = DEFAULT_AXIS_CONFIG, enableFallback = false) {
+		super(horizontal.cyclical, vertical.cyclical);
 
 		/**
 		 * @type {boolean}
@@ -41,21 +41,21 @@ export default class PrincipalAxisNavigation extends SpatialNavigation {
 		this._isFallbackEnabled = true;
 
 		this.setAxisNavigationEnabled(
-			opt_horizontal.enabled,
-			opt_vertical.enabled,
-			opt_enableFallback
+			horizontal.enabled,
+			vertical.enabled,
+			enableFallback
 		);
 	}
 
 	/**
-	 * @param {boolean=} opt_horizontal
-	 * @param {boolean=} opt_vertical
-	 * @param {boolean=} opt_enableFallback
+	 * @param {boolean=} horizontal
+	 * @param {boolean=} vertical
+	 * @param {boolean=} enableFallback
 	 */
-	setAxisNavigationEnabled(opt_horizontal = false, opt_vertical = false, opt_enableFallback = true) {
-		this._isHorizontalAxisNavigationEnabled = opt_horizontal;
-		this._isVerticaAxisNavigationEnabled = opt_vertical;
-		this._isFallbackEnabled = opt_enableFallback;
+	setAxisNavigationEnabled(horizontal = false, vertical = false, enableFallback = true) {
+		this._isHorizontalAxisNavigationEnabled = horizontal;
+		this._isVerticaAxisNavigationEnabled = vertical;
+		this._isFallbackEnabled = enableFallback;
 	}
 
 	/**

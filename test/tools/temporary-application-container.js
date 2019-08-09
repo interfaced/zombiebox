@@ -23,8 +23,7 @@ class TemporaryApplicationContainer {
 	}
 
 	/**
-	 * @return {string}
-	 * @return {Promise}
+	 * @return {Promise<string>}
 	 */
 	async init() {
 		tmp.setGracefulCleanup();
@@ -74,6 +73,7 @@ class TemporaryApplicationContainer {
 	}
 
 	/**
+	 * @param {...?} args
 	 * @return {Application}
 	 */
 	createZbApplication(...args) {
@@ -91,6 +91,7 @@ class TemporaryApplicationContainer {
 	/**
 	 * @param {string} file
 	 * @param {string} encoding
+	 * @return {Promise<string>}
 	 */
 	async readFile(file, encoding = 'utf-8') {
 		return fse.readFile(this.getFilePath(file), encoding);
@@ -99,6 +100,7 @@ class TemporaryApplicationContainer {
 	/**
 	 * @param {string} file
 	 * @param {string} encoding
+	 * @return {Promise<string>}
 	 */
 	async writeFile(file, encoding = 'utf-8') {
 		return fse.writeFile(this.getFilePath(file), encoding);

@@ -15,9 +15,9 @@ import {
 } from 'zb/html';
 
 describe('zb/html', () => {
-	const createDiv = function(opt_html) {
+	const createDiv = function(html = '') {
 		const div = document.createElement('div');
-		div.innerHTML = opt_html || '';
+		div.innerHTML = html;
 		return div;
 	};
 
@@ -85,8 +85,8 @@ describe('zb/html', () => {
 	});
 
 	describe('sanitize', () => {
-		const test = function(input, output, opt_filters) {
-			expect(sanitize(input, opt_filters)).eq(output);
+		const test = function(input, output, filters) {
+			expect(sanitize(input, filters)).eq(output);
 		};
 
 		it('Save plaint text', () => {

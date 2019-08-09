@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -203,9 +203,9 @@ export default class AbstractInput extends EventPublisher {
 	/**
 	 * @override
 	 */
-	enablePointingDeviceIdle(opt_timeout) {
-		if (!isNaN(opt_timeout) && isFinite(opt_timeout)) {
-			this._pointingDeviceIdleTimeoutDelay = /** @type {number} */ (opt_timeout);
+	enablePointingDeviceIdle(timeout) {
+		if (!isNaN(timeout) && isFinite(timeout)) {
+			this._pointingDeviceIdleTimeoutDelay = /** @type {number} */ (timeout);
 		}
 
 		this.disablePointingDeviceIdle();
@@ -250,7 +250,7 @@ export default class AbstractInput extends EventPublisher {
 	 * @abstract
 	 * @override
 	 */
-	disablePointingDevice(opt_timeout) {}
+	disablePointingDevice(timeout) {}
 
 	/**
 	 * @abstract

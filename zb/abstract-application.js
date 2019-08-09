@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -158,19 +158,19 @@ export default class AbstractApplication extends EventPublisher {
 	/**
 	 * @override
 	 */
-	processKey(zbKey, opt_e) {
+	processKey(zbKey, event) {
 		let result = false;
 
 		const currentLayer = this.getCurrentLayer();
 		if (currentLayer) {
 			// Current layer processes key
-			result = currentLayer.processKey(zbKey, opt_e);
+			result = currentLayer.processKey(zbKey, event);
 
 			if (!result) {
-				result = this._processKey(zbKey, opt_e);
+				result = this._processKey(zbKey, event);
 			}
 		} else if (!result) {
-			result = this._processKey(zbKey, opt_e);
+			result = this._processKey(zbKey, event);
 		}
 
 		return result;
@@ -179,7 +179,7 @@ export default class AbstractApplication extends EventPublisher {
 	/**
 	 * Clear navigation history and open home scene
 	 * @abstract
-	 * @return {?IThenable}
+	 * @return {?Promise}
 	 */
 	home() {}
 
@@ -204,7 +204,7 @@ export default class AbstractApplication extends EventPublisher {
 	}
 
 	/**
-	 * @return {IThenable}
+	 * @return {Promise}
 	 */
 	back() {
 		if (!this._historyManager.canBack()) {
@@ -221,7 +221,7 @@ export default class AbstractApplication extends EventPublisher {
 	}
 
 	/**
-	 * @return {IThenable}
+	 * @return {Promise}
 	 */
 	forward() {
 		if (!this._historyManager.canForward()) {
@@ -264,13 +264,13 @@ export default class AbstractApplication extends EventPublisher {
 	/**
 	 * Create new instance of layerClassName and append it to the system container
 	 * @param {Function} layerClassName
-	 * @param {*=} opt_params
+	 * @param {*=} params
 	 * @return {Layer}
 	 */
-	showChildLayer(layerClassName, opt_params) {
+	showChildLayer(layerClassName, params) {
 		show(this._systemContainer);
 
-		return this._systemLayer.showChildLayer(layerClassName, opt_params);
+		return this._systemLayer.showChildLayer(layerClassName, params);
 	}
 
 	/**
@@ -382,7 +382,7 @@ export default class AbstractApplication extends EventPublisher {
 	}
 
 	/**
-	 * @return {IThenable|undefined}
+	 * @return {Promise|undefined}
 	 */
 	onExit() {
 		return undefined;
@@ -477,19 +477,19 @@ export default class AbstractApplication extends EventPublisher {
 
 	/**
 	 * @param {Keys} zbKey
-	 * @param {(KeyboardEvent|WheelEvent)=} opt_e
+	 * @param {(KeyboardEvent|WheelEvent)=} event
 	 * @return {boolean} True if Key handled, false if not
 	 * @protected
 	 */
-	_processKey(zbKey, opt_e) {
+	_processKey(zbKey, event) {
 		let result = false;
 
 		switch (zbKey) {
 			// Back to previous scene/layer
 			case Keys.BACK:
 				this.back();
-				if (opt_e) {
-					opt_e.preventDefault();
+				if (event) {
+					event.preventDefault();
 				}
 				result = true;
 				break;
@@ -499,7 +499,7 @@ export default class AbstractApplication extends EventPublisher {
 		if (!result) {
 			warn(
 				'Unhandled zbKey ' + zbKey +
-				' (' + (opt_e ? 'keyCode ' + opt_e.keyCode : 'no keyboard event') + ')'
+				' (' + (event ? 'keyCode ' + event.keyCode : 'no keyboard event') + ')'
 			);
 		}
 

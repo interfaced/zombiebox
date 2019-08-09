@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -558,12 +558,10 @@ export default class Rect {
 
 	/**
 	 * @param {Point} size
-	 * @param {Point=} opt_point
+	 * @param {Point=} point
 	 * @return {Rect}
 	 */
-	static createBySize(size, opt_point) {
-		const point = opt_point || Point.createZeroPoint();
-
+	static createBySize(size, point = Point.createZeroPoint()) {
 		return new Rect({
 			x0: point.x,
 			y0: point.y,
@@ -616,12 +614,10 @@ export default class Rect {
 	}
 
 	/**
-	 * @param {Point=} opt_position
+	 * @param {Point=} position
 	 * @return {Rect}
 	 */
-	static createOneUnitRect(opt_position) {
-		const position = opt_position || new Point(0, 0);
-
+	static createOneUnitRect(position = new Point(0, 0)) {
 		return Rect.create({
 			x0: position.x,
 			y0: position.y,

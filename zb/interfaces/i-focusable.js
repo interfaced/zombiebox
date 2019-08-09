@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,9 +14,9 @@ import Rect from '../geometry/rect';
  */
 export default class IFocusable {
 	/**
-	 * @param {?Rect=} opt_fromRect
+	 * @param {?Rect=} fromRect
 	 */
-	focus(opt_fromRect) {}
+	focus(fromRect) {}
 
 	/**
 	 * Object looses focus

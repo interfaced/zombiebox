@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,7 +20,7 @@ export default class IHistoryManager {
 
 	/**
 	 * @param {number} delta
-	 * @return {IThenable}
+	 * @return {Promise}
 	 */
 	go(delta) {}
 
@@ -30,12 +30,12 @@ export default class IHistoryManager {
 	clear() {}
 
 	/**
-	 * @return {IThenable}
+	 * @return {Promise}
 	 */
 	forward() {}
 
 	/**
-	 * @return {IThenable}
+	 * @return {Promise}
 	 */
 	back() {}
 

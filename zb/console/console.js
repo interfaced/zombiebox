@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -67,71 +67,71 @@ export const getLogger = () => _logger;
 
 
 /**
- * @param {...*} var_args
+ * @param {...*} args
  */
-export const log = (...var_args) => {
+export const log = (...args) => {
 	if (_shouldPrint(Level.LOG)) {
-		_logger.log(...var_args);
+		_logger.log(...args);
 	}
 };
 
 
 /**
- * @param {...*} var_args
+ * @param {...*} args
  */
-export const debug = (...var_args) => {
+export const debug = (...args) => {
 	if (_shouldPrint(Level.DEBUG)) {
-		_logger.debug(...var_args);
+		_logger.debug(...args);
 	}
 };
 
 
 /**
- * @param {...*} var_args
+ * @param {...*} args
  */
-export const info = (...var_args) => {
+export const info = (...args) => {
 	if (_shouldPrint(Level.INFO)) {
-		_logger.info(...var_args);
+		_logger.info(...args);
 	}
 };
 
 
 /**
- * @param {...*} var_args
+ * @param {...*} args
  */
-export const warn = (...var_args) => {
+export const warn = (...args) => {
 	if (_shouldPrint(Level.WARN)) {
-		_logger.warn(...var_args);
+		_logger.warn(...args);
 	}
 };
 
 
 /**
- * @param {...*} var_args
+ * @param {...*} args
  */
-export const error = (...var_args) => {
+export const error = (...args) => {
 	if (_shouldPrint(Level.ERROR)) {
-		_logger.error(...var_args);
+		_logger.error(...args);
 	}
 };
 
 
 /**
- * @param {...*} var_args
+ * @param {...*} args
  */
-export const assert = (...var_args) => {
+export const assert = (...args) => {
 	if (_shouldPrint(Level.ASSERT)) {
-		_logger.assert(...var_args);
+		_logger.assert(...args);
 	}
 };
 
 
 /**
- * @param {...*} var_args
+ * @param {...*} args
  */
-export const dir = (...var_args) => {
+export const dir = (...args) => {
 	if (_shouldPrint(Level.DIR)) {
-		_logger.dir(...var_args);
+		_logger.dir(...args);
 	}
 };
 

@@ -1,5 +1,13 @@
 # Change log
 
+## 2.1.1 (release date: 09.08.2019)
+
+Updated ESLint to 6.0 and added new plugins and rules
+
+### Tools
+
+* Updated Closure Compiler to 20190729.0.0
+
 ## 2.1.0 (release date: 23.07.2019)
 
 ### Framework:

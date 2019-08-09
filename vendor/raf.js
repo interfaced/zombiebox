@@ -5,7 +5,7 @@
  * original requestAnimationFrame polyfill by Erik Möller
  * inspired from paul_irish gist and post
  *
- * Copyright (c) 2013 ngryman
+ * Copyright © 2013 ngryman
  * Licensed under the MIT license.
  */
 

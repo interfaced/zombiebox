@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,10 +10,10 @@
 
 /**
  * @deprecated You should use the real data instead. But don`t delete stub from zombiebox.
- * @param {number=} opt_probability
+ * @param {number=} probability
  * @return {boolean}
  */
-export const bool = (opt_probability) => Math.random() > (opt_probability || 0.5);
+export const bool = (probability = 0.5) => Math.random() > probability;
 
 
 /**
@@ -28,14 +28,11 @@ export const number = (min, max) => Math.floor(Math.random() * (max - min + 1)) 
 /**
  * @deprecated You should use the real data instead. But don`t delete stub from zombiebox.
  * @param {number} length
- * @param {number=} opt_maxLength
+ * @param {number=} maxLength
  * @return {Array}
  */
-export const array = (length, opt_maxLength) => {
-	let calculatedLength = length;
-	if (opt_maxLength) {
-		calculatedLength = number(length, opt_maxLength);
-	}
+export const array = (length, maxLength = length) => {
+	const calculatedLength = number(length, maxLength);
 
 	return Array(...new Array(calculatedLength));
 };
@@ -44,14 +41,11 @@ export const array = (length, opt_maxLength) => {
 /**
  * @deprecated You should use the real data instead. But don`t delete stub from zombiebox.
  * @param {number} length
- * @param {number=} opt_maxLength
+ * @param {number=} maxLength
  * @return {string}
  */
-export const string = (length, opt_maxLength) => {
-	let calculatedLength = length;
-	if (opt_maxLength) {
-		calculatedLength = number(length, opt_maxLength);
-	}
+export const string = (length, maxLength = length) => {
+	const calculatedLength = number(length, maxLength);
 
 	const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
 	let str = '';
@@ -69,14 +63,11 @@ export const string = (length, opt_maxLength) => {
 /**
  * @deprecated You should use the real data instead. But don`t delete stub from zombiebox.
  * @param {number} length
- * @param {number=} opt_maxLength
+ * @param {number=} maxLength
  * @return {string}
  */
-export const lorem = (length, opt_maxLength) => {
-	let calculatedLength = length;
-	if (opt_maxLength) {
-		calculatedLength = number(length, opt_maxLength);
-	}
+export const lorem = (length, maxLength = length) => {
+	const calculatedLength = number(length, maxLength);
 
 	const chunk = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ' +
 		'Nunc lobortis in sapien nec sodales. Integer quis tortor dictum, aliquet arcu quis, dignissim neque. ' +
@@ -102,7 +93,7 @@ export const lorem = (length, opt_maxLength) => {
  * @deprecated You should use the real data instead. But don`t delete stub from zombiebox.
  * @param {number} width
  * @param {number} height
- * @param {string=} opt_text
+ * @param {string=} text
  * @return {string}
  */
-export const image = (width, height, opt_text) => `http://placehold.it/${width}x${height}&text=${opt_text || ''}`;
+export const image = (width, height, text = '') => `http://placehold.it/${width}x${height}&text=${text}`;

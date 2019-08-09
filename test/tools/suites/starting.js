@@ -6,16 +6,17 @@ const TemporaryApplicationContainer = require('../temporary-application-containe
 
 const currentZBVersion = require('../../../package').version;
 const tamagotchiPlatformPath = path.join(__dirname, '..', 'fixtures', 'zombiebox-platform-tamagotchi');
+const {AbstractPlatform} = require('../../../lib/addons/abstract-platform');
 
 describe('Starting', () => {
 	let appContainer;
 
-	beforeEach(async() => {
+	beforeEach(async () => {
 		appContainer = new TemporaryApplicationContainer();
 		await appContainer.init();
 	});
 
-	afterEach(async() => {
+	afterEach(async () => {
 		await appContainer.cleanup();
 	});
 
@@ -27,7 +28,7 @@ describe('Starting', () => {
 	});
 
 	describe('Versions check', () => {
-		it('Should throw an error when the versions check fails', async() => {
+		it('Should throw an error when the versions check fails', async () => {
 			await appContainer.writeFile('package.json', JSON.stringify({
 				dependencies: {
 					'zombiebox': '0.0.0',
@@ -43,7 +44,7 @@ describe('Starting', () => {
 				));
 		});
 
-		it('Should be able to skip the versions check', async() => {
+		it('Should be able to skip the versions check', async () => {
 			await appContainer.writeFile('package.json', JSON.stringify({
 				dependencies: {
 					'zombiebox': '0.0.0',
@@ -54,7 +55,7 @@ describe('Starting', () => {
 			expect(() => appContainer.createZbApplication([{skipVersionsCheck: true}])).not.throw();
 		});
 
-		it('Should not throw an error when the required version range isn\'t valid', async() => {
+		it('Should not throw an error when the required version range isn\'t valid', async () => {
 			await appContainer.writeFile('package.json', JSON.stringify({
 				dependencies: {
 					'zombiebox': '_',
@@ -65,7 +66,7 @@ describe('Starting', () => {
 			expect(() => appContainer.createZbApplication([])).not.throw();
 		});
 
-		it('Should recognize the semantic versioning', async() => {
+		it('Should recognize the semantic versioning', async () => {
 			await appContainer.writeFile('package.json', JSON.stringify({
 				dependencies: {
 					'zombiebox': '^0.0.0 ~0.0.0 <=0.0.0',
@@ -81,7 +82,7 @@ describe('Starting', () => {
 				));
 		});
 
-		it('Should check peer dependencies of the loaded addons', async() => {
+		it('Should check peer dependencies of the loaded addons', async () => {
 			await appContainer.installDependency('zombiebox-platform-tamagotchi', tamagotchiPlatformPath, true);
 			await appContainer.writeFile('node_modules/zombiebox-platform-tamagotchi/package.json', JSON.stringify({
 				name: 'zombiebox-platform-tamagotchi',
@@ -108,7 +109,7 @@ describe('Starting', () => {
 	});
 
 	describe('Addons', () => {
-		it('Should load addons by the application package info', async() => {
+		it('Should load addons by the application package info', async () => {
 			await appContainer.installDependency('zombiebox-platform-tamagotchi', tamagotchiPlatformPath);
 
 			await appContainer.writeFile('package.json', JSON.stringify({
@@ -124,20 +125,20 @@ describe('Starting', () => {
 			expect(app.getPlatforms().find((platform) => platform.getName() === 'tamagotchi')).ok;
 		});
 
-		it('Should load addons by a file path', async() => {
+		it('Should load addons by a file path', async () => {
 			const app = appContainer.createZbApplication([], [tamagotchiPlatformPath]);
 
 			expect(app.getPlatforms().find((platform) => platform.getName() === 'tamagotchi')).ok;
 		});
 
-		it('Should load addons by an instance', async() => {
+		it('Should load addons by an instance', async () => {
 			const tamagotchiInstance = createTamagotchiPlatform();
 			const app = appContainer.createZbApplication([], [tamagotchiInstance]);
 
 			expect(app.getPlatforms().find((platform) => platform.getName() === 'tamagotchi')).ok;
 		});
 
-		it('Should extend config by the loaded addon', async() => {
+		it('Should extend config by the loaded addon', async () => {
 			const tamagotchiInstance = createTamagotchiPlatform();
 			stub(tamagotchiInstance, 'getConfig').returns({
 				include: [
@@ -152,15 +153,15 @@ describe('Starting', () => {
 			).to.be.ok;
 		});
 
-		it('Should throw an error when cannot load addon by the file path', async() => {
+		it('Should throw an error when cannot load addon by the file path', async () => {
 			expect(() => appContainer.createZbApplication([], ['/does-not-exist/addon.js'])).throw('Can\'t load addon');
 		});
 
-		it('Should throw an error when trying to pass a not addon instance', async() => {
+		it('Should throw an error when trying to pass a not addon instance', async () => {
 			expect(() => appContainer.createZbApplication([], [{}])).throw('Trying to add not addon');
 		});
 
-		it('Should throw an error when trying to load the same addon twice', async() => {
+		it('Should throw an error when trying to load the same addon twice', async () => {
 			expect(() => appContainer.createZbApplication([], [tamagotchiPlatformPath, tamagotchiPlatformPath]))
 				.throw('Addon with name');
 		});

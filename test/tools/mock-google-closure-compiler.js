@@ -8,6 +8,7 @@ const gccSpy = spy();
  */
 class ClosureCompilerStub {
 	/**
+	 * @param {...?} args
 	 */
 	constructor(...args) {
 		gccSpy(...args);

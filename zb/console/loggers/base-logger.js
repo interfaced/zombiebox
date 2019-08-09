@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -33,50 +33,50 @@ export default class BaseLogger {
 	/**
 	 * @override
 	 */
-	log(...var_args) {
-		this._log(Level.LOG, var_args);
+	log(...args) {
+		this._log(Level.LOG, args);
 	}
 
 	/**
 	 * @override
 	 */
-	debug(...var_args) {
-		this._log(Level.DEBUG, var_args);
+	debug(...args) {
+		this._log(Level.DEBUG, args);
 	}
 
 	/**
 	 * @override
 	 */
-	info(...var_args) {
-		this._log(Level.INFO, var_args);
+	info(...args) {
+		this._log(Level.INFO, args);
 	}
 
 	/**
 	 * @override
 	 */
-	warn(...var_args) {
-		this._log(Level.WARN, var_args);
+	warn(...args) {
+		this._log(Level.WARN, args);
 	}
 
 	/**
 	 * @override
 	 */
-	error(...var_args) {
-		this._log(Level.ERROR, var_args);
+	error(...args) {
+		this._log(Level.ERROR, args);
 	}
 
 	/**
 	 * @override
 	 */
-	assert(...var_args) {
-		this._log(Level.ASSERT, var_args);
+	assert(...args) {
+		this._log(Level.ASSERT, args);
 	}
 
 	/**
 	 * @override
 	 */
-	dir(...var_args) {
-		this._log(Level.DIR, var_args);
+	dir(...args) {
+		this._log(Level.DIR, args);
 	}
 
 	/**
@@ -102,7 +102,7 @@ export default class BaseLogger {
 	/**
 	 *
 	 * @param {Level} level
-	 * @param {Arguments|Array} args
+	 * @param {Array} args
 	 * @protected
 	 */
 	_log(level, args) {

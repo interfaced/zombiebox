@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -24,7 +24,7 @@ export default class AbstractTransport {
 		this._baseUrl = '';
 
 		/**
-		 * @type {function(Error, REQUEST_PARAMS): IThenable<HandleCode>}
+		 * @type {function(Error, REQUEST_PARAMS): Promise<HandleCode>}
 		 * @protected
 		 */
 		this._transportErrorHandler;
@@ -33,7 +33,7 @@ export default class AbstractTransport {
 	}
 
 	/**
-	 * @param {function(Error, REQUEST_PARAMS): IThenable<HandleCode>} handler
+	 * @param {function(Error, REQUEST_PARAMS): Promise<HandleCode>} handler
 	 */
 	setTransportErrorHandler(handler) {
 		this._transportErrorHandler = handler;
@@ -54,7 +54,7 @@ export default class AbstractTransport {
 	}
 
 	/**
-	 * @return {IThenable<HandleCode>}
+	 * @return {Promise<HandleCode>}
 	 */
 	defaultTransportErrorHandler() {
 		return Promise.resolve(HandleCode.ABORT);
@@ -63,7 +63,7 @@ export default class AbstractTransport {
 	/**
 	 * Does the Same as overridden doRequest
 	 * @param {REQUEST_PARAMS} params
-	 * @return {IThenable}
+	 * @return {Promise}
 	 */
 	doPersistentRequest(params) {
 		return this._persistRequest((params) => this.doRequest(params), params, this._transportErrorHandler);
@@ -73,15 +73,15 @@ export default class AbstractTransport {
 	 * API defines type of arguments
 	 * @abstract
 	 * @param {REQUEST_PARAMS} params
-	 * @return {IThenable}
+	 * @return {Promise}
 	 */
 	doRequest(params) {}
 
 	/**
-	 * @param {function(REQUEST_PARAMS): IThenable} request
+	 * @param {function(REQUEST_PARAMS): Promise} request
 	 * @param {REQUEST_PARAMS} requestParams
-	 * @param {function(Error, REQUEST_PARAMS): IThenable<HandleCode>} errorHandler
-	 * @return {IThenable}
+	 * @param {function(Error, REQUEST_PARAMS): Promise<HandleCode>} errorHandler
+	 * @return {Promise}
 	 * @protected
 	 */
 	_persistRequest(request, requestParams, errorHandler) {

@@ -24,7 +24,7 @@ describe('Server', () => {
 	let appContainer;
 	let app;
 
-	before(async() => {
+	before(async () => {
 		appContainer = new TemporaryApplicationContainer();
 		await appContainer.init();
 
@@ -56,11 +56,11 @@ describe('Server', () => {
 		await app.serve();
 	});
 
-	after(async() => {
+	after(async () => {
 		await appContainer.cleanup();
 	});
 
-	it('Should serve a html page', async() => {
+	it('Should serve a html page', async () => {
 		const rootResponse = await got(`http://localhost:${httpPort}`);
 		expect(rootResponse.headers['content-type']).equal('text/html; charset=UTF-8');
 
@@ -68,14 +68,14 @@ describe('Server', () => {
 		expect(indexHtmlResponse.headers['content-type']).equal('text/html; charset=UTF-8');
 	});
 
-	it('Should serve js files', async() => {
+	it('Should serve js files', async () => {
 		const response = await got(`http://localhost:${httpPort}/modules/zb-test/application.js`);
 
 		expect(response.headers['content-type']).equal('application/javascript; charset=UTF-8');
 		expect(response.body, '/modules/zb-test/application.js response did not match reference');
 	});
 
-	it('Should serve css files', async() => {
+	it('Should serve css files', async () => {
 		const response = await got(`http://localhost:${httpPort}/styles/zb-test/application.css`);
 
 		expect(response.headers['content-type']).equal('text/css; charset=UTF-8');
@@ -83,55 +83,55 @@ describe('Server', () => {
 			.equal(readFileFromApplicationFixtures('src/application.css'));
 	});
 
-	it('Should serve framework files', async() => {
+	it('Should serve framework files', async () => {
 		const response = await got(`http://localhost:${httpPort}/modules/zb/abstract-application.js`);
 
 		expect(response.body, '/modules/zb/abstract-application.js response did not match reference')
 			.equal(replaceAliasedPaths(readFileFromFramework('abstract-application.js')));
 	});
 
-	it('Should serve extension files', async() => {
+	it('Should serve extension files', async () => {
 		const response = await got(`http://localhost:${httpPort}/modules/blockchain/service.js`);
 
 		expect(response.body, '/modules/blockchain/service.js response did not match reference')
 			.equal(replaceAliasedPaths(readFileFromAddonFixtures('zombiebox-extension-blockchain/lib/service.js')));
 	});
 
-	it('Should serve platform files', async() => {
+	it('Should serve platform files', async () => {
 		const response = await got(`http://localhost:${httpPort}/modules/tamagotchi/device.js`);
 
 		expect(response.body, '/modules/tamagotchi/device.js response did not match reference')
 			.equal(replaceAliasedPaths(readFileFromAddonFixtures('zombiebox-platform-tamagotchi/lib/device.js')));
 	});
 
-	it('Should serve development backdoor', async() => {
+	it('Should serve development backdoor', async () => {
 		const response = await got(`http://localhost:${httpPort}/modules/backdoor`);
 
 		expect(response.body, '/modules/backdoor response did not match reference')
 			.equal(readFileFromApplicationFixtures('dev.js'));
 	});
 
-	it('Should serve custom compilation files', async() => {
+	it('Should serve custom compilation files', async () => {
 		const response = await got(`http://localhost:${httpPort}/modules/custom-alias/lib.js`);
 
 		expect(response.body).equal(readFileFromApplicationFixtures('custom-compilation-files/lib.js'));
 	});
 
-	it('Should serve custom static files', async() => {
+	it('Should serve custom static files', async () => {
 		const response = await got(`http://localhost:${httpPort}/custom-web-path/data.json`);
 
 		expect(response.body, '/custom-web-path/data.json response did not match reference')
 			.equal(readFileFromApplicationFixtures('static/data.json'));
 	});
 
-	it('Should proxy by a map', async() => {
+	it('Should proxy by a map', async () => {
 		const response = await got(`http://localhost:${httpPort}/proxy-custom/data.json`);
 
 		expect(response.body, '/proxy-custom/data.json response did not match reference')
 			.equal(readFileFromApplicationFixtures('static/data.json'));
 	});
 
-	it('Should proxy raw', async() => {
+	it('Should proxy raw', async () => {
 		const url = `http://localhost:${httpPort}/proxy/data.json?url=http://localhost:${httpPort}/custom-web-path`;
 		const response = await got(url);
 

@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -33,9 +33,9 @@ export default class IWidget {
 
 	/**
 	 * @param {string} theme
-	 * @param {function(IWidget): boolean=} opt_recursionFilter
+	 * @param {function(IWidget): boolean=} recursionFilter
 	 */
-	setTheme(theme, opt_recursionFilter) {}
+	setTheme(theme, recursionFilter) {}
 
 	/**
 	 * @return {Array<Rect>}

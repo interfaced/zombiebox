@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -115,17 +115,17 @@ export default class Layer extends Container {
 	/**
 	 * @override
 	 */
-	processKey(zbKey, opt_e) {
+	processKey(zbKey, event) {
 		if (this._block.isBlocked()) {
 			return false;
 		}
 
 		const topLayer = this.getTopChildLayer();
 		if (topLayer) {
-			return topLayer.processKey(zbKey, opt_e);
+			return topLayer.processKey(zbKey, event);
 		}
 
-		return super.processKey(zbKey, opt_e);
+		return super.processKey(zbKey, event);
 	}
 
 	/**
@@ -136,8 +136,8 @@ export default class Layer extends Container {
 	}
 
 	/**
-	 * @param {IThenable} promise
-	 * @return {IThenable}
+	 * @param {Promise} promise
+	 * @return {Promise}
 	 */
 	wait(promise) {
 		return this._block.block(promise);
@@ -241,11 +241,11 @@ export default class Layer extends Container {
 	/**
 	 * Create new instance of layerClassName and append it to the container
 	 * @param {Function} LayerClass
-	 * @param {*=} opt_params
+	 * @param {*=} params
 	 * @return {Layer}
 	 */
-	showChildLayer(LayerClass, opt_params) {
-		const layer = /** @type {Layer} */ (new LayerClass(opt_params));
+	showChildLayer(LayerClass, params) {
+		const layer = /** @type {Layer} */ (new LayerClass(params));
 
 		this.showChildLayerInstance(layer);
 

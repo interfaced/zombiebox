@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -110,12 +110,12 @@ export default class Container extends EventPublisher {
 	/**
 	 * @override
 	 */
-	processKey(zbKey, opt_e) {
-		if (this._doDip(zbKey, opt_e)) {
+	processKey(zbKey, event) {
+		if (this._doDip(zbKey, event)) {
 			return true;
 		}
 
-		return this._processKey(zbKey, opt_e);
+		return this._processKey(zbKey, event);
 	}
 
 	/**
@@ -273,16 +273,16 @@ export default class Container extends EventPublisher {
 	/**
 	 * Append widget to the container
 	 * @param {IWidget} widget
-	 * @param {string=} opt_name
+	 * @param {string=} name
 	 * @return {boolean}
 	 */
-	appendWidget(widget, opt_name) {
+	appendWidget(widget, name) {
 		this._widgets.push(widget);
 
 		this._navigation.addWidget(widget);
 
-		if (opt_name) {
-			this._namedWidgets[opt_name] = widget;
+		if (name) {
+			this._namedWidgets[name] = widget;
 		}
 
 		widget.on(widget.EVENT_WANT_FOCUS, this._onWidgetWantToFocus);
@@ -299,13 +299,13 @@ export default class Container extends EventPublisher {
 
 	/**
 	 * @param {string} theme
-	 * @param {RecursionFilter=} opt_recursionFilter
+	 * @param {RecursionFilter=} recursionFilter
 	 */
-	setTheme(theme, opt_recursionFilter) {
+	setTheme(theme, recursionFilter) {
 		this._theme = theme;
 
-		if (opt_recursionFilter) {
-			this._themeRecursionFilter = opt_recursionFilter;
+		if (recursionFilter) {
+			this._themeRecursionFilter = recursionFilter;
 		}
 
 		for (let i = 0; i < this._widgets.length; i++) {
@@ -392,12 +392,12 @@ export default class Container extends EventPublisher {
 	 * @param {IWidget} widget
 	 * @param {Value} direction
 	 * @param {?IWidget} widgetTo When null is given this mean "stop navigation"
-	 * @param {boolean=} opt_bidirectional
+	 * @param {boolean=} bidirectional
 	 */
-	setNavigationRule(widget, direction, widgetTo, opt_bidirectional) {
+	setNavigationRule(widget, direction, widgetTo, bidirectional = false) {
 		this._navigation.setRule(widget, direction, widgetTo);
 
-		if (opt_bidirectional) {
+		if (bidirectional) {
 			const opposite = (new Direction(direction))
 				.invert()
 				.getKey();
@@ -424,15 +424,15 @@ export default class Container extends EventPublisher {
 	/**
 	 * Set widget active
 	 * @param {?IWidget} widget
-	 * @param {?Rect=} opt_prevRect
+	 * @param {?Rect=} prevRect
 	 * @return {boolean}
 	 */
-	activateWidget(widget, opt_prevRect) {
+	activateWidget(widget, prevRect) {
 		const selfFocused = this.isFocused();
 
 		if (widget === this._activeWidget) {
 			if (selfFocused && widget && !widget.isFocused()) {
-				widget.focus(opt_prevRect);
+				widget.focus(prevRect);
 			}
 
 			return true;
@@ -455,7 +455,7 @@ export default class Container extends EventPublisher {
 
 		this._activeWidget = widget;
 		if (this._activeWidget && selfFocused) {
-			this._activeWidget.focus(opt_prevRect || oldFocusedRect);
+			this._activeWidget.focus(prevRect || oldFocusedRect);
 		}
 
 		return true;
@@ -560,15 +560,15 @@ export default class Container extends EventPublisher {
 
 	/**
 	 * @param {Keys} zbKey
-	 * @param {(KeyboardEvent|WheelEvent)=} opt_e
+	 * @param {(KeyboardEvent|WheelEvent)=} event
 	 * @return {boolean}
 	 * @protected
 	 */
-	_doDip(zbKey, opt_e) {
+	_doDip(zbKey, event) {
 		if (this.hasWidgets()) {
 			const activeWidget = this.getActiveWidget();
 			if (activeWidget && activeWidget.isVisible() && activeWidget.isEnabled()) {
-				return activeWidget.processKey(zbKey, opt_e);
+				return activeWidget.processKey(zbKey, event);
 			}
 		}
 
@@ -577,11 +577,11 @@ export default class Container extends EventPublisher {
 
 	/**
 	 * @param {Keys} zbKey
-	 * @param {(KeyboardEvent|WheelEvent)=} opt_e
+	 * @param {(KeyboardEvent|WheelEvent)=} event
 	 * @return {boolean}
 	 * @protected
 	 */
-	_processKey(zbKey, opt_e) { // eslint-disable-line no-unused-vars
+	_processKey(zbKey, event) { // eslint-disable-line no-unused-vars
 		switch (zbKey) {
 			case Keys.LEFT:
 				return this._activateByDirection(Value.LEFT);

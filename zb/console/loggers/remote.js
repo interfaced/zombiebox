@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright (c) 2012-2019, Interfaced
+ * Copyright © 2012-2019, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,28 +10,26 @@ import BaseLogger from './base-logger';
 
 
 /**
- * @example
- *      console.setLogger(new Remote([opt_options]));
- *      Developer mode(launch developer server by `zb run` and launch application from this server):
- *          Logs are send automatically to http://developer-server-name:1337/log, there is no need to specify opt_url
- *      Compiled application:
- *          1. You have to run log server from npm package 'zb-log-server' and specify port and path.
- *          E.g. `zb-log-server --port 8181 --path /logPath`
- *          2. Specify full URL to your log-server in compiled application in opt_url argument.
- *             E.g. 'http://192.168.1.3:8181/logPath'
+ * Developer mode(launch developer server by `zb run` and launch application from this server):
+ *     Logs are send automatically to http://developer-server-name:1337/log, there is no need to specify url
+ * Compiled application:
+ *     1. You have to run log server from npm package 'zb-log-server' and specify port and path.
+ *     E.g. `zb-log-server --port 8181 --path /logPath`
+ *     2. Specify full URL to your log-server in compiled application in url argument.
+ *     E.g. 'http://192.168.1.3:8181/logPath'
  */
 export default class Remote extends BaseLogger {
 	/**
-	 * @param {Options=} opt_options
+	 * @param {Options=} options
 	 */
-	constructor(opt_options) {
+	constructor(options = {}) {
 		super();
 
 		/**
 		 * @type {StrictOptions}
 		 * @protected
 		 */
-		this._options = this._parseOptions(opt_options);
+		this._options = this._parseOptions(options);
 
 		/**
 		 * @type {Array<string>}
@@ -71,13 +69,11 @@ export default class Remote extends BaseLogger {
 	}
 
 	/**
-	 * @param {Options=} opt_options
+	 * @param {Options=} options
 	 * @return {StrictOptions}
 	 * @protected
 	 */
-	_parseOptions(opt_options) {
-		const options = opt_options || {};
-
+	_parseOptions(options = {}) {
 		const getValue = (value, defaultValue) => {
 			if (typeof options.url === 'undefined') {
 				return defaultValue;
