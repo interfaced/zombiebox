@@ -206,7 +206,7 @@ export const sanitizeNode = (node, filters = {}) => {
 	 * @param {Node} parent
 	 * @param {SanitizeFilters} filters
 	 */
-	const sanitizeNode = (node, parent, filters) => {
+	const sanitizeNodeInner = (node, parent, filters) => {
 		if (isClobbered(node)) {
 			parent.removeChild(node);
 
@@ -220,7 +220,7 @@ export const sanitizeNode = (node, filters = {}) => {
 
 		getChildNodes(node)
 			.forEach((child) => {
-				sanitizeNode(child, node, filters);
+				sanitizeNodeInner(child, node, filters);
 			});
 
 		const filter = filters[node.tagName.toLowerCase()];
@@ -256,7 +256,8 @@ export const sanitizeNode = (node, filters = {}) => {
 
 	getChildNodes(node)
 		.forEach((child) => {
-			sanitizeNode(child, node, filters);
+			// Type cast fixes https://github.com/google/closure-compiler/issues/3452
+			sanitizeNodeInner(child, node, /** @type {SanitizeFilters} */ (filters));
 		});
 
 	return node;

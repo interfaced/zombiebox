@@ -1,5 +1,9 @@
 # Change log
 
+## 2.1.1 (release date: 14.08.2019)
+
+* Quell a GCC warning
+
 ## 2.1.1 (release date: 09.08.2019)
 
 Updated ESLint to 6.0 and added new plugins and rules
