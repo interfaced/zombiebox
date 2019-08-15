@@ -51,7 +51,10 @@ module.exports = {
 				'test/tools/addons/*/index.js',
 				'test/framework/karma.conf.js'
 			],
-			extends: 'interfaced/node'
+			extends: 'interfaced/node',
+			rules: {
+				'jsdoc/no-undefined-types': "off" // Introduces circular dependencies
+			}
 		},
 		{
 			files: ['test/framework/suites/**', 'test/tools/suites/**'],

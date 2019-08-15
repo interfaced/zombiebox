@@ -1,6 +1,11 @@
 # Change log
 
-## 2.1.1 (release date: 14.08.2019)
+## 2.1.3 (release date: 15.08.2019)
+
+### Tools 
+* Fix some cyclical dependencies introduced by jsdoc comments
+
+## 2.1.2 (release date: 14.08.2019)
 
 * Quell a GCC warning
 
