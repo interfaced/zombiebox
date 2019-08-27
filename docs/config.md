@@ -57,6 +57,7 @@ Configures CSS files processing and bundling
 
 | Key | Type | Description | 
 | --- | --- | --- |
+| importEntryPoints | Array<string> | CSS @import entry point, if not set imports will not be processed |
 | presetEnv | Object | [postcss-preset-env options](https://github.com/csstools/postcss-preset-env#options) |
 | extraPlugins | Array | Any additional plugin instances |
 | url | Object | [postcss-url options](https://github.com/postcss/postcss-url#options-combinations) |

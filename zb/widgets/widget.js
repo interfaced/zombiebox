@@ -90,6 +90,7 @@ export default class Widget extends Container {
 
 	/**
 	 * @override
+	 * @suppress {deprecated}
 	 */
 	setContainer(container) {
 		this._container = container;
@@ -98,7 +99,10 @@ export default class Widget extends Container {
 	}
 
 	/**
+	 * TODO: remove in 2.3
+	 * @deprecated
 	 * @override
+	 * @suppress {deprecated}
 	 */
 	setTheme(theme, recursionFilter) {
 		const oldTheme = this._theme;

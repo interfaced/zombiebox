@@ -1,5 +1,12 @@
 module.exports = {
 	extends: 'interfaced',
+	rules: {
+		'jsdoc/check-tag-names': ['error', {
+			definedTags: [
+				'suppress'
+			]
+		}]
+	},
 	overrides: [
 		{
 			files: ['zb/**', 'test/framework/*/**', 'test/tools/addons/*/lib/**', 'templates/**/*.js'],

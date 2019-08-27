@@ -80,6 +80,7 @@ export default class Container extends EventPublisher {
 		this._navigationDebug = false;
 
 		/**
+		 * TODO: remove in 2.3
 		 * @type {RecursionFilter}
 		 * @protected
 		 */
@@ -93,11 +94,13 @@ export default class Container extends EventPublisher {
 		this._focused = false;
 
 		/**
+		 * TODO: remove in 2.3
 		 * @const {string}
 		 */
 		this.THEME_NONE = '';
 
 		/**
+		 * TODO: remove in 2.3
 		 * @const {string}
 		 */
 		this.THEME_DEFAULT = 'default';
@@ -298,6 +301,8 @@ export default class Container extends EventPublisher {
 	}
 
 	/**
+	 * TODO: remove in 2.3
+	 * @deprecated
 	 * @param {string} theme
 	 * @param {RecursionFilter=} recursionFilter
 	 */
@@ -314,6 +319,8 @@ export default class Container extends EventPublisher {
 	}
 
 	/**
+	 * TODO: remove in 2.3
+	 * @deprecated
 	 * @return {string}
 	 */
 	getTheme() {
@@ -607,16 +614,20 @@ export default class Container extends EventPublisher {
 	}
 
 	/**
+	 * @suppress {deprecated}
 	 * @protected
 	 */
 	_setupDefaultTheme() {
 		this._theme = this.THEME_NONE;
 		this._themeRecursionFilter = () => true;
 
+		/** suppress JSC_DEPRECATED_PROP */
 		this.setTheme(this.THEME_DEFAULT);
 	}
 
 	/**
+	 * TODO: remove in 2.3
+	 * @suppress {deprecated}
 	 * @param {IWidget} widget
 	 * @protected
 	 */

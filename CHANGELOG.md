@@ -1,5 +1,19 @@
 # Change log
 
+## 2.2.0 (release date: 27.08.2019)
+
+### Tools
+Several changes in CSS processing, some of them might be breaking (see [Migration doc](./docs/migrations/2.2.0.md)):
+
+* New config option `postcss.importEntryPoints`. Setting it will change the behavior of css files processing: Instead of bundling all css files, ZombieBox will look into files set as entry points and will only bundle css imported from them (and descendants).
+* `StylesCache` and `Applicatione.getStylesCache` were removed. Instead, dev server now handles its cache.
+* As as result, dev server performance was noticeably improved.
+* Dev server no longer runs `postcss.extraPlugins` against project css files.
+* Build process now processes CSS files after bundling. This significantly improved CSSO effectiveness.
+
+### Framework
+* `Container.setTheme` and `Container.getTheme` were deprecated
+
 ## 2.1.3 (release date: 15.08.2019)
 
 ### Tools 

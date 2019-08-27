@@ -23,22 +23,6 @@ export default class AbstractVideo extends EventPublisher {
 	constructor(rect) {
 		super();
 
-		/* eslint-disable */
-		// TODO: remove in 2.2.0
-		if (rect instanceof HTMLElement) {
-			console.error('AbstractVideo constructor parameter changed to Rect in 2.1.0');
-			/**
-			 * @deprecated
-			 * @type {HTMLElement}
-			 * @protected
-			 */
-			this._videoContainer = rect;
-
-			rect = Rect.createByClientRect(rect.getBoundingClientRect());
-
-		}
-		/* eslint-enable */
-
 		/**
 		 * @type {Rect}
 		 * @protected

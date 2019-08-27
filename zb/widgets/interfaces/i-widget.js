@@ -32,6 +32,8 @@ export default class IWidget {
 	setContainer(container) {}
 
 	/**
+	 * TODO: remove in 2.3
+	 * @deprecated
 	 * @param {string} theme
 	 * @param {function(IWidget): boolean=} recursionFilter
 	 */

@@ -124,6 +124,14 @@
       "additionalProperties": false,
 
       "properties": {
+        "importEntryPoints": {
+          "description": "CSS @import entry point, if not set imports will not be processed",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+
         "presetEnv": {
           "description": "[postcss-preset-env options](https://github.com/csstools/postcss-preset-env#options)",
           "type": "object"

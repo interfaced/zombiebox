@@ -62,15 +62,6 @@ export default class AbstractApplication extends EventPublisher {
 		this._systemContainer = null;
 
 		/**
-		 * @deprecated
-		 * TODO: remove in 2.2.0
-		 * Video container (emulation for html5 player to work as devices do)
-		 * @type {HTMLDivElement}
-		 * @protected
-		 */
-		this._videoContainer = null;
-
-		/**
 		 * Application body
 		 * @type {HTMLDivElement}
 		 * @protected
@@ -322,16 +313,6 @@ export default class AbstractApplication extends EventPublisher {
 	}
 
 	/**
-	 * @deprecated
-	 * TODO: remove in 2.2.0
-	 * Return video container.
-	 * @return {?HTMLElement}
-	 */
-	getVideoContainer() {
-		return this._videoContainer;
-	}
-
-	/**
 	 * Return plugin container
 	 * @return {?HTMLElement}
 	 */
@@ -549,7 +530,6 @@ export default class AbstractApplication extends EventPublisher {
 		this._body = div('zb-body');
 		document.body.appendChild(this._body);
 
-		this._videoContainer = div('zb-video-container zb-fullscreen');
 		this._layerContainer = div('zb-layer-container zb-fullscreen');
 		this._systemContainer = div('zb-system-container zb-fullscreen');
 		this._pluginContainer = div('zb-plugin-container');
