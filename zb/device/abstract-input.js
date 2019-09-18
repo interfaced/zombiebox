@@ -414,8 +414,8 @@ export default class AbstractInput extends EventPublisher {
 		const addBodyListener = (event, callback) => {
 			body.addEventListener(event, callback, this._isPassiveOptionSupported ? {
 				'passive': true,
-				'capture': true
-			} : true);
+				'capture': false
+			} : false);
 		};
 
 		['mouseenter', 'mousemove', 'mouseup', 'mousedown', 'mousewheel', 'wheel']

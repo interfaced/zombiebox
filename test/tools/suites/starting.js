@@ -158,7 +158,8 @@ describe('Starting', () => {
 		});
 
 		it('Should throw an error when trying to pass a not addon instance', async () => {
-			expect(() => appContainer.createZbApplication([], [{}])).throw('Trying to add not addon');
+			expect(() => appContainer.createZbApplication([], [{}]))
+				.throw('Trying to add not an addon: [object Object] (unknown name)');
 		});
 
 		it('Should throw an error when trying to load the same addon twice', async () => {

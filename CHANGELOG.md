@@ -1,5 +1,14 @@
 # Change log
 
+## 2.2.1 (release date: 18.09.2019)
+
+### Framework
+* Fixed mouse clicks sometimes not being processed on widgets with child widgets.
+* Removed unnecessary mouse activation/deactivation events when mouse moves within application body from one element to another. 
+
+### Tools
+* Google Closure Compiler updated to 20190909
+
 ## 2.2.0 (release date: 27.08.2019)
 
 ### Tools

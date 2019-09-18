@@ -363,19 +363,14 @@ export default class Widget extends Container {
 	mouseClick(event) {
 		if (this.isFocused()) {
 			const widgets = this.getVisibleWidgets();
-			if (widgets.length) {
-				for (let i = 0; i < widgets.length; i++) {
-					const widget = widgets[i];
-					if (widget.getContainer().contains(/** @type {Node} */ (event.target))) {
-						if (widget.isVisible() && widget.isEnabled()) {
-							widgets[i].processKey(Keys.ENTER);
-						}
-						break;
-					}
-				}
-			} else {
-				this.processKey(Keys.ENTER);
-			}
+
+			const targetWidget = widgets.find((widget) =>
+				widget.getContainer().contains(/** @type {Node} */ (event.target)) &&
+				widget.isVisible() &&
+				widget.isEnabled()
+			) || this;
+
+			targetWidget.processKey(Keys.ENTER);
 
 			event.stopPropagation();
 		}
