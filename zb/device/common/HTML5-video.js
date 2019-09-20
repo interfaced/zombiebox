@@ -265,7 +265,7 @@ export default class HTML5Video extends AbstractVideo {
 		container.style.position = 'absolute';
 		container.style.overflow = 'hidden';
 
-		document.body.prepend(container);
+		document.body.insertBefore(container, document.body.firstChild);
 
 		return container;
 	}

@@ -1,5 +1,10 @@
 # Change log
 
+## 2.2.1 (release date: 20.09.2019)
+
+### Framework
+* Avoid using `ParentNode.prepend` because of some unidentified problems with its polyfill.
+
 ## 2.2.1 (release date: 18.09.2019)
 
 ### Framework
