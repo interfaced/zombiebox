@@ -137,8 +137,13 @@
           "type": "object"
         },
 
-        "extraPlugins": {
-          "description": "Any additional plugin instances",
+        "filePlugins": {
+          "description": "Any additional plugin instances that will be run against each file. Also run by dev server.",
+          "type": "array"
+        },
+
+        "bundlePlugins": {
+          "description": "Any additional plugin instances that will be run against resulting CSS bundle. Not run by dev server",
           "type": "array"
         },
 

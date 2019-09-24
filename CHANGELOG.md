@@ -1,6 +1,11 @@
 # Change log
 
-## 2.2.1 (release date: 20.09.2019)
+## 2.2.3 (release date: 24.09.2019)
+
+### Tools
+* `postcss.extraPlugins` property was split into two: `filePlugins` and `bundlePlugins` to allow more granular control over when plugins are run. `filePlugins` is similar to `extraPlugins` behaviour prior to version 2.2.0.
+
+## 2.2.2 (release date: 20.09.2019)
 
 ### Framework
 * Avoid using `ParentNode.prepend` because of some unidentified problems with its polyfill.
