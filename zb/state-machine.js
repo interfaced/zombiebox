@@ -21,7 +21,7 @@ export default class StateMachine extends EventPublisher {
 		super();
 
 		/**
-		 * @type {!Map<STATE_TYPE, Array<STATE_TYPE>>}
+		 * @type {!Object<STATE_TYPE, Array<STATE_TYPE>>}
 		 * @protected
 		 */
 		this._transitionsTable = transitionsTable;

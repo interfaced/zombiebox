@@ -59,10 +59,8 @@ class CLI {
 	run() {
 		this._assertApplication();
 
-		this._application.ready().then(() => {
-			this._application.buildCode();
-			this._application.serve();
-		});
+		this._application.ready()
+			.then(() => this._application.serve());
 	}
 
 	/**
@@ -71,10 +69,8 @@ class CLI {
 	buildCode() {
 		this._assertApplication();
 
-		this._application.ready().then(() => {
-			this._application.buildCode();
-			process.exit(0);
-		});
+		this._application.ready()
+			.then(() => this._application.buildCode());
 	}
 
 	/**
@@ -88,8 +84,7 @@ class CLI {
 		);
 
 		this._application.ready()
-			.then(() => this._application.compile(platformsToCompile))
-			.then(process.exit.bind(process, 0), process.exit.bind(process, 1));
+			.then(() => this._application.compile(platformsToCompile));
 	}
 
 	/**
@@ -101,7 +96,6 @@ class CLI {
 
 		const appName = this._application.getConfig().project.name;
 		this._scaffolding.addScene(name, appName, path);
-		process.exit(0);
 	}
 
 	/**
@@ -113,7 +107,6 @@ class CLI {
 
 		const appName = this._application.getConfig().project.name;
 		this._scaffolding.addPopup(name, appName, path);
-		process.exit(0);
 	}
 
 	/**
@@ -125,7 +118,6 @@ class CLI {
 
 		const appName = this._application.getConfig().project.name;
 		this._scaffolding.addWidget(name, appName, path);
-		process.exit(0);
 	}
 
 	/**
@@ -149,7 +141,6 @@ class CLI {
 					process.exit(1);
 				} else {
 					console.log('Aliases map generated in', chalk.cyan(filename));
-					process.exit(0);
 				}
 			});
 		});
@@ -338,7 +329,7 @@ class CLI {
 	 */
 	_assertApplication() {
 		if (!this._application) {
-			console.error('Could not find ZombieBox applicaion');
+			console.error('Could not find ZombieBox application');
 			process.exit(1);
 		}
 	}

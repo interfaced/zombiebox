@@ -26,7 +26,6 @@ describe('Building', () => {
 		it('Should pass the default flags to the compiler', async () => {
 			const app = appContainer.createZbApplication([]);
 			await app.ready();
-			await app.buildCode();
 			await app.getBuildHelper().getCompressedScripts();
 
 			expect(gcc.spy.called).be.true;
@@ -49,7 +48,6 @@ describe('Building', () => {
 		it('Should apply flags from the arguments', async () => {
 			const app = appContainer.createZbApplication([]);
 			await app.ready();
-			await app.buildCode();
 			await app.getBuildHelper().getCompressedScripts({'compilation_level': 'SIMPLE'});
 
 
@@ -60,7 +58,6 @@ describe('Building', () => {
 		it('Should compile the application code', async () => {
 			const app = appContainer.createZbApplication([]);
 			await app.ready();
-			await app.buildCode();
 			await app.getBuildHelper().getCompressedScripts();
 
 			expect(gcc.spy.called).be.true;
@@ -87,7 +84,6 @@ describe('Building', () => {
 			}]);
 
 			await app.ready();
-			await app.buildCode();
 			await app.getBuildHelper().getCompressedScripts();
 
 			expect(gcc.spy.called).be.true;

@@ -6,7 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import Keys from '../device/input/keys';
+import Key from '../device/input/key';
 
 
 /**
@@ -14,7 +14,7 @@ import Keys from '../device/input/keys';
  */
 export default class IKeyHandler {
 	/**
-	 * @param {Keys} zbKey
+	 * @param {Key} zbKey
 	 * @param {(KeyboardEvent|WheelEvent)=} event
 	 * @return {boolean} True if Key handled, false if not
 	 */

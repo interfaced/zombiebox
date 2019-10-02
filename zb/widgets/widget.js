@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 import {updateClassName} from '../html';
-import Keys from '../device/input/keys';
+import Key from '../device/input/key';
 import Rect from '../geometry/rect';
 import Container from './container';
 import IWidget from './interfaces/i-widget';
@@ -90,32 +90,10 @@ export default class Widget extends Container {
 
 	/**
 	 * @override
-	 * @suppress {deprecated}
 	 */
 	setContainer(container) {
 		this._container = container;
 		container.classList.add('zb-widget');
-		this.setTheme(this.getTheme());
-	}
-
-	/**
-	 * TODO: remove in 2.3
-	 * @deprecated
-	 * @override
-	 * @suppress {deprecated}
-	 */
-	setTheme(theme, recursionFilter) {
-		const oldTheme = this._theme;
-
-		super.setTheme(theme, recursionFilter);
-
-		const prefix = '_theme_';
-		if (this._container) {
-			this._container.classList.remove(prefix + oldTheme);
-			if (this._theme !== this.THEME_NONE) {
-				this._container.classList.add(prefix + this._theme);
-			}
-		}
 	}
 
 	/**
@@ -370,7 +348,7 @@ export default class Widget extends Container {
 				widget.isEnabled()
 			) || this;
 
-			targetWidget.processKey(Keys.ENTER);
+			targetWidget.processKey(Key.ENTER);
 
 			event.stopPropagation();
 		}

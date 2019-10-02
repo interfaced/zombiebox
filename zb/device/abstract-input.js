@@ -9,7 +9,7 @@
 import Timeout from '../timeout';
 import EventPublisher from '../events/event-publisher';
 import IInput from './interfaces/i-input';
-import Keys from './input/keys';
+import Key from './input/key';
 
 
 /**
@@ -42,7 +42,7 @@ export default class AbstractInput extends EventPublisher {
 		this._blockId = 0;
 
 		/**
-		 * @type {Object<number, Keys>}
+		 * @type {Object<number, Key>}
 		 * @protected
 		 */
 		this._map = this._createKeysMap();
@@ -155,7 +155,7 @@ export default class AbstractInput extends EventPublisher {
 	 * @override
 	 */
 	keyToPrintableChar(zbKey) {
-		const zbKeys = Keys;
+		const zbKeys = Key;
 		const zbCharKeys = {};
 		zbCharKeys[zbKeys.DIGIT_0] = '0';
 		zbCharKeys[zbKeys.DIGIT_1] = '1';
@@ -254,7 +254,7 @@ export default class AbstractInput extends EventPublisher {
 
 	/**
 	 * @abstract
-	 * @return {Object<number, Keys>}
+	 * @return {Object<number, Key>}
 	 * @protected
 	 */
 	_createKeysMap() {}
@@ -297,7 +297,7 @@ export default class AbstractInput extends EventPublisher {
 
 	/**
 	 * @param {KeyboardEvent} keyboardEvent
-	 * @return {Keys}
+	 * @return {Key}
 	 * @protected
 	 */
 	_keyboardEventToKeyCode(keyboardEvent) {
@@ -306,12 +306,12 @@ export default class AbstractInput extends EventPublisher {
 			return this._map[keyCode];
 		}
 
-		return Keys.UNKNOWN;
+		return Key.UNKNOWN;
 	}
 
 	/**
 	 * @param {WheelEvent} wheelEvent
-	 * @return {Keys}
+	 * @return {Key}
 	 * @protected
 	 */
 	_wheelEventToKeyCode(wheelEvent) {
@@ -330,7 +330,7 @@ export default class AbstractInput extends EventPublisher {
 
 		// Direction can't be determined in this case
 		if (deltaX && deltaY) {
-			return Keys.UNKNOWN;
+			return Key.UNKNOWN;
 		}
 
 		// Fallback to another one standard
@@ -342,22 +342,22 @@ export default class AbstractInput extends EventPublisher {
 
 		const direction = Math.sign(deltaX || deltaY);
 		if (!direction) {
-			return Keys.UNKNOWN;
+			return Key.UNKNOWN;
 		}
 
 		if (deltaX) {
 			return direction > 0 ?
-				Keys.MOUSE_WHEEL_RIGHT :
-				Keys.MOUSE_WHEEL_LEFT;
+				Key.MOUSE_WHEEL_RIGHT :
+				Key.MOUSE_WHEEL_LEFT;
 		}
 
 		if (deltaY) {
 			return direction > 0 ?
-				Keys.MOUSE_WHEEL_DOWN :
-				Keys.MOUSE_WHEEL_UP;
+				Key.MOUSE_WHEEL_DOWN :
+				Key.MOUSE_WHEEL_UP;
 		}
 
-		return Keys.UNKNOWN;
+		return Key.UNKNOWN;
 	}
 
 	/**

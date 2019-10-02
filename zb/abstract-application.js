@@ -17,7 +17,7 @@ import SceneOpener from './scene-opener';
 import Console from './console/loggers/console';
 import IDevice from './device/interfaces/i-device';
 import {ResolutionInfo, ResolutionInfoItem} from './device/resolutions';
-import Keys from './device/input/keys';
+import Key from './device/input/key';
 import EventPublisher from './events/event-publisher';
 import HistoryManager from './history/history-manager';
 import IHistoryManager from './history/interfaces/i-history-manager';
@@ -390,7 +390,7 @@ export default class AbstractApplication extends EventPublisher {
 	 * @protected
 	 */
 	_onDeviceReady(eventName, device) {
-		new BackButtonListener(this.processKey.bind(this, Keys.BACK));
+		new BackButtonListener(this.processKey.bind(this, Key.BACK));
 
 		this.device = device;
 		this.device.storage.setKeyPrefix(packageInfo['name']);
@@ -457,7 +457,7 @@ export default class AbstractApplication extends EventPublisher {
 	_createDevice() {}
 
 	/**
-	 * @param {Keys} zbKey
+	 * @param {Key} zbKey
 	 * @param {(KeyboardEvent|WheelEvent)=} event
 	 * @return {boolean} True if Key handled, false if not
 	 * @protected
@@ -467,7 +467,7 @@ export default class AbstractApplication extends EventPublisher {
 
 		switch (zbKey) {
 			// Back to previous scene/layer
-			case Keys.BACK:
+			case Key.BACK:
 				this.back();
 				if (event) {
 					event.preventDefault();

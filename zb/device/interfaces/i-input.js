@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 import UnsupportedFeature from '../errors/unsupported-feature';
-import Keys from '../input/keys';
+import Key from '../input/key';
 import IEventPublisher from '../../events/interfaces/i-event-publisher';
 
 
@@ -18,7 +18,7 @@ import IEventPublisher from '../../events/interfaces/i-event-publisher';
 export default class IInput {
 	/**
 	 * @param {(KeyboardEvent|WheelEvent)} e
-	 * @return {Keys}
+	 * @return {Key}
 	 */
 	eventToKeyCode(e) {}
 
@@ -29,7 +29,7 @@ export default class IInput {
 	eventToPrintableChar(keyboardEvent) {}
 
 	/**
-	 * @param {Keys} zbKey
+	 * @param {Key} zbKey
 	 * @return {?string} Printable char or group of chars
 	 */
 	keyToPrintableChar(zbKey) {}

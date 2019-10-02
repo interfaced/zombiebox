@@ -52,7 +52,6 @@ describe('Server', () => {
 		]);
 
 		await app.ready();
-		await app.buildCode();
 		await app.serve();
 	});
 

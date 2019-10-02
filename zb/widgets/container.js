@@ -11,7 +11,7 @@ import Direction, {Value} from '../geometry/direction';
 import IFocusable from '../interfaces/i-focusable';
 import IKeyHandler from '../interfaces/i-key-handler';
 import InputDispatcher from '../input-dispatcher';
-import Keys from '../device/input/keys';
+import Key from '../device/input/key';
 import EventPublisher from '../events/event-publisher';
 import IStateful from '../history/interfaces/i-stateful';
 import Point from '../geometry/point';
@@ -31,8 +31,6 @@ export default class Container extends EventPublisher {
 	 */
 	constructor() {
 		super();
-
-		const defaultRecursionFilter = () => true;
 
 		/**
 		 * The array of widgets - basic user-controlled elements
@@ -68,23 +66,10 @@ export default class Container extends EventPublisher {
 		this._defaultWidget = null;
 
 		/**
-		 * @type {string}
-		 * @protected
-		 */
-		this._theme = '';
-
-		/**
 		 * @type {boolean}
 		 * @protected
 		 */
 		this._navigationDebug = false;
-
-		/**
-		 * TODO: remove in 2.3
-		 * @type {RecursionFilter}
-		 * @protected
-		 */
-		this._themeRecursionFilter = defaultRecursionFilter;
 
 		/**
 		 * Defines whether the container is focused
@@ -93,21 +78,7 @@ export default class Container extends EventPublisher {
 		 */
 		this._focused = false;
 
-		/**
-		 * TODO: remove in 2.3
-		 * @const {string}
-		 */
-		this.THEME_NONE = '';
-
-		/**
-		 * TODO: remove in 2.3
-		 * @const {string}
-		 */
-		this.THEME_DEFAULT = 'default';
-
 		this._onWidgetWantToFocus = this._onWidgetWantToFocus.bind(this);
-
-		this._setupDefaultTheme();
 	}
 
 	/**
@@ -295,36 +266,7 @@ export default class Container extends EventPublisher {
 			this._getInputDispatcher().addMouseHoverArea(widget, widgetContainer);
 		}
 
-		this._applyThemeToChildWidget(widget);
-
 		return true;
-	}
-
-	/**
-	 * TODO: remove in 2.3
-	 * @deprecated
-	 * @param {string} theme
-	 * @param {RecursionFilter=} recursionFilter
-	 */
-	setTheme(theme, recursionFilter) {
-		this._theme = theme;
-
-		if (recursionFilter) {
-			this._themeRecursionFilter = recursionFilter;
-		}
-
-		for (let i = 0; i < this._widgets.length; i++) {
-			this._applyThemeToChildWidget(this._widgets[i]);
-		}
-	}
-
-	/**
-	 * TODO: remove in 2.3
-	 * @deprecated
-	 * @return {string}
-	 */
-	getTheme() {
-		return this._theme;
 	}
 
 	/**
@@ -566,7 +508,7 @@ export default class Container extends EventPublisher {
 	}
 
 	/**
-	 * @param {Keys} zbKey
+	 * @param {Key} zbKey
 	 * @param {(KeyboardEvent|WheelEvent)=} event
 	 * @return {boolean}
 	 * @protected
@@ -583,20 +525,20 @@ export default class Container extends EventPublisher {
 	}
 
 	/**
-	 * @param {Keys} zbKey
+	 * @param {Key} zbKey
 	 * @param {(KeyboardEvent|WheelEvent)=} event
 	 * @return {boolean}
 	 * @protected
 	 */
 	_processKey(zbKey, event) { // eslint-disable-line no-unused-vars
 		switch (zbKey) {
-			case Keys.LEFT:
+			case Key.LEFT:
 				return this._activateByDirection(Value.LEFT);
-			case Keys.UP:
+			case Key.UP:
 				return this._activateByDirection(Value.UP);
-			case Keys.RIGHT:
+			case Key.RIGHT:
 				return this._activateByDirection(Value.RIGHT);
-			case Keys.DOWN:
+			case Key.DOWN:
 				return this._activateByDirection(Value.DOWN);
 		}
 
@@ -614,30 +556,6 @@ export default class Container extends EventPublisher {
 	}
 
 	/**
-	 * @suppress {deprecated}
-	 * @protected
-	 */
-	_setupDefaultTheme() {
-		this._theme = this.THEME_NONE;
-		this._themeRecursionFilter = () => true;
-
-		/** suppress JSC_DEPRECATED_PROP */
-		this.setTheme(this.THEME_DEFAULT);
-	}
-
-	/**
-	 * TODO: remove in 2.3
-	 * @suppress {deprecated}
-	 * @param {IWidget} widget
-	 * @protected
-	 */
-	_applyThemeToChildWidget(widget) {
-		if (this._themeRecursionFilter(widget)) {
-			widget.setTheme(this._theme, this._themeRecursionFilter);
-		}
-	}
-
-	/**
 	 * @return {boolean}
 	 * @private
 	 */
@@ -645,9 +563,3 @@ export default class Container extends EventPublisher {
 		return this._navigationDebug;
 	}
 }
-
-
-/**
- * @typedef {function(IWidget): boolean}
- */
-export let RecursionFilter;

@@ -1,5 +1,19 @@
 # Change log
 
+## 2.3.0 (release date 02.10.2019)
+
+### Tools
+* Build tasks no longer watch file system changes. This helps to avoid Chokidar issues [#873](https://github.com/paulmillr/chokidar/issues/873) and [#859](https://github.com/paulmillr/chokidar/issues/859) and generally improves their performance.
+* `SourceProviderCodeCache` was renamed to `SourceProviderGenerated`.
+* `Application.ready` now also builds generated code (no longer necessary to call `buildCode`).
+* Added `watch` and `stopWatching` methods to `ISourceProvider`. 
+* Google Closure Compiler updated to 20190929.0.0
+
+### Framework
+* Widget theme functionality (`setTheme`) was removed.
+* `input/keys.js` renamed to `input/key.js`. Old name is kept as alias. Will be deprecated and replaced soon.
+* Fixed GCC warnings in StateMachine.
+
 ## 2.2.3 (release date: 24.09.2019)
 
 ### Tools
@@ -70,7 +84,6 @@ Updated ESLint to 6.0 and added new plugins and rules
 #### Tools
 * Fixed another exception in `BuildHelper.addDirToArchiveMap` method.
 * Moved `setTemplateHelper` method to `AbstractAddon` to allow platform use it in addition to extensions.
-
 
 ## 2.0.1 (release date: 13.06.2019)
 
