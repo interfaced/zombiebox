@@ -13,6 +13,7 @@ import IInfo from './i-info';
 import IInput from './i-input';
 import IStorage from './i-storage';
 import IVideo from './i-video';
+import IStatefulVideo from './i-stateful-video';
 
 
 /**
@@ -31,6 +32,12 @@ export default class IDevice {
 	 * @throws {UnsupportedFeature}
 	 */
 	createVideo(rect) {}
+
+	/**
+	 * @return {IStatefulVideo}
+	 * @throws {UnsupportedFeature}
+	 */
+	createStatefulVideo() {}
 
 	/**
 	 * Returns MAC address of active network connection
@@ -100,6 +107,12 @@ export default class IDevice {
 	 * @return {boolean}
 	 */
 	isUHDSupported() {}
+
+	/**
+	 * Whether 4320 resolution is supported by device
+	 * @return {boolean}
+	 */
+	isUHD8KSupported() {}
 
 	/**
 	 * Returns system environment variables (if any)

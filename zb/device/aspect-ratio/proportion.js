@@ -46,6 +46,7 @@ export class Proportion {
 			registry[proportionString] = this;
 		}
 
+		// eslint-disable-next-line no-constructor-return
 		return /** @type {!Proportion} */ (registry[proportionString]);
 	}
 

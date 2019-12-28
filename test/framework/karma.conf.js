@@ -1,6 +1,9 @@
+const path = require('path');
+
 const zbPath = '../../zb';
 const generatedPath = 'generated';
 const testPath = 'suites';
+const sinonPath = path.join(path.dirname(require.resolve('sinon/package.json')), 'pkg');
 
 const [zbFiles, generatedFiles, testFiles] =
 	[zbPath, generatedPath, testPath].map((root) => root + '/**/*.js');
@@ -17,7 +20,8 @@ module.exports = (config) => {
 		files: [
 			{type: 'module', pattern: zbFiles},
 			{type: 'module', pattern: generatedFiles},
-			{type: 'module', pattern: testFiles}
+			{type: 'module', pattern: testFiles},
+			{type: 'module', pattern: sinonPath + '/sinon-esm.js'}
 		],
 
 		preprocessors: {
@@ -29,8 +33,10 @@ module.exports = (config) => {
 		moduleResolverPreprocessor: {
 			aliases: {
 				'zb': zbPath,
-				'generated': generatedPath
-			}
+				'generated': generatedPath,
+				'sinon': sinonPath
+			},
+			ecmaVersion: 9
 		}
 	});
 };

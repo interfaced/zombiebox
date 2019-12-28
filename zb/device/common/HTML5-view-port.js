@@ -11,18 +11,20 @@ import AbstractViewPort from '../abstract-view-port';
 import {Proportion, Common} from '../aspect-ratio/proportion';
 import {Transferring} from '../aspect-ratio/aspect-ratio';
 import Rect from '../../geometry/rect';
+import {ResolutionInfoItem} from '../resolutions';
 
 
 /**
  */
 export default class HTML5ViewPort extends AbstractViewPort {
 	/**
-	 * @param {Rect} containerRect
-	 * @param {HTMLDivElement} videoContainer
+	 * @param {ResolutionInfoItem} panelResolution
+	 * @param {ResolutionInfoItem} appResolution
+	 * @param {HTMLElement} videoContainer
 	 * @param {HTMLVideoElement} videoObject
 	 */
-	constructor(containerRect, videoContainer, videoObject) {
-		super(containerRect);
+	constructor(panelResolution, appResolution, videoContainer, videoObject) {
+		super(panelResolution, appResolution);
 
 		/**
 		 * @type {{
@@ -34,7 +36,7 @@ export default class HTML5ViewPort extends AbstractViewPort {
 		this._videoInfo;
 
 		/**
-		 * @type {HTMLDivElement}
+		 * @type {HTMLElement}
 		 * @protected
 		 */
 		this._videoContainer = videoContainer;

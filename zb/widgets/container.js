@@ -19,6 +19,7 @@ import Rect from '../geometry/rect';
 import INavigation from './interfaces/i-navigation';
 import IWidget from './interfaces/i-widget';
 import SpatialNavigation from './navigation/spatial-navigation';
+import PrincipalAxisNavigation from './navigation/principal-axis-navigation';
 
 
 /**
@@ -437,7 +438,10 @@ export default class Container extends EventPublisher {
 	 * @protected
 	 */
 	_createNavigation() {
-		return new SpatialNavigation();
+		return new PrincipalAxisNavigation(
+			{enabled: true},
+			{enabled: true}
+		);
 	}
 
 	/**

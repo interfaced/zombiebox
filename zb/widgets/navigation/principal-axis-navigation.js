@@ -19,30 +19,39 @@ export default class PrincipalAxisNavigation extends SpatialNavigation {
 	 * @param {AxisConfig=} vertical
 	 * @param {boolean=} enableFallback
 	 */
-	constructor(horizontal = DEFAULT_AXIS_CONFIG, vertical = DEFAULT_AXIS_CONFIG, enableFallback = false) {
-		super(horizontal.cyclical, vertical.cyclical);
+	constructor(horizontal = {}, vertical = {}, enableFallback = true) {
+		const horizontalNormalized = {
+			...DEFAULT_AXIS_CONFIG,
+			...horizontal
+		};
+		const verticalNormalized = {
+			...DEFAULT_AXIS_CONFIG,
+			...vertical
+		};
+
+		super(horizontalNormalized.cyclical, verticalNormalized.cyclical);
 
 		/**
 		 * @type {boolean}
-		 * @private
+		 * @protected
 		 */
-		this._isHorizontalAxisNavigationEnabled = false;
+		this._isHorizontalAxisNavigationEnabled;
 
 		/**
 		 * @type {boolean}
-		 * @private
+		 * @protected
 		 */
-		this._isVerticaAxisNavigationEnabled = false;
+		this._isVerticaAxisNavigationEnabled;
 
 		/**
 		 * @type {boolean}
-		 * @private
+		 * @protected
 		 */
-		this._isFallbackEnabled = true;
+		this._isFallbackEnabled;
 
 		this.setAxisNavigationEnabled(
-			horizontal.enabled,
-			vertical.enabled,
+			horizontalNormalized.enabled,
+			verticalNormalized.enabled,
 			enableFallback
 		);
 	}
@@ -81,7 +90,9 @@ export default class PrincipalAxisNavigation extends SpatialNavigation {
 			if (!widgets.length && this._isCyclicalEnabledInDirection(direction)) {
 				widgets = this._sortWidgetsForCyclicalNavigation(focusedRect, direction, areaWidgets);
 			}
-		} else if (this._isFallbackEnabled) {
+		}
+
+		if (!widgets.length && this._isFallbackEnabled) {
 			widgets = super._autoNavigate(fromWidget, direction);
 		}
 
@@ -146,8 +157,8 @@ const DEFAULT_AXIS_CONFIG = {
 
 /**
  * @typedef {{
- *     enabled: boolean,
- *     cyclical: boolean
+ *     enabled: (boolean|undefined),
+ *     cyclical: (boolean|undefined)
  * }}
  */
 export let AxisConfig;

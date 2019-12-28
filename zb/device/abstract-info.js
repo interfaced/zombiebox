@@ -59,10 +59,23 @@ export default class AbstractInfo {
 	hardwareVersion() {}
 
 	/**
+	 * @override
+	 */
+	osdResolutionType() {
+		return this.getOSDResolution();
+	}
+
+	/**
 	 * @abstract
 	 * @override
 	 */
-	osdResolutionType() {}
+	getPanelResolution() {}
+
+	/**
+	 * @abstract
+	 * @override
+	 */
+	getOSDResolution() {}
 
 	/**
 	 * @override
@@ -82,6 +95,7 @@ export default class AbstractInfo {
 	_getLocale() {}
 
 	/**
+	 * @deprecated Use zb/device/resolutions findLargest instead
 	 * Get resolutions smaller or equal screen size
 	 * @param {number} width
 	 * @param {number} height

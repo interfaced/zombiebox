@@ -1,18 +1,21 @@
+const path = require('path');
+const sinonPath = path.join(path.dirname(require.resolve('sinon/package.json')), 'pkg');
+
 module.exports = {
 	extends: 'interfaced',
-	rules: {
-		'jsdoc/check-tag-names': ['error', {
-			definedTags: [
-				'suppress'
-			]
-		}]
-	},
 	overrides: [
 		{
 			files: ['zb/**', 'test/framework/*/**', 'test/tools/addons/*/lib/**', 'templates/**/*.js'],
 			extends: 'interfaced/esm',
 			settings: {
-				'import/resolver': 'zombiebox'
+				'import/resolver': {
+					'zombiebox': {},
+					'alias': {
+						'map': [
+							['sinon', sinonPath]
+						]
+					}
+				}
 			}
 		},
 		{

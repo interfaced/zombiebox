@@ -74,14 +74,8 @@ export default class Point {
 	 */
 	getDistance(point) {
 		return Math.sqrt(
-			Math.pow(
-				Math.abs(this.x - point.x),
-				2
-			) +
-			Math.pow(
-				Math.abs(this.y - point.y),
-				2
-			)
+			Math.abs(this.x - point.x) ** 2 +
+			Math.abs(this.y - point.y) ** 2
 		);
 	}
 

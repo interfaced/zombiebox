@@ -27,7 +27,7 @@ export default class StateMachine extends EventPublisher {
 		this._transitionsTable = transitionsTable;
 
 		/**
-		 * @type {STATE_TYPE}
+		 * @type {?STATE_TYPE}
 		 * @protected
 		 */
 		this._currentState = initialState;
@@ -41,6 +41,7 @@ export default class StateMachine extends EventPublisher {
 		/**
 		 * Fired with:
 		 *     {STATE_TYPE} The state that was entered
+		 *     {STATE_TYPE} The previous state
 		 * @const {string}
 		 */
 		this.EVENT_STATE_ENTER = 'state-enter';
@@ -48,36 +49,37 @@ export default class StateMachine extends EventPublisher {
 		/**
 		 * Fired with:
 		 *     {STATE_TYPE} The state that was was exited
+		 *     {STATE_TYPE} The next state
 		 * @const {string}
 		 */
 		this.EVENT_STATE_EXIT = 'state-exit';
 	}
 
 	/**
-	 * @param {STATE_TYPE} state
+	 * @param {STATE_TYPE} newState
 	 * @throws {InvalidTransitionError<STATE_TYPE>}
 	 * @throws {PendingTransitionError<STATE_TYPE>}
 	 */
-	setState(state) {
-		if (!this.canTransitTo(state)) {
-			throw new InvalidTransitionError(this._currentState, state);
+	setState(newState) {
+		if (!this.canTransitTo(newState)) {
+			throw new InvalidTransitionError(this._currentState, newState);
 		}
 
-		if (this._pendingTransition) {
-			if (this._pendingTransition.to !== state) {
-				throw new PendingTransitionError(this._pendingTransition.from, this._pendingTransition.to);
-			} else {
-				this._pendingTransition = null;
-			}
+		if (this._pendingTransition && this._pendingTransition.to !== newState) {
+			throw new PendingTransitionError(this._pendingTransition.from, this._pendingTransition.to, newState);
 		}
 
-		if (this._currentState) {
-			this._fireEvent(this.EVENT_STATE_EXIT, this._currentState);
+		let previousState;
+		if (!this._pendingTransition) {
+			previousState = this._currentState;
+			this._fireEvent(this.EVENT_STATE_EXIT, previousState, newState);
+		} else {
+			previousState = this._pendingTransition.from;
+			this._pendingTransition = null;
 		}
 
-		this._currentState = state;
-
-		this._fireEvent(this.EVENT_STATE_ENTER, this._currentState);
+		this._currentState = newState;
+		this._fireEvent(this.EVENT_STATE_ENTER, this._currentState, previousState);
 	}
 
 	/**
@@ -86,7 +88,7 @@ export default class StateMachine extends EventPublisher {
 	 */
 	startTransitionTo(state) {
 		if (this._pendingTransition) {
-			throw new PendingTransitionError(this._pendingTransition.from, this._pendingTransition.to);
+			throw new PendingTransitionError(this._pendingTransition.from, this._pendingTransition.to, state);
 		}
 
 		if (!this.canTransitTo(state)) {
@@ -97,6 +99,8 @@ export default class StateMachine extends EventPublisher {
 			from: this._currentState,
 			to: state
 		};
+		this._currentState = null;
+		this._fireEvent(this.EVENT_STATE_EXIT, this._pendingTransition.from, state);
 	}
 
 	/**
@@ -120,7 +124,7 @@ export default class StateMachine extends EventPublisher {
 	 * @return {boolean}
 	 */
 	canTransitTo(state) {
-		return (this._transitionsTable[this._currentState] || []).includes(state);
+		return !this._currentState || (this._transitionsTable[this._currentState] || []).includes(state);
 	}
 
 	/**
@@ -143,6 +147,32 @@ export default class StateMachine extends EventPublisher {
 	 */
 	getPendingTransition() {
 		return this._pendingTransition;
+	}
+
+	/**
+	 * @param {STATE_TYPE} state
+	 * @return {boolean}
+	 */
+	isTransitingFrom(state) {
+		return !!this._pendingTransition && this._pendingTransition.from === state;
+	}
+
+	/**
+	 * @param {STATE_TYPE} state
+	 * @return {boolean}
+	 */
+	isTransitingTo(state) {
+		return !!this._pendingTransition && this._pendingTransition.to === state;
+	}
+
+	/**
+	 */
+	abortPendingTransition() {
+		if (!this._pendingTransition) {
+			return;
+		}
+		this._currentState = this._pendingTransition.from;
+		this._pendingTransition = null;
 	}
 
 	/**
@@ -200,20 +230,23 @@ export class InvalidTransitionError extends Error {
  */
 export class PendingTransitionError extends Error {
 	/**
-	 * @param {STATE_TYPE} from
-	 * @param {STATE_TYPE} to
+	 * @param {STATE_TYPE} pendingFrom
+	 * @param {STATE_TYPE} pendingTo
+	 * @param {STATE_TYPE} attempted
 	 */
-	constructor(from, to) {
-		super(`There is a pending transition from "${from}" to "${to}"`);
+	constructor(pendingFrom, pendingTo, attempted) {
+		super(
+			`There is a pending transition from "${pendingFrom}" to "${pendingTo}", cannot transition to "${attempted}"`
+		);
 
 		/**
 		 * @type {STATE_TYPE}
 		 */
-		this.from = from;
+		this.from = pendingFrom;
 
 		/**
 		 * @type {STATE_TYPE}
 		 */
-		this.to = to;
+		this.to = pendingTo;
 	}
 }

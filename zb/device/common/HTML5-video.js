@@ -6,6 +6,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+import {findLargest, ResolutionInfo} from '../resolutions';
 import {remove, div, node} from '../../html';
 import Rect from '../../geometry/rect';
 import AbstractVideo from '../abstract-video';
@@ -233,8 +234,13 @@ export default class HTML5Video extends AbstractVideo {
 	 * @override
 	 */
 	_createViewPort(containerRect) {
+		// Compatibility with updated viewport
+		const panelResolution = ResolutionInfo[findLargest(containerRect)];
+		const appResolution = panelResolution;
+
 		return new HTML5ViewPort(
-			containerRect,
+			panelResolution,
+			appResolution,
 			this._container,
 			this._video
 		);

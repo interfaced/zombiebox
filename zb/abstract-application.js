@@ -492,7 +492,7 @@ export default class AbstractApplication extends EventPublisher {
 	 * @protected
 	 */
 	_appendScreenSizeClass() {
-		const resolution = ResolutionInfo[this.device.info.osdResolutionType()];
+		const resolution = ResolutionInfo[this.device.info.getOSDResolution()];
 		const resolutionClassName = resolution ? ('zb-' + resolution.name) : 'zb-unknown-resolution';
 
 		this._appendViewportSize(resolution);

@@ -6,7 +6,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import {info} from '../console/console';
 import IEventPublisher from './interfaces/i-event-publisher';
 
 
@@ -25,25 +24,16 @@ export default class EventPublisher {
 		this._listeners = {};
 
 		/**
-		 * Event callbacks that being called by wrappers
-		 * @type {!Object<string, Array<Listener>>}
+		 * @type {Array<OnceRecord>}
 		 * @protected
 		 */
-		this._onceMapCallbacks = {};
+		this._onceRecords = [];
 
 		/**
-		 * Event wrappers that call their callbacks
-		 * @type {!Object<string, Array<Listener>>}
+		 * @type {?EventExecutionContext}
 		 * @protected
 		 */
-		this._onceMapWrappers = {};
-
-		/**
-		 * Current executing event
-		 * @type {?string}
-		 * @protected
-		 */
-		this._executingEvent = null;
+		this._currentContext = null;
 
 		/**
 		 * Warning: use this event only for development purposes
@@ -59,11 +49,10 @@ export default class EventPublisher {
 	 * @param {Listener} callback
 	 */
 	on(event, callback) {
-		if (!this._listeners.hasOwnProperty(event)) {
+		if (!this._listeners[event]) {
 			this._listeners[event] = [];
 		}
 
-		this._cloneListenersOnWrite(event);
 		this._listeners[event].push(callback);
 	}
 
@@ -73,22 +62,27 @@ export default class EventPublisher {
 	 * @param {Listener} callback
 	 */
 	once(event, callback) {
+		const record = {
+			callback,
+			wrapper: null,
+			called: false
+		};
+
 		const wrapper = (...args) => {
+			// This prevents duplicate execution in some very specific cases:
+			// When similar events get nested, listeners are frozen and .off will not remove a pending listener
+			if (record.called) {
+				return;
+			}
+
+			record.called = true;
 			this.off(event, wrapper);
 
 			callback(...args);
 		};
+		record.wrapper = wrapper;
 
-		if (!this._onceMapCallbacks.hasOwnProperty(event)) {
-			this._onceMapCallbacks[event] = [];
-		}
-
-		if (!this._onceMapWrappers.hasOwnProperty(event)) {
-			this._onceMapWrappers[event] = [];
-		}
-
-		this._onceMapCallbacks[event].push(callback);
-		this._onceMapWrappers[event].push(wrapper);
+		this._onceRecords.push(/** @type {OnceRecord} */ (record));
 
 		this.on(event, wrapper);
 	}
@@ -99,29 +93,33 @@ export default class EventPublisher {
 	 * @param {Listener} callback
 	 */
 	off(event, callback) {
-		if (!this._listeners.hasOwnProperty(event)) {
+		if (!this._listeners[event]) {
 			return;
 		}
 
-		const eventOnceWrappers = this._onceMapWrappers[event] || [];
-		const eventOnceCallbacks = this._onceMapCallbacks[event] || [];
+		let index = this._listeners[event].indexOf(callback);
 
-		const i = this._listeners[event].indexOf(callback);
-		if (i !== -1) {
-			const onceWrapperIndex = eventOnceWrappers.indexOf(callback);
+		if (index === -1) {
+			const wrapperIndex = this._onceRecords.findIndex(
+				({callback: wrappedCallback}) => wrappedCallback === callback
+			);
 
-			this._cloneListenersOnWrite(event, {logInfo: onceWrapperIndex === -1});
-			this._listeners[event].splice(i, 1);
+			if (wrapperIndex !== -1) {
+				const {wrapper} = this._onceRecords[wrapperIndex];
+				this._onceRecords.splice(wrapperIndex, 1);
 
-			if (onceWrapperIndex !== -1) {
-				eventOnceWrappers.splice(onceWrapperIndex, 1);
-				eventOnceCallbacks.splice(onceWrapperIndex, 1);
+				index = this._listeners[event].indexOf(wrapper);
 			}
 		}
 
-		let onceCallbackIndex;
-		while ((onceCallbackIndex = eventOnceCallbacks.indexOf(callback)) !== -1) {
-			this.off(event, eventOnceWrappers[onceCallbackIndex]);
+		if (index === -1) {
+			return;
+		}
+
+		if (1 === this._listeners[event].length) {
+			this._listeners[event] = [];
+		} else {
+			this._listeners[event].splice(index, 1);
 		}
 	}
 
@@ -130,45 +128,24 @@ export default class EventPublisher {
 	 * @param {string=} event
 	 */
 	removeAllListeners(event) {
-		const allListeners = this._listeners;
-		const eventsToRemove = event ? [event] : Object.keys(allListeners);
-
-		eventsToRemove.forEach((event) => {
-			// "off" mutates listeners, so use a copy instead of an original array
-			const eventListeners = allListeners[event].slice();
-
-			eventListeners.forEach((listener) => {
-				this.off(event, listener);
-			});
-		});
+		if (event !== undefined && this._listeners[event]) {
+			this._listeners[event] = null;
+		} else {
+			this._listeners = {};
+		}
 	}
 
 	/**
-	 * @param {string} event
-	 * @param {{
-	 *     logInfo: (boolean|undefined)
-	 * }=} options
-	 * @protected
+	 * Runs after current event loop is done calling all of its listeners
+	 * Only intended to be used from within event handlers
+	 * @param {Function} callback
 	 */
-	_cloneListenersOnWrite(event, {logInfo = true} = {}) {
-		if (this._executingEvent === event) {
-			const oldListeners = this._listeners[event];
-
-			let newListeners = [];
-			if (oldListeners && oldListeners.length) {
-				newListeners = oldListeners.slice(0);
-			}
-
-			this._listeners[event] = newListeners;
-
-			if (logInfo) {
-				info(
-					`Clone listeners for event "${event}" during the execution phase. ` +
-					`This may lead to a low-predictable order of callbacks executing and performance degradation ` +
-					`when event has a large number of listeners.`
-				);
-			}
+	runAfterCurrentEvent(callback) {
+		if (!this._currentContext) {
+			throw new Error('No events are being fired');
 		}
+
+		this._currentContext.runAfter.push(callback);
 	}
 
 	/**
@@ -178,53 +155,73 @@ export default class EventPublisher {
 	 * @protected
 	 */
 	_fireEvent(event, ...args) {
-		// Save refs to prevent mutation during event execution
-		const eventListeners = this._listeners[event];
-		const anyEventListeners = this._listeners[this.EVENT_ANY];
+		let listeners = [];
 
-		this._executingEvent = event;
-		this._callListeners(eventListeners, event, args);
+		if (this._listeners[event] && this._listeners[event].length) {
+			listeners = listeners.concat(this._listeners[event]);
+		}
 
-		this._executingEvent = this.EVENT_ANY;
-		this._callListeners(anyEventListeners, event, args);
+		if (this._listeners[this.EVENT_ANY] && this._listeners[this.EVENT_ANY].length) {
+			listeners = listeners.concat(this._listeners[this.EVENT_ANY]);
+		}
 
-		this._executingEvent = null;
+		if (!listeners.length) {
+			return;
+		}
+
+		/**
+		 * @type {EventExecutionContext}
+		 */
+		const context = {
+			listeners,
+			event,
+			args,
+			runAfter: []
+		};
+
+		const previousContext = this._currentContext;
+		this._currentContext = context;
+
+		this._callListeners(context);
+
+		for (const callback of context.runAfter) {
+			callback();
+		}
+
+		this._currentContext = previousContext;
 	}
 
 	/**
-	 * @param {Array<Listener>|undefined} listeners
-	 * @param {string} event
-	 * @param {Array<*>} args
+	 * @param {EventExecutionContext} context
 	 * @protected
 	 */
-	_callListeners(listeners, event, args) {
-		if (listeners) {
-			for (let i = 0, len = listeners.length; i < len; i++) {
-				const listener = listeners[i];
-				switch (args.length) {
-					// Fast cases
-					case 0:
-						listener.call(null, event);
-						break;
-					case 1:
-						listener.call(null, event, args[0]);
-						break;
-					case 2:
-						listener.call(null, event, args[0], args[1]);
-						break;
-					case 3:
-						listener.call(null, event, args[0], args[1], args[2]);
-						break;
-					case 4:
-						listener.call(null, event, args[0], args[1], args[2], args[3]);
-						break;
-					case 5:
-						listener.call(null, event, args[0], args[1], args[2], args[3], args[4]);
-						break;
-					// Slower
-					default:
-						listener(...[event].concat(args));
-				}
+	_callListeners({listeners, event, args}) {
+		for (let i = 0, len = listeners.length; i < len; i++) {
+			const listener = listeners[i];
+
+			switch (args.length) {
+				// Fast cases
+				case 0:
+					listener.call(null, event);
+					break;
+				case 1:
+					listener.call(null, event, args[0]);
+					break;
+				case 2:
+					listener.call(null, event, args[0], args[1]);
+					break;
+				case 3:
+					listener.call(null, event, args[0], args[1], args[2]);
+					break;
+				case 4:
+					listener.call(null, event, args[0], args[1], args[2], args[3]);
+					break;
+				case 5:
+					listener.call(null, event, args[0], args[1], args[2], args[3], args[4]);
+					break;
+				// Slower
+				default:
+					listener(...[event].concat(args));
 			}
 		}
 	}
@@ -235,3 +232,24 @@ export default class EventPublisher {
  * @typedef {function(string, ...?)}
  */
 export let Listener;
+
+
+/**
+ * @typedef {{
+ *     callback: !Listener,
+ *     called: boolean,
+ *     wrapper: !Listener
+ * }}
+ */
+let OnceRecord;
+
+
+/**
+ * @typedef {{
+ *     listeners: !Array<Listener>,
+ *     event: string,
+ *     args: !Array<*>,
+ *     runAfter: !Array<Function>
+ * }}
+ */
+let EventExecutionContext;

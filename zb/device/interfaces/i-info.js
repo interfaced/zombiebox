@@ -64,11 +64,25 @@ export default class IInfo {
 	hardwareVersion() {}
 
 	/**
-	 * Returns browser size type
+	 * @deprecated Use getOSDResolution instead
 	 * @return {Resolution}
 	 * @throws {UnsupportedFeature}
 	 */
 	osdResolutionType() {}
+
+	/**
+	 * Returns physical screen panel resolution, typically largest possible resolution for video
+	 * @return {!Resolution}
+	 * @throws {UnsupportedFeature}
+	 */
+	getPanelResolution() {}
+
+	/**
+	 * Returns html viewport resolution
+	 * @return {!Resolution}
+	 * @throws {UnsupportedFeature}
+	 */
+	getOSDResolution() {}
 
 	/**
 	 * Returns current locale valid for BCP47 format or null

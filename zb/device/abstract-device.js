@@ -61,6 +61,12 @@ export default class AbstractDevice extends EventPublisher {
 	 * @abstract
 	 * @override
 	 */
+	createStatefulVideo() {}
+
+	/**
+	 * @abstract
+	 * @override
+	 */
 	exit() {}
 
 	/**
@@ -140,4 +146,10 @@ export default class AbstractDevice extends EventPublisher {
 	 * @override
 	 */
 	isUHDSupported() {}
+
+	/**
+	 * @abstract
+	 * @override
+	 */
+	isUHD8KSupported() {}
 }

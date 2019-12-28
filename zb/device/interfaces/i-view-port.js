@@ -61,6 +61,7 @@ export default class IViewPort {
 	setFullScreen(state) {}
 
 	/**
+	 * @deprecated Use isFullScreen
 	 * Returns full screen state
 	 * @return {boolean}
 	 */

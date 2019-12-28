@@ -1,5 +1,89 @@
 # Change log
 
+## 2.4.0 (release date 28.12.2019)
+
+Identical to `2.0.0-rc.2`, changes since previous stable version (`2.3.0`) are listed.
+
+This release introduces `IStatefulVideo` and tis Abstract and HTML5 implementations. Stateful Video has a much stricter model that leverages more stability, standardisation and error handling. Additionally it supports DRM playback.
+Stateful Video is meant to replace current IVideo, but at this point both are available and the latte is not even deprecated.
+Migrating to Stateful Video will require a large effort as its model and APIs are vastly incompatible with previous IVideo.
+
+For more details on Stateful Video see [docs/video](./docs/video/).
+
+Other changes:
+
+* `PrincipalAxisNavigation` is now used as first spatial navigation strategy of choice
+* `EventPublisher` refactored, added `runAfterCurrentEvent` method, improved test coverage
+* QHD resolution support removed, 4K and 8K added
+* `Info.osdResolutionType` deprecated in favor of `getOSDResolution` and `getPanelResolution`
+* `Viewport.getFullScreen` deprecated in favor of `isFullScreen`
+* `AbstractStatefulVideo` and `AbstracViewport` constructors both now accept panel and app resolutions
+* `zb/http` `decodeParams` now returns properly empty object if query string is empty as opposed to object with empty keys
+
+## 2.4.0-rc.2 (release date 28.12.2019)
+
+### Framework
+* Ensure no changes in html5 engine or Video happen once Video entered `ERROR` state
+* `EVENT_ERROR` now tries to make a better message 
+
+### Tools
+* Fixed issue when errors occurred while loading custom configs could be consumed and not reported 
+
+## 2.4.0-rc.1 (release date 27.12.2019)
+
+### Framework
+* Aborting transition in `StateMachine` now restores it to previous state
+
+### Tools
+* ESLint, its configs and plugins updated
+* Fix polyfills not being included in build
+* Workaround for GCC issue that prevents object destructuring from working without native `Object.assign` 
+
+## 2.4.0-alpha.6 (release date 19.12.2019)
+
+### Framework
+* `PrincipalAxisNavigation` is now used as first spatial navigation strategy of choice
+* Improved stability of `StatefulVideo`, especially when destroying it
+* `EVENT_STATE_EXIT` now happens before asynchronous transitions. This makes `getState` return `null` in between states. `getPendingTransitions` should be used in this occasions.
+* `EventPublisher` refactored, added `runAfterCurrentEvent` method, improved test coverage
+
+## 2.4.0-alpha.5 (release date 16.12.2019)
+### Framework
+* Ensure `getUrl` always returns url in LOADING state
+* Refactor Viewport to always accept application coordinates
+* `Device.createStatefulVideo` no longer requires Rect parameter
+* QHD resolution removed support, 4K and 8K added
+* `AbstractStatefulVideo` and `AbstracViewport` constructors both now accept panel and app resolutions
+* `Info.osdResolutionType` deprecated in favor of `getOSDResolution` and `getPanelResolution`
+* `Viewport.getFullScreen` deprecated in favor of `isFullScreen`
+
+## 2.4.0-alpha.4 (release date 12.12.2019)
+### Framework
+* Added `PrepareOption` to support 4K and 8K video.
+* Added `Device.isUHD8KSupported`.
+* Fixed StatefulVideo positioning in letterbox mode. 
+
+## 2.4.0-alpha.3 (release date 05.12.2019)
+
+### Framework
+* VerimatrixClient added, support VCAS.
+
+## 2.4.0-alpha.2 (release date 02.12.2019)
+
+### Framework
+* DRM support was added. See [drm.md](./docs/video/drm.md) for more details. 
+* new `IStatefulVideo` methods: static `isDRMSupported`, static `canHandleMultiDRM`, `attachDRM`, `detachDRM`.
+* new interfaces and classes: `IDRMClient`, `AbstractDRMClient`, `PlayReadyClient`.
+* `PrepareOption.FORMAT` was renamed to `PrepareOption.TYPE` and now accepts mime-type. `MediaType` enum added with common mime types.
+
+## 2.4.0-alpha.1 (release date 19.11.2019)
+
+Unstable channel release.
+
+### Framework
+* `IStatefulVideo`, `AbstractStatefulVideo` and `StatefulHtml5Video` classes and `Device.createStatefulVideo` were added. This a new video interface expected to eventually replace `IVideo`, in foreseeable future however they will coexist. It's much more strict and standardized. See [](./docs/video)
+* `zb/http` `decodeParams` now returns properly empty object if query string is empty as opposed to object with empty keys.
+
 ## 2.3.0 (release date 02.10.2019)
 
 ### Tools

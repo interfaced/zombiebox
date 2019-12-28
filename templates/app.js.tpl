@@ -1,3 +1,4 @@
+import 'zb/hacks.js';
 import Application from '<%= path %>';
 
 /**

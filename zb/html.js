@@ -380,6 +380,7 @@ export const remove = (...args) => {
 
 
 /**
+ * TODO: This could be optimized or perhaps not necessary at all
  * Based on: https://davidwalsh.name/vendor-prefix
  * @return {{dom: string, lowercase: string, css: string, js: string}}
  */

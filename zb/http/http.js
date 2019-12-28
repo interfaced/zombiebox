@@ -57,26 +57,27 @@ export const encodeParams = (params) => {
  * @return {Object<string, (?string|Array<?string>)>}
  */
 export const decodeParams = (queryString) => {
-	const result = {};
-
-	const vars = queryString.split('&');
-	for (let i = 0; i < vars.length; i++) {
-		const pair = vars[i].split('=');
-
-		const variableName = decodeURIComponent(pair[0]);
-		const variableValue = pair[1] ? decodeURIComponent(pair[1]) : '';
-
-		if (variableName.slice(-2) === '[]') {
-			if (!result[variableName]) {
-				result[variableName] = [];
-			}
-			result[variableName].push(variableValue);
-		} else {
-			result[variableName] = variableValue;
-		}
+	if (queryString.length === 0) {
+		return {};
 	}
 
-	return result;
+	return queryString.split('&').reduce((accumulator, param) => {
+		const pair = param.split('=');
+
+		const name = decodeURIComponent(pair[0]);
+		const value = pair[1] ? decodeURIComponent(pair[1]) : '';
+
+		if (name.slice(-2) === '[]') {
+			if (!accumulator[name]) {
+				accumulator[name] = [];
+			}
+			accumulator[name].push(value);
+		} else {
+			accumulator[name] = value;
+		}
+
+		return accumulator;
+	}, {});
 };
 
 

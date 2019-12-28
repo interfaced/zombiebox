@@ -8,6 +8,7 @@
  */
 import {warn, debug} from '../console/console';
 import Rect from '../geometry/rect';
+import {ResolutionInfoItem, translate, createResolutionRect} from './resolutions';
 import {Common} from './aspect-ratio/proportion';
 import IViewPort from './interfaces/i-view-port';
 import {AspectRatio, Transferring} from './aspect-ratio/aspect-ratio';
@@ -20,15 +21,33 @@ import UnsupportedFeature from './errors/unsupported-feature';
  */
 export default class AbstractViewPort {
 	/**
-	 * @param {Rect} containerRect
+	 * @param {ResolutionInfoItem} panelResolution – Real fullscreen resolution in device coordinates
+	 * @param {ResolutionInfoItem} appResolution – Resolution app is set to,
+	 * will be used as reference point for all interface methods
 	 */
-	constructor(containerRect) {
+	constructor(panelResolution, appResolution) {
 		/**
-		 * Values of DOM video container (offsetX, offsetY, offsetWidth, offsetHeight)
+		 * @type {ResolutionInfoItem}
+		 * @protected
+		 */
+		this._panelResolution = panelResolution;
+
+		/**
+		 * @type {ResolutionInfoItem}
+		 * @protected
+		 */
+		this._appResolution = appResolution;
+
+		/**
+		 * Full screen rect in app coordinates
 		 * @type {Rect}
 		 * @protected
 		 */
-		this._containerRect = containerRect;
+		this._fullscreenRect = translate(
+			createResolutionRect(this._panelResolution),
+			this._panelResolution,
+			this._appResolution
+		);
 
 		/**
 		 * @type {boolean}
@@ -44,7 +63,7 @@ export default class AbstractViewPort {
 		this._aspectRatio = null;
 
 		/**
-		 * Values of specified area (offsetX, offsetY, offsetWidth, offsetHeight)
+		 * Values of specified area (offsetX, offsetY, offsetWidth, offsetHeight), always in app coordinates
 		 * @type {?Rect}
 		 * @private
 		 */
@@ -112,7 +131,7 @@ export default class AbstractViewPort {
 			throw new UnsupportedFeature('Area change');
 		}
 
-		const normalizedRect = rect.getIntersection(this._containerRect);
+		const normalizedRect = rect.getIntersection(this._fullscreenRect);
 		const areaChanged = !this._areaRect || !normalizedRect.isEqual(this._areaRect);
 
 		this._areaRect = normalizedRect;
@@ -140,14 +159,14 @@ export default class AbstractViewPort {
 	 */
 	getCurrentArea() {
 		if (this.isFullScreen()) {
-			return this._containerRect;
+			return this._fullscreenRect;
 		}
 
 		if (this._areaRect) {
 			return this._areaRect;
 		}
 
-		return this._containerRect;
+		return this._fullscreenRect;
 	}
 
 	/**
@@ -166,21 +185,21 @@ export default class AbstractViewPort {
 	 * @override
 	 */
 	getFullScreen() {
-		return this._fullScreenState;
+		return this.isFullScreen();
 	}
 
 	/**
 	 * @override
 	 */
 	getFullScreenArea() {
-		return this._containerRect;
+		return this._fullscreenRect;
 	}
 
 	/**
 	 * @override
 	 */
 	isFullScreen() {
-		return this.getFullScreen();
+		return this._fullScreenState;
 	}
 
 	/**
