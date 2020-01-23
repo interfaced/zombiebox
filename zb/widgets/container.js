@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright © 2012-2019, Interfaced
+ * Copyright © 2012-2020, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -86,7 +86,11 @@ export default class Container extends EventPublisher {
 	 * @override
 	 */
 	processKey(zbKey, event) {
-		if (this._doDip(zbKey, event)) {
+		const shouldDip = event === undefined ||
+			event instanceof KeyboardEvent ||
+			event instanceof WheelEvent; // But not MouseEvent in general
+
+		if (shouldDip && this._doDip(zbKey, event)) {
 			return true;
 		}
 
@@ -513,7 +517,7 @@ export default class Container extends EventPublisher {
 
 	/**
 	 * @param {Key} zbKey
-	 * @param {(KeyboardEvent|WheelEvent)=} event
+	 * @param {(KeyboardEvent|MouseEvent)=} event
 	 * @return {boolean}
 	 * @protected
 	 */
@@ -530,7 +534,7 @@ export default class Container extends EventPublisher {
 
 	/**
 	 * @param {Key} zbKey
-	 * @param {(KeyboardEvent|WheelEvent)=} event
+	 * @param {(KeyboardEvent|MouseEvent)=} event
 	 * @return {boolean}
 	 * @protected
 	 */

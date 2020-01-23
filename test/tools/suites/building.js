@@ -38,7 +38,7 @@ describe('Building', () => {
 			expect(args['charset']).equal('UTF8');
 			expect(args['module_resolution']).equal('BROWSER_WITH_TRANSFORMED_PREFIXES');
 			expect(args['browser_resolver_prefix_replacements']).to.be.an('array').that.is.not.empty;
-			expect(args['dependency_mode']).equal('STRICT');
+			expect(args['dependency_mode']).equal('PRUNE');
 			expect(args['entry_point']).to.be.a('string');
 			expect(args['summary_detail_level']).equal('3');
 			expect(args['externs']).to.be.an('array').that.is.empty;

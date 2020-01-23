@@ -1,7 +1,7 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright © 2012-2019, Interfaced
+ * Copyright © 2012-2020, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -339,17 +339,7 @@ export default class Widget extends Container {
 	 * @override
 	 */
 	mouseClick(event) {
-		if (this.isFocused()) {
-			const widgets = this.getVisibleWidgets();
-
-			const targetWidget = widgets.find((widget) =>
-				widget.getContainer().contains(/** @type {Node} */ (event.target)) &&
-				widget.isVisible() &&
-				widget.isEnabled()
-			) || this;
-
-			targetWidget.processKey(Key.ENTER);
-
+		if (this.processKey(Key.ENTER, event)) {
 			event.stopPropagation();
 		}
 	}

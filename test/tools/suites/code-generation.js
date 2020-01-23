@@ -66,11 +66,6 @@ describe('Code generation', () => {
 		await appContainer.cleanup();
 	});
 
-	it('Should generate a package info', async () => {
-		expect(await appContainer.readFile('.generated/package-info.js'))
-			.equal(readFileFromReferences('package-info.js'));
-	});
-
 	it('Should generate an entry point', async () => {
 		expect(await appContainer.readFile('.generated/app.js'))
 			.equal(readFileFromReferences('app.js'));
@@ -82,8 +77,14 @@ describe('Code generation', () => {
 	});
 
 	it('Should generate defines', async () => {
-		expect(await appContainer.readFile('.generated/define.js'))
-			.equal(readFileFromReferences('define.js'));
+		const zbVersion = app.getZbPackageJson()['version'];
+
+		const reference = readFileFromReferences('define.js').replace(
+			'export const ZOMBIEBOX_VERSION = "0.0.0";',
+			`export const ZOMBIEBOX_VERSION = "${zbVersion}";`
+		);
+
+		expect(await appContainer.readFile('.generated/define.js')).equal(reference);
 	});
 
 	it('Should generate extensions code', async () => {

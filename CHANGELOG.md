@@ -1,5 +1,17 @@
 # Change log
 
+## 2.5.0 (release date 23.01.2020)
+
+### Framework
+* ENTER key events caused by mouse clicks now no longer propagates down widget tree.
+* generated/package-info was deprecated and several defines were introduced to replace it. See [migrations/2.5.0.md](./docs/migrations/2.5.0.md) for more details.
+* Version checker will now tolerate prerelease versions.
+
+### Tools
+* Google Closure Compiler updated to 20200101.0.0
+* ECMAScript version increased to 2019
+* Node 8 support dropped as it left LTS
+
 ## 2.4.0 (release date 28.12.2019)
 
 Identical to `2.0.0-rc.2`, changes since previous stable version (`2.3.0`) are listed.

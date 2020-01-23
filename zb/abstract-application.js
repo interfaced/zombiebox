@@ -1,12 +1,12 @@
 /*
  * This file is part of the ZombieBox package.
  *
- * Copyright © 2012-2019, Interfaced
+ * Copyright © 2012-2020, Interfaced
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import packageInfo from 'generated/package-info';
+import {NPM_PACKAGE_NAME} from 'generated/define';
 import {div, node, hide, show} from './html';
 import {warn, setLogger, getLogger} from './console/console';
 import BackButtonListener from './back-button-listener';
@@ -393,7 +393,7 @@ export default class AbstractApplication extends EventPublisher {
 		new BackButtonListener(this.processKey.bind(this, Key.BACK));
 
 		this.device = device;
-		this.device.storage.setKeyPrefix(packageInfo['name']);
+		this.device.storage.setKeyPrefix(NPM_PACKAGE_NAME);
 
 		this._body.classList.add(this.device.info.type());
 		this._appendScreenSizeClass();
@@ -458,7 +458,7 @@ export default class AbstractApplication extends EventPublisher {
 
 	/**
 	 * @param {Key} zbKey
-	 * @param {(KeyboardEvent|WheelEvent)=} event
+	 * @param {(KeyboardEvent|MouseEvent)=} event
 	 * @return {boolean} True if Key handled, false if not
 	 * @protected
 	 */

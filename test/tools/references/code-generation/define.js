@@ -109,3 +109,18 @@ export const emptyArray = [];
  * @const {Function}
  */
 export const functionValue = () => 0;
+
+/**
+ * @const {string}
+ */
+export const NPM_PACKAGE_NAME = "zb-test";
+
+/**
+ * @const {string}
+ */
+export const NPM_PACKAGE_VERSION = "0.0.0";
+
+/**
+ * @const {string}
+ */
+export const ZOMBIEBOX_VERSION = "0.0.0";

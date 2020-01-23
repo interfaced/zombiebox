@@ -36,7 +36,7 @@ module.exports = (config) => {
 				'generated': generatedPath,
 				'sinon': sinonPath
 			},
-			ecmaVersion: 9
+			ecmaVersion: 2019
 		}
 	});
 };
