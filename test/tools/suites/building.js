@@ -40,7 +40,7 @@ describe('Building', () => {
 			expect(args['dependency_mode']).equal('PRUNE');
 			expect(args['entry_point']).to.be.a('string');
 			expect(args['summary_detail_level']).equal('3');
-			expect(args['externs']).to.be.an('array').that.is.empty;
+			expect(args['externs']).to.be.an('array').that.has.length(1); // hls.js
 			expect(args['js']).to.be.an('array').that.is.not.empty;
 		});
 
@@ -88,7 +88,7 @@ describe('Building', () => {
 			expect(gcc.spy.called).be.true;
 
 			expect(gcc.spy.args[0][0]['compilation_level']).equal('SIMPLE_OPTIMIZATIONS');
-			expect(gcc.spy.args[0][0]['externs']).deep.equal([appContainer.getFilePath('vendor/lodash.js')]);
+			expect(gcc.spy.args[0][0]['externs']).to.include(appContainer.getFilePath('vendor/lodash.js'));
 
 			expect(gcc.spy.args[0][0]['js']).include(appContainer.getFilePath('vendor/lodash.js'));
 			expect(gcc.spy.args[0][0]['js']).not.include(appContainer.getFilePath('vendor/jquery.js'));

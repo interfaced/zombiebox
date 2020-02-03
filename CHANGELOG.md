@@ -1,5 +1,10 @@
 # Change log
 
+## 2.6.1 (release date: 03.02.2020)
+
+### Tools
+* Fix parsing of some GCC output
+
 ## 2.6.0 (release date: 03.02.2020)
 
 ### Tools
