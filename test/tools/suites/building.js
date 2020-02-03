@@ -1,5 +1,4 @@
 const {expect} = require('chai');
-const {stub} = require('sinon');
 
 const gcc = require('../mock-google-closure-compiler');
 const TemporaryApplicationContainer = require('../temporary-application-container');
@@ -100,9 +99,9 @@ describe('Building', () => {
 		it('Should include the application styles', async () => {
 			const app = appContainer.createZbApplication([]);
 			await app.ready();
-			const styles = await app.getBuildHelper().getCompressedStyles('dist');
+			const {css} = await app.getBuildHelper().getCompressedStyles('dist');
 
-			expect(styles).include('.my');
+			expect(css).include('.my');
 		});
 
 		it('Should inline resources', async () => {
@@ -114,10 +113,10 @@ describe('Building', () => {
 				}
 			}]);
 			await app.ready();
-			const styles = await app.getBuildHelper().getCompressedStyles('dist');
+			const {css} = await app.getBuildHelper().getCompressedStyles('dist');
 
 			const backgroundContent = await appContainer.readFile('src/background.png', null);
-			expect(styles).include(
+			expect(css).include(
 				`data:image/png;base64,${backgroundContent.toString('base64')}`
 			);
 		});
@@ -131,11 +130,11 @@ describe('Building', () => {
 				}
 			}]);
 			await app.ready();
-			const styles = await app.getBuildHelper().getCompressedStyles('dist');
+			const {css} = await app.getBuildHelper().getCompressedStyles('dist');
 
 			const backgroundContent = await appContainer.readFile('src/background.png', null);
-			expect(styles).include('url(styles/67d039f.png)');
-			expect(styles).not.include(`data:image/png;base64,${backgroundContent.toString('base64')}`);
+			expect(css).include('url(styles/67d039f.png)');
+			expect(css).not.include(`data:image/png;base64,${backgroundContent.toString('base64')}`);
 			expect(await appContainer.readFile('dist/styles/67d039f.png', null))
 				.to.deep.equal(backgroundContent);
 		});
@@ -153,83 +152,10 @@ describe('Building', () => {
 				]
 			}]);
 			await app.ready();
-			const styles = await app.getBuildHelper().getCompressedStyles('dist');
+			const {css} = await app.getBuildHelper().getCompressedStyles('dist');
 
-			expect(styles).to.include('.lodash');
-			expect(styles).not.include('.jquery');
-		});
-	});
-
-	describe('Writing of index.html', () => {
-		it('Should write a html page with the compressed code and styles', async () => {
-			const app = appContainer.createZbApplication([]);
-			const buildHelper = app.getBuildHelper();
-
-			const compressedCode = 'var one = 1;';
-			const compressedStyles = '.my {}';
-
-			stub(buildHelper, 'getCompressedStyles').returns(Promise.resolve(compressedStyles));
-			stub(buildHelper, 'getCompressedScripts').returns(Promise.resolve({
-				stdout: compressedCode,
-				stderr: ''
-			}));
-
-			await app.ready();
-			await buildHelper.writeIndexHTML('application-empty.html');
-			const indexHTMLContent = await appContainer.readFile('application-empty.html');
-
-			expect(indexHTMLContent).match(/<html>(.|\n)*?<\/html>/);
-			expect(indexHTMLContent).include(`<script>${compressedCode}</script>`);
-			expect(indexHTMLContent).include(`<style>${compressedStyles}</style>`);
-		});
-
-		it('Should be configurable', async () => {
-			const app = appContainer.createZbApplication([{
-				include: [
-					{
-						externalScripts: ['http://zombiebox.tv/scripts.js']
-					},
-					{
-						inlineScripts: ['vendor/lodash.js']
-					},
-					{
-						// This file does not exist and is expected to be filtered out
-						scripts: ['vendor/jquery.js']
-					},
-					{
-						externalCss: ['http://zombiebox.tv/styles.css']
-					}
-				]
-			}]);
-
-			const buildHelper = app.getBuildHelper();
-			stub(buildHelper, 'getCompressedStyles').returns(Promise.resolve(''));
-			stub(buildHelper, 'getCompressedScripts').returns(Promise.resolve({stdout: '', stderr: ''}));
-
-			await app.ready();
-			await buildHelper.writeIndexHTML('application-with-resources.html');
-			const indexHTMLContent = await appContainer.readFile('application-with-resources.html');
-
-			const lodashContent = await appContainer.readFile('vendor/lodash.js');
-			expect(indexHTMLContent).include(`<script>${lodashContent}</script>`);
-			expect(indexHTMLContent).include(`<script src="http://zombiebox.tv/scripts.js"></script>`);
-			expect(indexHTMLContent).include(`<link rel="stylesheet" href="http://zombiebox.tv/styles.css">`);
-		});
-
-		it('Should support the page template customization', async () => {
-			const app = appContainer.createZbApplication([{
-				templates: ['_templates']
-			}]);
-
-			const buildHelper = app.getBuildHelper();
-			stub(buildHelper, 'getCompressedStyles').returns(Promise.resolve(''));
-			stub(buildHelper, 'getCompressedScripts').returns(Promise.resolve({stdout: '', stderr: ''}));
-
-			await app.ready();
-			await buildHelper.writeIndexHTML('application-custom-template.html');
-
-			expect(await appContainer.readFile('application-custom-template.html'))
-				.equal(await appContainer.readFile('_templates/index.html.tpl'));
+			expect(css).to.include('.lodash');
+			expect(css).not.include('.jquery');
 		});
 	});
 

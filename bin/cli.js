@@ -16,6 +16,8 @@ const {findPackageJson} = require('../lib/utils');
 const Application = require('../lib/application');
 const TemplateHelper = require('../lib/template-helper');
 const Scaffolding = require('../lib/scaffolding');
+const {rootLogger, createChild} = require('../lib/logger');
+const logger = createChild('CLI');
 
 
 /**
@@ -40,6 +42,7 @@ class CLI {
 				if (this._application) {
 					locations = locations.concat(this._application.getPathHelper().getTemplateLocations());
 				}
+				logger.silly(`Template locations: \n\t${locations.join('\n\t')}`);
 				return locations;
 			}
 		);
@@ -57,6 +60,7 @@ class CLI {
 	 * Prepare app and start developer mode HTTP server.
 	 */
 	run() {
+		logger.verbose(`Starting dev server`);
 		this._assertApplication();
 
 		this._application.ready()
@@ -67,6 +71,7 @@ class CLI {
 	 * Build code and exit
 	 */
 	buildCode() {
+		logger.verbose(`Building generated application code`);
 		this._assertApplication();
 
 		this._application.ready()
@@ -74,17 +79,25 @@ class CLI {
 	}
 
 	/**
-	 * @param {Array<string>} targets Platform names.
+	 * @param {string} target Platform name
 	 */
-	build(targets) {
+	build(target) {
+		logger.verbose(`Building application for ${target}`);
 		this._assertApplication();
 
-		const platformsToCompile = this._application.getPlatforms().filter((platform) =>
-			targets.includes(platform.getName()) || targets.includes('all')
-		);
+		const platform = this._application.getPlatforms().find((platform) => platform.getName() === target);
 
 		this._application.ready()
-			.then(() => this._application.compile(platformsToCompile));
+			.then(() => this._application.build(platform))
+			.catch((e) => {
+				if (e instanceof Error) {
+					logger.error(e.toString());
+					logger.debug(e.stack);
+				} else {
+					logger.error(e);
+				}
+				process.exit(2);
+			});
 	}
 
 	/**
@@ -92,6 +105,7 @@ class CLI {
 	 * @param {string} path
 	 */
 	addScene(name, path) {
+		logger.verbose(`Generating scene ${name} at ${path}`);
 		this._assertApplication();
 
 		const appName = this._application.getConfig().project.name;
@@ -103,6 +117,7 @@ class CLI {
 	 * @param {string} path
 	 */
 	addPopup(name, path) {
+		logger.verbose(`Generating popup ${name} at ${path}`);
 		this._assertApplication();
 
 		const appName = this._application.getConfig().project.name;
@@ -114,6 +129,7 @@ class CLI {
 	 * @param {string} path
 	 */
 	addWidget(name, path) {
+		logger.verbose(`Generating widget ${name} at ${path}`);
 		this._assertApplication();
 
 		const appName = this._application.getConfig().project.name;
@@ -124,6 +140,7 @@ class CLI {
 	 * @param {string} target
 	 */
 	generateAliases(target) {
+		logger.verbose(`Generating aliases map in ${target}`);
 		this._assertApplication();
 
 		this._application.ready().then(() => {
@@ -133,14 +150,16 @@ class CLI {
 			for (const [key, value] of this._application.getAliases()) {
 				map[key] = value;
 			}
+
+			logger.debug(`Aliases: \n${JSON.stringify(map, null, '\t')}`);
 			const content = this._templateHelper.render('webpack.config.js.tpl', {map});
 
 			fs.writeFile(filename, content, 'utf8', (error) => {
 				if (error) {
-					console.error('Error writing aliases map:', error.message);
+					logger.error(`Error writing aliases map: ${error.message}`);
 					process.exit(1);
 				} else {
-					console.log('Aliases map generated in', chalk.cyan(filename));
+					logger.output(`Aliases map generated in ${chalk.underline(filename)}`);
 				}
 			});
 		});
@@ -154,7 +173,13 @@ class CLI {
 		/* eslint-disable newline-per-chained-call */
 		yargs
 			.array('config').default('config', [])
-			.array('addon').default('addon', []);
+			.array('addon').default('addon', [])
+			.string('log-level')
+			.alias('log-level', 'l')
+			.default('log-level', 'info')
+			.choices('log-level', Object.keys(logger.levels));
+
+		rootLogger.level = yargs.argv.logLevel;
 
 		// @see {https://github.com/yargs/yargs/issues/1336}
 		const configs = Array.isArray(yargs.argv.config) ?
@@ -162,20 +187,25 @@ class CLI {
 			[yargs.argv.config];
 
 		const app = this._createApplication(configs, yargs.argv.addon);
-		const buildTargets = ['all'];
+		const buildTargets = [];
 		let projectConfig = null;
 
 		if (app) {
 			projectConfig = app.getConfig().project;
-			app.getPlatforms()
-				.forEach((platform) => {
-					buildTargets.push(platform.getName());
-					yargs.command(
-						platform.getName(),
-						`${platform.getName()} platform CLI commands`,
-						(yargs) => platform.buildCLI(yargs, app)
-					);
-				});
+			const platforms = app.getPlatforms();
+
+			logger.silly(`Application supports platforms: ${platforms.map((p) => p.getName()).join(', ')}`);
+
+			platforms.forEach((platform) => {
+				buildTargets.push(platform.getName());
+				yargs.command(
+					platform.getName(),
+					`${platform.getName()} platform CLI commands`,
+					(yargs) => platform.buildCLI(yargs, app)
+				);
+			});
+		} else {
+			logger.debug(`Application was not created, running without it`);
 		}
 
 		return yargs
@@ -193,11 +223,11 @@ class CLI {
 			)
 			.command('buildCode', 'Generate lifecycle code', (yargs) => this.buildCode(yargs))
 			.command(
-				'build <platform..>',
-				'Build artifact for one or several platforms',
+				'build <platform>',
+				'Build artifact for specific platform',
 				(yargs) => {
 					yargs.positional('platform', {
-						describe: 'platform name(s)',
+						describe: 'platform name',
 						choices: buildTargets
 					});
 				},
@@ -277,13 +307,13 @@ class CLI {
 	 * @protected
 	 */
 	init(name, root) {
-		const data = {
+		logger.verbose(`Creating boilerplate application "${name}" in ${root}`);
+
+		this._templateHelper.renderDir('boilerplate', root, {
 			name
-		};
+		});
 
-		this._templateHelper.renderDir('boilerplate', root, data);
-
-		console.log(`Boilerplate ZombieBox application ${name} created at`, root);
+		logger.output(`Boilerplate ZombieBox application "${name}" created at ${root}`);
 	}
 
 	/**
@@ -297,10 +327,18 @@ class CLI {
 			return this._application;
 		}
 
+		logger.silly(
+			`Trying to instantiate Application` +
+			(rawConfigs.length ? `\n\tConfigs: ${rawConfigs.join(', ')}` : '') +
+			(rawAddons.length ? `\n\tAddons: ${rawAddons.join(', ')}` : '')
+		);
+
 		const packageJson = findPackageJson(
 			process.cwd(),
 			(packageJson) => packageJson.dependencies && packageJson.dependencies.hasOwnProperty('zombiebox')
 		);
+
+		logger.debug(`Application package.json path: ${chalk.underline(packageJson)}`);
 
 		if (!packageJson) {
 			return null;
@@ -318,8 +356,11 @@ class CLI {
 		try {
 			this._application = new Application(path.dirname(packageJson), configs, addons);
 		} catch (e) {
-			console.error(e.message);
-			console.warn('Failed to create ZombieBox Application instance. CLI functionality will be limited');
+			logger.warn(
+				`Could not create Application instance, ` +
+				`CLI commands that require it will not work: ${e.toString()}`
+			);
+			logger.debug(e.stack);
 		}
 		return this._application;
 	}
@@ -329,7 +370,7 @@ class CLI {
 	 */
 	_assertApplication() {
 		if (!this._application) {
-			console.error('Could not find ZombieBox application');
+			logger.error('Cannot execute this command without application');
 			process.exit(1);
 		}
 	}

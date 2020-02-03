@@ -9,8 +9,7 @@
 import Key from './key';
 
 /**
- * This file is deprecated and to be replaced with key.js
- * Not marked with @deprecated yet to allow for more gradual transition
- * TODO: Start to phase its usage from components, deprecate and remove it
+ * TODO: Remove this file in 2.7.0 or later
+ * @deprecated Use "key" instead of "keys"
  */
 export default Key;

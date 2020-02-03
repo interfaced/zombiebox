@@ -63,7 +63,8 @@ module.exports = {
 			],
 			extends: 'interfaced/node',
 			rules: {
-				'jsdoc/no-undefined-types': "off" // Introduces circular dependencies
+				'jsdoc/no-undefined-types': 'off', // Introduces circular dependencies
+				'no-console': 'error' // Winston logger should be used for output
 			}
 		},
 		{

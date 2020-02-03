@@ -1,10 +1,20 @@
 # Change log
 
+## 2.6.0 (release date: 03.02.2020)
+
+### Tools
+* Build process was refactored, CLI commands and Platform API were affected. See [migrations/2.5.0.md](./docs/migrations/2.5.0.md) for more details.
+  * `zb build` now only accepts one platform and can't build for several at once.
+  * `AbstractPlatform.buildApp` method is deprecated in favor of `AbstractPlatform.pack`.
+  * Include entities now only get included in build for the platform that specified them. 
+* Console output and logging was improved and now can be controlled with `--log-level` or `-l` flag, see `zb --help`. 
+* `generated/package-info` was removed.
+
 ## 2.5.0 (release date 23.01.2020)
 
 ### Framework
 * ENTER key events caused by mouse clicks now no longer propagates down widget tree.
-* generated/package-info was deprecated and several defines were introduced to replace it. See [migrations/2.5.0.md](./docs/migrations/2.5.0.md) for more details.
+* `generated/package-info` was deprecated and several defines were introduced to replace it. See [migrations/2.5.0.md](./docs/migrations/2.5.0.md) for more details.
 * Version checker will now tolerate prerelease versions.
 
 ### Tools
