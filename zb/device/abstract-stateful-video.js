@@ -358,6 +358,12 @@ export default class AbstractStatefulVideo extends EventPublisher {
 	}
 
 	/**
+	 * @abstract
+	 * @override
+	 */
+	getEngine() {}
+
+	/**
 	 * @param {State|Array<State>} stateOrSeveral
 	 * @param {string=} message
 	 * @throws {StateError}

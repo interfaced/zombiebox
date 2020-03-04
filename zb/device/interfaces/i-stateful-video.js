@@ -302,6 +302,11 @@ export default class IStatefulVideo {
 	detachDRM(type) {}
 
 	/**
+	 * @return {?*}
+	 */
+	getEngine() {}
+
+	/**
 	 * @param {DRMType|string} type
 	 * @return {boolean}
 	 */

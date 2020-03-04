@@ -49,7 +49,6 @@ describe('Building', () => {
 			await app.ready();
 			await app.getBuildHelper().getCompressedScripts({'compilation_level': 'SIMPLE'});
 
-
 			expect(gcc.spy.called).be.true;
 			expect(gcc.spy.args[0][0]['compilation_level']).to.equal('SIMPLE');
 		});
@@ -172,7 +171,7 @@ describe('Building', () => {
 			}]);
 
 			await app.ready();
-			app.getBuildHelper().copyStaticFiles('dist');
+			await app.getBuildHelper().copyStaticFiles('dist');
 
 			expect(await appContainer.readFile('dist/custom-static-path/data.json'), 'utf-8')
 				.equal(await appContainer.readFile('static/data.json'), 'utf-8');

@@ -88,10 +88,16 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 		this._requestedStartPosition = null;
 
 		/**
+		 * @type {StartPositionState}
+		 * @protected
+		 */
+		this._startPositionState = StartPositionState.NONE;
+
+		/**
 		 * @type {boolean}
 		 * @protected
 		 */
-		this._attemptingToCorrectStartingPosition = false;
+		this._receivedCanplay = false;
 
 		// When we encounter State Machine errors in interface methods it's user's responsibility
 		// If state errors happen in these handlers it means Video implementation is erroneous
@@ -135,6 +141,7 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 
 		if (PrepareOption.START_POSITION in options) {
 			this._requestedStartPosition = options[PrepareOption.START_POSITION];
+			this._startPositionState = StartPositionState.REQUESTED;
 
 			this._reapplyStartPosition();
 		}
@@ -179,6 +186,8 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 			this._videoElement.removeChild(this._sourceElement);
 			this._sourceElement = null;
 		}
+		this._startPositionState = StartPositionState.NONE;
+		this._receivedCanplay = false;
 		this._videoElement.load();
 	}
 
@@ -295,6 +304,13 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 	}
 
 	/**
+	 * @return {?HTMLVideoElement}
+	 */
+	getEngine() {
+		return this._videoElement;
+	}
+
+	/**
 	 * @protected
 	 */
 	_init() {
@@ -375,7 +391,7 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 	 */
 	_onNativeLoadedMetadata() {
 		// First attempt to correct starting position – works in Safari and webOS with HLS
-		this._attemptingToCorrectStartingPosition = this._reapplyStartPosition();
+		this._reapplyStartPosition();
 	}
 
 	/**
@@ -383,20 +399,22 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 	 */
 	_onNativeLoadedData() {
 		// Second attempt to correct starting position – helps with other formats on webOS
-		this._attemptingToCorrectStartingPosition = this._reapplyStartPosition();
+		this._reapplyStartPosition();
 	}
 
 	/**
 	 * @protected
 	 */
 	_onNativeCanplay() {
-		// For whatever reason canplay fires before position is applied and we get "seeking" event shortly after
-		// To hide all this behind LOADING state, ignore this event and transition on "seeked" event
-		if (this._attemptingToCorrectStartingPosition) {
-			return;
-		}
+		this._receivedCanplay = true;
 
-		if (this._stateMachine.isIn(LOADING)) {
+		if (
+			(
+				this._startPositionState === StartPositionState.NONE ||
+				this._startPositionState === StartPositionState.APPLIED
+			) &&
+			this._stateMachine.isIn(LOADING)
+		) {
 			this._stateMachine.setState(READY);
 		}
 	}
@@ -444,8 +462,11 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 	_onNativeSeeking() {
 		const currentState = this._stateMachine.getCurrentState();
 
-		// Ignore seeking events while starting playback from certain position
-		if (currentState === LOADING) {
+		if (
+			this._startPositionState === StartPositionState.REQUESTED &&
+			currentState === LOADING
+		) {
+			this._startPositionState = StartPositionState.APPLYING;
 			return;
 		}
 
@@ -459,10 +480,19 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 		const currentState = this._stateMachine.getCurrentState();
 
 		if (currentState === LOADING) {
-			if (this._attemptingToCorrectStartingPosition) {
-				this._attemptingToCorrectStartingPosition = false;
-				this._stateMachine.setState(READY);
+			if (this._startPositionState === StartPositionState.APPLYING) {
+				this._startPositionState = StartPositionState.APPLIED;
 			}
+
+			if (
+				this._startPositionState === StartPositionState.APPLIED &&
+				this._videoElement.readyState >= NativeReadyState.HAVE_CURRENT_DATA
+			) {
+				if (this._receivedCanplay) {
+					this._stateMachine.setState(READY);
+				}
+			}
+
 			return;
 		}
 
@@ -548,34 +578,31 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 	}
 
 	/**
-	 * Some engines with some media formats sometimes quietly fail to apply start position.
-	 * Attempt to force it again at a better time.
-	 * HLS in Safari is the easiest way to reproduce this, webOS also does that with HLS and some other.
-	 * @return {boolean} whether this call resulted in an attempt to correct position or not
 	 * @protected
 	 */
 	_reapplyStartPosition() {
 		const needsCorrection = this._requestedStartPosition !== null &&
 			Math.round(this._requestedStartPosition / 1000) !== Math.round(this._videoElement.currentTime);
 
-		if (needsCorrection) {
-			this._fireEvent(
-				this.EVENT_DEBUG_MESSAGE,
-				'Reapplying start position',
-				`Current: ${this._videoElement.currentTime}, requested: ${this._requestedStartPosition}`
-			);
-			try {
-				this._videoElement.currentTime = this._requestedStartPosition / 1000;
-			} catch (e) {
-				if (e instanceof DOMException && e.code === DOMException.INVALID_STATE_ERR) {
-					// Ignore
-				} else {
-					throw e;
-				}
-			}
+		if (!needsCorrection) {
+			return;
 		}
 
-		return needsCorrection;
+		this._fireEvent(
+			this.EVENT_DEBUG_MESSAGE,
+			'Applying start position ' +
+			`State: ${this._startPositionState} ` +
+			`Current: ${this._videoElement.currentTime}, requested: ${this._requestedStartPosition}`
+		);
+		try {
+			this._videoElement.currentTime = this._requestedStartPosition / 1000;
+		} catch (e) {
+			if (e instanceof DOMException && e.code === DOMException.INVALID_STATE_ERR) {
+				// Ignore
+			} else {
+				throw e;
+			}
+		}
 	}
 
 	/**
@@ -645,7 +672,6 @@ const NativeReadyState = {
 	HAVE_ENOUGH_DATA: 4
 };
 
-
 /**
  * @type {!Array<string>}
  */
@@ -674,3 +700,18 @@ const NativeEvents = [
 	'waiting'
 ];
 
+/**
+ * Some engines with some media formats sometimes quietly fail to apply start position at initialisation.
+ * We attempt to force it again at a better time(s).
+ * HLS in Safari is the easiest way to reproduce this, webOS also does that with HLS and some other.
+ * Such attempts to force it may happen before or after canplay event.
+ * All this warrant a more complex tracking of something as trivial as starting position
+ * @enum {string}
+ * @protected
+ */
+export const StartPositionState = {
+	NONE: 'none', // No were requested in start options, playback is starting from media start
+	REQUESTED: 'requested', // A non-zero value was given as START_POSITION and will be set
+	APPLYING: 'applying', // An attempt was made to set starting position
+	APPLIED: 'applied' // Successfully set requested position
+};

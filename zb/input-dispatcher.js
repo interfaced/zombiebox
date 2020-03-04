@@ -56,7 +56,7 @@ export default class InputDispatcher {
 	 * @param {HTMLElement} element
 	 */
 	addMouseHoverArea(widget, element) {
-		if (this._input.isPointingDeviceSupported()) {
+		if (this._input.isPointingDeviceSupported() && !this._mouseHoverAreaMapElementToListener.has(element)) {
 			const listener = this._widgetMouseOverListener.bind(this, widget);
 
 			element.addEventListener('mouseover', listener, false);

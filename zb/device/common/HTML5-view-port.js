@@ -174,29 +174,16 @@ export default class HTML5ViewPort extends AbstractViewPort {
 	 */
 	_applyCropStyles() {
 		const transferring = this._aspectRatio.getTransferring();
-		const isCropMode = transferring === Transferring.CROP;
 
-		if (isCropMode) {
-			this._setElementStyleProperty(this._video, 'objectFit', 'contain');
-			this._setElementStyleProperty(this._video, 'transform', 'scale(' + this._calculateTransitRatio() + ')');
-		} else {
-			this._setElementStyleProperty(this._video, 'objectFit', 'fill');
-			this._setElementStyleProperty(this._video, 'transform', '');
-		}
-	}
+		const objectFit = {
+			[Transferring.CROP]: 'cover',
+			[Transferring.LETTERBOX]: 'contain',
+			[Transferring.STRETCH]: 'fill',
+			[Transferring.KEEP]: 'none',
+			[Transferring.AUTO]: 'contain'
+		}[transferring];
 
-	/**
-	 * @return {number}
-	 * @protected
-	 */
-	_calculateTransitRatio() {
-		this._updateVideoInfo();
-
-		const area = this.getCurrentArea();
-		const areaRatio = area.getSizeX() / area.getSizeY();
-		const originRatio = this._videoInfo.width / this._videoInfo.height;
-
-		return originRatio / areaRatio;
+		this._setElementStyleProperty(this._video, 'objectFit', objectFit);
 	}
 
 	/**

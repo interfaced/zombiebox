@@ -4,6 +4,8 @@ const {expect} = require('chai');
 const TemporaryApplicationContainer = require('../temporary-application-container');
 
 
+const normalizeLineBreaks = (string) => string.replace(/[\n\r]+\s*/g, '\n');
+
 describe('Code generation', () => {
 	let appContainer;
 	let app;
@@ -67,29 +69,40 @@ describe('Code generation', () => {
 	});
 
 	it('Should generate an entry point', async () => {
-		expect(await appContainer.readFile('.generated/app.js'))
-			.equal(readFileFromReferences('app.js'));
+		const result = await appContainer.readFile('.generated/app.js');
+		const reference = readFileFromReferences('app.js');
+
+		expect(normalizeLineBreaks(result))
+			.equal(normalizeLineBreaks(reference));
 	});
 
 	it('Should generate a base application class', async () => {
-		expect(await appContainer.readFile('.generated/base-application.js'))
-			.equal(readFileFromReferences('base-application.js'));
+		const result = await appContainer.readFile('.generated/base-application.js');
+		const reference = readFileFromReferences('base-application.js');
+
+		expect(normalizeLineBreaks(result))
+			.equal(normalizeLineBreaks(reference));
 	});
 
 	it('Should generate defines', async () => {
 		const zbVersion = app.getZbPackageJson()['version'];
 
+		const result = await appContainer.readFile('.generated/define.js');
 		const reference = readFileFromReferences('define.js').replace(
 			'export const ZOMBIEBOX_VERSION = "0.0.0";',
 			`export const ZOMBIEBOX_VERSION = "${zbVersion}";`
 		);
 
-		expect(await appContainer.readFile('.generated/define.js')).equal(reference);
+		expect(normalizeLineBreaks(result))
+			.equal(normalizeLineBreaks(reference));
 	});
 
 	it('Should generate extensions code', async () => {
-		expect(await appContainer.readFile('.generated/blockchain/private-key'))
-			.equal(readFileFromAddonFixturesFixtures('zombiebox-extension-blockchain/private-key'));
+		const result = await appContainer.readFile('.generated/blockchain/private-key');
+		const reference = readFileFromAddonFixturesFixtures('zombiebox-extension-blockchain/private-key');
+
+		expect(normalizeLineBreaks(result))
+			.equal(normalizeLineBreaks(reference));
 	});
 });
 

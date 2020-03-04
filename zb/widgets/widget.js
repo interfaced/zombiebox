@@ -339,7 +339,7 @@ export default class Widget extends Container {
 	 * @override
 	 */
 	mouseClick(event) {
-		if (this.processKey(Key.ENTER, event)) {
+		if (this.isEnabled() && this.processKey(Key.ENTER, event)) {
 			event.stopPropagation();
 		}
 	}

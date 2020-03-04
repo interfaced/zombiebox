@@ -76,7 +76,7 @@ class TemporaryApplicationContainer {
 		if (copy) {
 			await fse.copy(source, target);
 		} else {
-			await fse.symlink(source, target);
+			await fse.symlink(source, target, 'junction');
 		}
 	}
 

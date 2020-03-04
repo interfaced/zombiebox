@@ -30,6 +30,7 @@ describe('Starting', () => {
 	describe('Versions check', () => {
 		it('Should throw an error when the versions check fails', async () => {
 			await appContainer.writeFile('package.json', JSON.stringify({
+				name: 'test',
 				dependencies: {
 					'zombiebox': '0.0.0',
 					'zombiebox-platform-pc': '*'
@@ -39,13 +40,14 @@ describe('Starting', () => {
 			expect(() => appContainer.createZbApplication([]))
 				.throw(Error).and.satisfy((err) => stripAnsi(err.message) === (
 					`Installed version ${currentZBVersion} of zombiebox is incompatible ` +
-					`with the required by application range 0.0.0.\n` +
+					`with the required by test range 0.0.0.\n` +
 					`Install a compatible with range 0.0.0 version of zombiebox and try again.`
 				));
 		});
 
 		it('Should be able to skip the versions check', async () => {
 			await appContainer.writeFile('package.json', JSON.stringify({
+				name: 'test',
 				dependencies: {
 					'zombiebox': '0.0.0',
 					'zombiebox-platform-pc': '*'
@@ -57,6 +59,7 @@ describe('Starting', () => {
 
 		it('Should not throw an error when the required version range isn\'t valid', async () => {
 			await appContainer.writeFile('package.json', JSON.stringify({
+				name: 'test',
 				dependencies: {
 					'zombiebox': '_',
 					'zombiebox-platform-pc': '*'
@@ -68,6 +71,7 @@ describe('Starting', () => {
 
 		it('Should recognize the semantic versioning', async () => {
 			await appContainer.writeFile('package.json', JSON.stringify({
+				name: 'test',
 				dependencies: {
 					'zombiebox': '^0.0.0 ~0.0.0 <=0.0.0',
 					'zombiebox-platform-pc': '*'
@@ -77,7 +81,7 @@ describe('Starting', () => {
 			expect(() => appContainer.createZbApplication([]))
 				.throw(Error).and.satisfy((err) => stripAnsi(err.message) === (
 					`Installed version ${currentZBVersion} of zombiebox is incompatible ` +
-					`with the required by application range ^0.0.0 ~0.0.0 <=0.0.0.\n` +
+					`with the required by test range ^0.0.0 ~0.0.0 <=0.0.0.\n` +
 					`Install a compatible with range ^0.0.0 ~0.0.0 <=0.0.0 version of zombiebox and try again.`
 				));
 		});
@@ -92,6 +96,7 @@ describe('Starting', () => {
 			}));
 
 			await appContainer.writeFile('package.json', JSON.stringify({
+				name: 'test',
 				dependencies: {
 					'zombiebox': '*',
 					'zombiebox-platform-pc': '*',
@@ -113,6 +118,7 @@ describe('Starting', () => {
 			await appContainer.installDependency('zombiebox-platform-tamagotchi', tamagotchiPlatformPath);
 
 			await appContainer.writeFile('package.json', JSON.stringify({
+				name: 'test',
 				dependencies: {
 					'zombiebox': '*',
 					'zombiebox-platform-pc': '*',

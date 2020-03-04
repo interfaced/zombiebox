@@ -1,5 +1,20 @@
 # Change log
 
+## 2.7.0 (release date: 04.03.2020) 
+
+### Framework
+* `StatefulHtml5Video` now ensures `START_POSITION` is applied before entering `READY`
+* `IStatefulVideo.getEngine` method was added that exposes internal platform-specific engine
+* Disabled widgets no longer receive mouse clicks
+* Fix duplication of mouse listeners on widgets that get changed from one parent to another in some cases
+
+### Tools
+* Fixed several compatibility issues on Windows 
+* Added a warning against node versions not compatible with versions specified in `engines` fields of application and its dependencies.  
+* Parallelized and optimised some filesystem operations
+* Several deprecated APIs were removed, see previous versions for migration guides
+* Google Closure Compiler udpated to `20200224`
+
 ## 2.6.1 (release date: 03.02.2020)
 
 ### Tools

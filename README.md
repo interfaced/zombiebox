@@ -24,7 +24,7 @@ npm install zombiebox
 npm install zombiebox-platform-pc zombiebox-extension-cutejs
 ```
 
-Create application `config.js` and start developing or use boilerplate:
+Either create application `config.js` manually and start developing or start with a boilerplate:
 
 ```bash
 npx zombiebox init $NAME

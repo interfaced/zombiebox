@@ -10,6 +10,7 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	line-height: 1.25;
+	overflow: hidden;
 }
 
 /* Helpers
