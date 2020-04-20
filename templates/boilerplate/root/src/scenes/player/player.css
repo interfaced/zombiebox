@@ -1,0 +1,15 @@
+.s-player .row {
+	margin: 20px auto;
+	text-align: center;
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+.s-player .row.history {
+	bottom: 0;
+}
+
+.s-player .row.scenes {
+	bottom: 100px;
+}

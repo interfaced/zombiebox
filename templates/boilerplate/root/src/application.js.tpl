@@ -1,21 +1,17 @@
 import BaseApplication from 'generated/base-application';
 import Home from './scenes/home/home';
+import Player from './scenes/player/player';
 
 
 /**
  */
 export default class Application extends BaseApplication {
 	/**
-	 */
-	constructor() {
-		super();
-	}
-
-	/**
 	 * @override
 	 */
 	onReady() {
 		this.addScene(new Home(), 'home');
+		this.addScene(new Player(), 'player');
 	}
 
 	/**
@@ -25,9 +21,7 @@ export default class Application extends BaseApplication {
 		this.clearHistory();
 		const homeScene = this.getLayerManager().getLayer('home');
 
-		return this.getSceneOpener().open(homeScene, () => {
-			// Set home scene data here
-		});
+		return this.getSceneOpener().open(homeScene);
 	}
 
 	/**

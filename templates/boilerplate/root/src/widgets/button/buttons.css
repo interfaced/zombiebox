@@ -1,0 +1,18 @@
+.w-button {
+	width: 300px;
+	height: 40px;
+	border: 3px solid white;
+	border-radius: 7px;
+	display: inline-block;
+	font-size: 30px;
+	line-height: 40px;
+	margin: 20px;
+	text-align: center;
+	background: rgba(0, 0, 0, 0.7);
+}
+
+.w-button._active {
+	font-weight: bold;
+	border-color: darkred;
+	background: rgba(58, 11, 18, 0.7);
+}

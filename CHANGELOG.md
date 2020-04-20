@@ -1,5 +1,14 @@
 # Change log
 
+## 2.7.1 (release date: 20.04.2020)
+
+### Framework
+* Added `EVENT_INNER_FOCUS` to `Container` this event is fired when focus moves within a container (scene or widget) and propagates all the way to root `Container`
+
+### Tools
+* Boilerplate application expanded to show case more real cases like video player, navigation and scene opening
+* Closure compiler updated to `20200224`
+ 
 ## 2.7.0 (release date: 04.03.2020) 
 
 ### Framework

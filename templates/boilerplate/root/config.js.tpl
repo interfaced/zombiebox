@@ -12,5 +12,9 @@ module.exports = function(config) {
 			src: path.resolve(__dirname, 'src'),
 			entry: path.resolve(__dirname, 'src/application.js')
 		},
+
+		devServer: {
+			backdoor: path.resolve(__dirname, 'src/dev.js')
+		}
 	};
 };

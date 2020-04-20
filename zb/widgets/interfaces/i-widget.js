@@ -174,9 +174,3 @@ IWidget.prototype.EVENT_BLUR;
  * @const {string} widget want to focus
  */
 IWidget.prototype.EVENT_WANT_FOCUS;
-
-
-/**
- * @const {string} inner focus state changed. E.g. another child element selected
- */
-IWidget.prototype.EVENT_INNER_FOCUS;

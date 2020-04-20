@@ -79,7 +79,14 @@ export default class Container extends EventPublisher {
 		 */
 		this._focused = false;
 
+		/**
+		 * Fired with: {Array<Container>} {?IWidget}
+		 * @const {string}
+		 */
+		this.EVENT_INNER_FOCUS = 'inner-focus';
+
 		this._onWidgetWantToFocus = this._onWidgetWantToFocus.bind(this);
+		this._onWidgetInnerFocus = this._onWidgetInnerFocus.bind(this);
 	}
 
 	/**
@@ -265,6 +272,7 @@ export default class Container extends EventPublisher {
 		}
 
 		widget.on(widget.EVENT_WANT_FOCUS, this._onWidgetWantToFocus);
+		widget.on(widget.EVENT_INNER_FOCUS, this._onWidgetInnerFocus);
 
 		const widgetContainer = widget.getContainer();
 		if (widgetContainer) {
@@ -384,14 +392,6 @@ export default class Container extends EventPublisher {
 	activateWidget(widget, prevRect) {
 		const selfFocused = this.isFocused();
 
-		if (widget === this._activeWidget) {
-			if (selfFocused && widget && !widget.isFocused()) {
-				widget.focus(prevRect);
-			}
-
-			return true;
-		}
-
 		if (widget) {
 			this.isMyWidget(widget);
 
@@ -400,16 +400,26 @@ export default class Container extends EventPublisher {
 			}
 		}
 
-		if (this._activeWidget) {
-			this._activeWidget.blur();
-		}
-
 		const oldWidget = this._activeWidget;
 		const oldFocusedRect = oldWidget ? oldWidget.getFocusedRect() : null;
+		let newWidget = null;
 
-		this._activeWidget = widget;
-		if (this._activeWidget && selfFocused) {
-			this._activeWidget.focus(prevRect || oldFocusedRect);
+		if (widget === this._activeWidget) {
+			if (selfFocused && widget && !widget.isFocused()) {
+				newWidget = this._activeWidget;
+			}
+		} else {
+			if (this._activeWidget) {
+				this._activeWidget.blur();
+			}
+
+			newWidget = widget;
+			this._activeWidget = newWidget;
+		}
+
+		if (newWidget && selfFocused) {
+			this._fireEvent(this.EVENT_INNER_FOCUS, [this], newWidget);
+			newWidget.focus(prevRect || oldFocusedRect);
 		}
 
 		return true;
@@ -561,6 +571,17 @@ export default class Container extends EventPublisher {
 	 */
 	_onWidgetWantToFocus(event, widget) {
 		this.activateWidget(widget);
+	}
+
+	/**
+	 *
+	 * @param {string} event
+	 * @param {Array<Container>} breadcrumbs
+	 * @param {?IWidget} child
+	 * @protected
+	 */
+	_onWidgetInnerFocus(event, breadcrumbs, child) {
+		this._fireEvent(event, [this].concat(breadcrumbs), child);
 	}
 
 	/**

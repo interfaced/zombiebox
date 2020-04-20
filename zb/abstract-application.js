@@ -208,7 +208,7 @@ export default class AbstractApplication extends EventPublisher {
 		const unblock = this.device.input.unblock.bind(this.device.input, blockId);
 
 		return this._historyManager.back()
-			.then(unblock, unblock);
+			.finally(unblock);
 	}
 
 	/**
@@ -220,10 +220,10 @@ export default class AbstractApplication extends EventPublisher {
 		}
 
 		const blockId = this.device.input.block();
-		const unblock = this.device.input.unblock(blockId);
+		const unblock = this.device.input.unblock.bind(this.device.input, blockId);
 
 		return this._historyManager.forward()
-			.then(unblock, unblock);
+			.finally(unblock);
 	}
 
 	/**

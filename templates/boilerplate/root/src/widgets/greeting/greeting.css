@@ -1,5 +1,13 @@
 .w-greeting {
-	font-size: 50px;
-	margin: 100px;
 	text-align: center;
+}
+
+.w-greeting h2 {
+	font-size: 50px;
+	margin-top: 100px;
+}
+
+.w-greeting p {
+	font-size: 20px;
+	margin: 30px;
 }

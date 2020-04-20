@@ -73,12 +73,6 @@ export default class Widget extends Container {
 		 * @override
 		 */
 		this.EVENT_WANT_FOCUS = 'want-focus';
-
-		/**
-		 * TODO: implement or remove this event
-		 * @override
-		 */
-		this.EVENT_INNER_FOCUS = 'inner-focus';
 	}
 
 	/**

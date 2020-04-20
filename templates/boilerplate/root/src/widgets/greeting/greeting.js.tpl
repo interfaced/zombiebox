@@ -1,5 +1,5 @@
 import AbstractCuteWidget from 'cutejs/widgets/abstract-widget';
-import {In, Out, render} from 'generated/cutejs/<%=name%>/widgets/greeting/greeting.jst';
+import {Out, render} from 'generated/cutejs/<%=name%>/widgets/greeting/greeting.jst';
 
 
 /**
@@ -15,8 +15,13 @@ export default class Greeting extends AbstractCuteWidget {
 		 * @protected
 		 */
 		this._exported;
+	}
 
-		this._addContainerClass('w-greeting');
+	/**
+	 * @override
+	 */
+	isFocusable() {
+		return false;
 	}
 
 	/**

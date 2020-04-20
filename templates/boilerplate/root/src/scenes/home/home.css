@@ -1,7 +1,21 @@
-.s-home {}
+.s-home h1 {
+	padding: 30px;
+	font-size: 30px;
+	background: #555;
+}
 
-	.s-home h1 {
-		padding: 30px;
-		font-size: 30px;
-		background: #555;
-	}
+.s-home .row {
+	margin: 20px auto;
+	text-align: center;
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+.s-home .row.history {
+	bottom: 0
+}
+
+.s-home .row.scenes {
+	bottom: 100px;
+}
