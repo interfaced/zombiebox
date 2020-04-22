@@ -174,3 +174,9 @@ IWidget.prototype.EVENT_BLUR;
  * @const {string} widget want to focus
  */
 IWidget.prototype.EVENT_WANT_FOCUS;
+
+
+/**
+ * @const {string} focus changed somewhere between widget descendants
+ */
+IWidget.prototype.EVENT_INNER_FOCUS;

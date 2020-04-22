@@ -1,5 +1,10 @@
 # Change log
 
+## 2.7.2 (release date: 22.04.2020)
+
+### Framework
+* Fixed `EVENT_INNER_FOCUS` being left out from `IWidget` interface
+
 ## 2.7.1 (release date: 20.04.2020)
 
 ### Framework
