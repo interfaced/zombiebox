@@ -527,7 +527,6 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 			this._stateBeforeSeeking = null;
 			return;
 		}
-
 		// Playing and Ended states will be handled in "playing" and "ended" event handlers
 
 		this._stateBeforeSeeking = null;
@@ -664,7 +663,7 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 /**
  * @enum {number}
  */
-const NativeReadyState = {
+export const NativeReadyState = {
 	HAVE_NOTHING: 0,
 	HAVE_METADATA: 1,
 	HAVE_CURRENT_DATA: 2,

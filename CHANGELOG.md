@@ -1,5 +1,14 @@
 # Change log
 
+## 2.7.3 (release date: 05.08.2020)
+
+### Framework
+* Added export if `NativeReadyState` to `StatefulHtml5Video`
+
+### Tools
+* Replaced `chalk` with `kleur`
+* Improved output of `--help` option for CLI tools
+
 ## 2.7.2 (release date: 22.04.2020)
 
 ### Framework
