@@ -141,7 +141,6 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 
 		if (PrepareOption.START_POSITION in options) {
 			this._requestedStartPosition = options[PrepareOption.START_POSITION];
-			this._startPositionState = StartPositionState.REQUESTED;
 
 			this._reapplyStartPosition();
 		}
@@ -584,8 +583,13 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 			Math.round(this._requestedStartPosition / 1000) !== Math.round(this._videoElement.currentTime);
 
 		if (!needsCorrection) {
+			this._startPositionState = this._requestedStartPosition === null ?
+				StartPositionState.NONE :
+				StartPositionState.APPLIED;
 			return;
 		}
+
+		this._startPositionState = StartPositionState.REQUESTED;
 
 		this._fireEvent(
 			this.EVENT_DEBUG_MESSAGE,

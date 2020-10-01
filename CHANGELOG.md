@@ -1,5 +1,19 @@
 # Change log
 
+## 2.7.4 (release date: 01.10.2020)
+Virtually the same as `2.7.4-alpha.1`
+
+### Framework
+* Fix start position not being applied on webOS in some cases
+
+### Tools
+* Closure compiler updated to `20200927`
+
+## 2.7.4-alpha.1 (release date: 30.09.2020)
+
+### Framework
+* Experimental fix for an issue on webOS 2017 when start position fails to apply in some cases.
+
 ## 2.7.3 (release date: 05.08.2020)
 
 ### Framework
