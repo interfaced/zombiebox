@@ -462,7 +462,7 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 		const currentState = this._stateMachine.getCurrentState();
 
 		if (
-			this._startPositionState === StartPositionState.REQUESTED &&
+			this._startPositionState !== StartPositionState.NONE &&
 			currentState === LOADING
 		) {
 			this._startPositionState = StartPositionState.APPLYING;
