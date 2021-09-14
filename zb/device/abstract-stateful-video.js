@@ -14,6 +14,10 @@ import {Type as DRMType} from './drm/drm';
 import IStatefulVideo, {State, StateDiagram} from './interfaces/i-stateful-video';
 import IViewPort from './interfaces/i-video';
 
+// This is a workaround for @suppress erroneously triggering no-undefined-types in eslint jsdoc plugin
+// TODO: should be addressed in eslint-plugin-jsdoc
+const checkTypes = null;
+
 
 /**
  * @abstract

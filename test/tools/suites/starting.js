@@ -179,6 +179,6 @@ describe('Starting', () => {
  * @return {AbstractPlatform}
  */
 function createTamagotchiPlatform() {
-	// eslint-disable-next-line global-require
+	// eslint-disable-next-line node/global-require
 	return new (require(tamagotchiPlatformPath))();
 }

@@ -45,7 +45,7 @@ class TemporaryApplicationContainer {
 			path.dirname(require.resolve('zombiebox-platform-pc/package.json')),
 			true
 		);
-		// eslint-disable-next-line global-require
+		// eslint-disable-next-line node/global-require
 		const pcPackageJson = require('zombiebox-platform-pc/package.json');
 		for (const pcDependency of Object.keys(pcPackageJson['dependencies'])) {
 			await this.installDependency(

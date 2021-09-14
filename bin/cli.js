@@ -10,7 +10,7 @@
  */
 const path = require('path');
 const fs = require('fs');
-const chalk = require('chalk');
+const kleur = require('kleur');
 const yargs = require('yargs');
 const {findPackageJson} = require('../lib/utils');
 const Application = require('../lib/application');
@@ -159,7 +159,7 @@ class CLI {
 					logger.error(`Error writing aliases map: ${error.message}`);
 					process.exit(1);
 				} else {
-					logger.output(`Aliases map generated in ${chalk.underline(filename)}`);
+					logger.output(`Aliases map generated in ${kleur.underline(filename)}`);
 				}
 			});
 		});
@@ -170,6 +170,10 @@ class CLI {
 	 * @protected
 	 */
 	_setupYargs() {
+		// Disable built-in help to prevent early processing and unexpected process end.
+		// Will be enabled before the last argv call.
+		yargs.help(false);
+
 		/* eslint-disable newline-per-chained-call */
 		yargs
 			.array('config').default('config', [])
@@ -245,7 +249,7 @@ class CLI {
 							default: process.cwd()
 						});
 				},
-				(yargv) => this.init(yargv.name, yargv.root)
+				(argv) => this.init(argv.name, argv.root)
 			)
 			.command(
 				'addScene <name> [path]',
@@ -338,7 +342,7 @@ class CLI {
 			(packageJson) => packageJson.dependencies && packageJson.dependencies.hasOwnProperty('zombiebox')
 		);
 
-		logger.debug(`Application package.json path: ${chalk.underline(packageJson)}`);
+		logger.debug(`Application package.json path: ${kleur.underline(packageJson)}`);
 
 		if (!packageJson) {
 			return null;

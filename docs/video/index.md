@@ -199,10 +199,10 @@ Aborts playback and frees resources occupied by Media File.
 | getVolume       |    •   |     •     |    •    |     •     |     •     |     •     |     •    |    •    |    •    |     •     |      •      |
 | isMuted         |    •   |     •     |    •    |     •     |     •     |     •     |     •    |    •    |    •    |     •     |      •      |
 | prepare         |    •   |           |         |           |           |           |          |         |    •    |           |             |
-| pause           |        |           |         |     •     |           |     •     |          |         |    •    |           |             |
-| play            |        |           |         |           |     •     |     •     |          |         |    •    |           |             |
+| pause           |        |           |         |     •     |           |           |          |         |    •    |           |             |
+| play            |        |           |         |           |           |           |     •    |         |    •    |           |             |
 | setPlaybackRate |        |     •     |    •    |     •     |     •     |     •     |     •    |    •    |    •    |     •     |      •      |
-| setPosition     |        |           |         |     •     |           |           |     •    |    •    |    •    |           |             |
+| setPosition     |        |           |         |     •     |           |     •     |     •    |    •    |    •    |           |             |
 | setVolume       |    •   |     •     |    •    |     •     |     •     |     •     |     •    |    •    |    •    |     •     |      •      |
 | stop            |        |     •     |    •    |     •     |     •     |     •     |     •    |    •    |    •    |           |             |
 | toggleMuted     |    •   |     •     |    •    |     •     |     •     |     •     |     •    |    •    |    •    |     •     |      •      |

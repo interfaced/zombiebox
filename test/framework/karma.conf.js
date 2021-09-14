@@ -15,8 +15,13 @@ module.exports = (config) => {
 
 		frameworks: ['mocha', 'chai'],
 		reporters: ['mocha'],
-		browsers: ['ChromeHeadless'],
-
+		browsers: ['ChromeHeadlessNoSandbox'],
+		customLaunchers: {
+			ChromeHeadlessNoSandbox: {
+				base: 'ChromeHeadless',
+				flags: ['--no-sandbox']
+			}
+		},
 		files: [
 			{type: 'module', pattern: zbFiles},
 			{type: 'module', pattern: generatedFiles},

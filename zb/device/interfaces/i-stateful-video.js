@@ -277,16 +277,18 @@ export default class IStatefulVideo {
 	setVolume(volume) {}
 
 	/**
+	 * @param {number=} step
 	 * @return {number}
 	 * @throws {UnsupportedFeature}
 	 */
-	volumeDown() {}
+	volumeDown(step) {}
 
 	/**
+	 * @param {number=} step
 	 * @return {number}
 	 * @throws {UnsupportedFeature}
 	 */
-	volumeUp() {}
+	volumeUp(step) {}
 
 	/**
 	 * @param {IDRMClient} client

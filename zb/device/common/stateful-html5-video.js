@@ -141,7 +141,6 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 
 		if (PrepareOption.START_POSITION in options) {
 			this._requestedStartPosition = options[PrepareOption.START_POSITION];
-			this._startPositionState = StartPositionState.REQUESTED;
 
 			this._reapplyStartPosition();
 		}
@@ -463,7 +462,7 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 		const currentState = this._stateMachine.getCurrentState();
 
 		if (
-			this._startPositionState === StartPositionState.REQUESTED &&
+			this._startPositionState !== StartPositionState.NONE &&
 			currentState === LOADING
 		) {
 			this._startPositionState = StartPositionState.APPLYING;
@@ -527,7 +526,6 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 			this._stateBeforeSeeking = null;
 			return;
 		}
-
 		// Playing and Ended states will be handled in "playing" and "ended" event handlers
 
 		this._stateBeforeSeeking = null;
@@ -585,8 +583,13 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 			Math.round(this._requestedStartPosition / 1000) !== Math.round(this._videoElement.currentTime);
 
 		if (!needsCorrection) {
+			this._startPositionState = this._requestedStartPosition === null ?
+				StartPositionState.NONE :
+				StartPositionState.APPLIED;
 			return;
 		}
+
+		this._startPositionState = StartPositionState.REQUESTED;
 
 		this._fireEvent(
 			this.EVENT_DEBUG_MESSAGE,
@@ -664,7 +667,7 @@ export default class StatefulHtml5Video extends AbstractStatefulVideo {
 /**
  * @enum {number}
  */
-const NativeReadyState = {
+export const NativeReadyState = {
 	HAVE_NOTHING: 0,
 	HAVE_METADATA: 1,
 	HAVE_CURRENT_DATA: 2,

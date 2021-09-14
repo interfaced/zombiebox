@@ -28,7 +28,7 @@ module.exports = {
 					'',
 					' * This file is part of the ZombieBox package.',
 					' *',
-					{pattern: `\\* Copyright © 2012\\-${(new Date).getFullYear()}, Interfaced`},
+					{pattern: `\\* Copyright © 2012\\-${(new Date()).getFullYear()}, Interfaced`},
 					' *',
 					' * For the full copyright and license information, please view the LICENSE',
 					' * file that was distributed with this source code.',
