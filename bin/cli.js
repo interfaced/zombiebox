@@ -11,6 +11,7 @@
 const path = require('path');
 const fs = require('fs');
 const kleur = require('kleur');
+const _ = require('lodash');
 const yargs = require('yargs');
 const {findPackageJson} = require('../lib/utils');
 const Application = require('../lib/application');
@@ -44,12 +45,15 @@ class CLI {
 				}
 				logger.silly(`Template locations: \n\t${locations.join('\n\t')}`);
 				return locations;
+			}, (data) => {
+				data._ = _;
+				data.config = this._application ? this._application.getConfig() : null;
 			}
 		);
 
 		/**
 		 * @type {Scaffolding}
-		 * @private
+		 * @protected
 		 */
 		this._scaffolding = new Scaffolding(this._templateHelper);
 
