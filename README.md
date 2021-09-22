@@ -186,5 +186,5 @@ It was created as internal framework for numerous Smart TV and STB [applications
 
 This library is distributed under MIT license. See [LICENSE](LICENSE).
 
-Copyright © 2012-2020, Interfaced. All rights reserved.
+Copyright © 2012-2021, Interfaced. All rights reserved.
 If you have any questions about license, please write to [licensing@zombiebox.tv](mailto:licensing@zombiebox.tv).
