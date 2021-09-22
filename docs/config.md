@@ -10,8 +10,8 @@ ZombieBox project configuration schema
 | Key | Type | Description | 
 | --- | --- | --- |
 | project | [`ProjectConfig`](#markdown-header-projectconfig) | **Required!** Vital project configuration |
-| build | [`Build`](#build) | Build options |
 | gcc | Object | [Closure Compiler flags](https://github.com/google/closure-compiler/wiki/Flags-and-Options). Some flags (`--js`, `--externs` et al.) are set internally by ZombieBox, overriding them might break everything. |
+| build | [`BuildOptions`](#markdown-header-buildoptions) | Build options |
 | postcss | [`PostCSSConfig`](#markdown-header-postcssconfig) | Configures CSS files processing and bundling |
 | include | Array<[`EntityConfig`](#markdown-header-entityconfig)> | Resources, source and other files for additional entities (libraries, extra scripts and static files) |
 | extensions | Object | ZombieBox extensions specific configuration options |
@@ -33,15 +33,6 @@ Vital project configuration
 | entry | string | **Required!** Absolute path to application entry point class file path; Must provide a default export |
 | src | string | **Required!** Absolute path to directory with application sources; Will be aliased as project name |
 | dist | string | Absolute path to output directory; Build artifacts will be put here |
-
-## Build
-
-Build configuration
-
-| Key | Type | Description | 
-| --- | --- | --- |
-| inlineJS | boolean | Inline bundled JS code into index.html body. |
-| inlineCSS | boolean | Inline bundled CSS code into index.html body. |
 
 
 ## EntityConfig
@@ -85,5 +76,15 @@ Development server options
 | proxy | Object<string> | Map of urls to proxy |
 | enableRawProxy | boolean | Enables proxy at `/proxy?url=` |
 | backdoor | string | Path to a JS module file that will be include in dev server only |
+
+
+## BuildOptions
+
+Build options
+
+| Key | Type | Description | 
+| --- | --- | --- |
+| inlineCSS | boolean | Inline bundled CSS code into index.html body |
+| inlineJS | boolean | Inline bundled JS code into index.html body |
 
 
