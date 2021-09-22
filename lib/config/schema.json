@@ -203,6 +203,16 @@
       "additionalProperties": true
     },
 
+    "build": {
+      "description": "Build options.",
+      "type": "object",
+      "properties": {
+        "inlineCSS": {"type": "boolean"},
+        "inlineJS": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+
     "postcss": {"$ref": "#/definitions/postcss" },
 
     "include": {
