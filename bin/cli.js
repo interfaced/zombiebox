@@ -89,10 +89,32 @@ class CLI {
 		logger.verbose(`Building application for ${target}`);
 		this._assertApplication();
 
-		const platform = this._application.getPlatforms().find((platform) => platform.getName() === target);
+		const platform = this._application.getPlatformByName(target);
 
 		this._application.ready()
 			.then(() => this._application.build(platform))
+			.catch((e) => {
+				if (e instanceof Error) {
+					logger.error(e.toString());
+					logger.debug(e.stack);
+				} else {
+					logger.error(e);
+				}
+				process.exit(2);
+			});
+	}
+
+	/**
+	 * @param {string} target Platform name
+	 */
+	pack(target) {
+		logger.verbose(`Packing application for ${target}`);
+		this._assertApplication();
+
+		const platform = this._application.getPlatformByName(target);
+
+		this._application.ready()
+			.then(() => this._application.pack(platform))
 			.catch((e) => {
 				if (e instanceof Error) {
 					logger.error(e.toString());
@@ -240,6 +262,17 @@ class CLI {
 					});
 				},
 				(argv) => this.build(argv.platform)
+			)
+			.command(
+				'pack <platform>',
+				'Pack artifact for specific platform',
+				(yargs) => {
+					yargs.positional('platform', {
+						describe: 'platform name',
+						choices: buildTargets
+					});
+				},
+				(argv) => this.pack(argv.platform)
 			)
 			.command(
 				'init <name> [root]',
