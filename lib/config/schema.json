@@ -190,6 +190,24 @@
           "type": "string"
         }
       }
+    },
+    "build": {
+      "title": "Build options",
+      "description": "Build options",
+      "$id": "BuildOptions",
+      "type": "object",
+      "additionalProperties": false,
+
+      "properties": {
+        "inlineCSS": {
+          "description": "Inline bundled CSS code into index.html body",
+          "type": "boolean"
+        },
+        "inlineJS": {
+          "description": "Inline bundled JS code into index.html body",
+          "type": "boolean"
+        }
+      }
     }
   },
 
@@ -203,15 +221,7 @@
       "additionalProperties": true
     },
 
-    "build": {
-      "description": "Build options.",
-      "type": "object",
-      "properties": {
-        "inlineCSS": {"type": "boolean"},
-        "inlineJS": {"type": "boolean"}
-      },
-      "additionalProperties": false
-    },
+    "build": {"$ref": "#/definitions/build"},
 
     "postcss": {"$ref": "#/definitions/postcss" },
 
