@@ -100,9 +100,9 @@
     "sinon": "^11.1.2",
     "strip-ansi": "^6.0.0",
     "tmp": "^0.2.1",
-    "zombiebox-platform-pc": "^2.3.5"
+    "zombiebox-platform-pc": "^2.3.6"
   },
   "peerDependencies": {
-    "zombiebox-platform-pc": "^2.3.5"
+    "zombiebox-platform-pc": "^2.3.6"
   }
 }
