@@ -1,5 +1,20 @@
 # Change log
 
+## 2.7.7 (release date: 11.10.2021)
+
+### Framework
+* Fixed bad relative resources path in compiled CSS
+
+## 2.7.6 (release date: 28.09.2021)
+
+### Framework
+* Pass application config into `*.tpl` templates
+* Added `config.build.inlineCSS/JS` options
+* Split `build` command into `build` and `pack` commands
+
+### Tools
+* Closure compiler updated to `20210907`
+
 ## 2.7.5 (release date: 23.11.2020)
 
 ### Framework
