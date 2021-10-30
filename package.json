@@ -30,11 +30,12 @@
     "README.md"
   ],
   "engines": {
-    "node": ">=10",
-    "npm": ">=5"
+    "node": ">=16",
+    "npm": ">=8"
   },
+  "type": "module",
   "main": "./lib/index.js",
-  "module": "./zb/",
+  "module": "./lib/",
   "bin": {
     "zombiebox": "./bin/cli.js",
     "zb": "./bin/cli.js"

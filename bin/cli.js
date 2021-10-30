@@ -8,16 +8,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-const path = require('path');
-const fs = require('fs');
-const kleur = require('kleur');
-const _ = require('lodash');
-const yargs = require('yargs');
-const {findPackageJson} = require('../lib/utils');
-const Application = require('../lib/application');
-const TemplateHelper = require('../lib/template-helper');
-const Scaffolding = require('../lib/scaffolding');
-const {rootLogger, createChild} = require('../lib/logger');
+import path from 'path';
+import fs from 'fs';
+import kleur from 'kleur';
+import _ from 'lodash';
+import Yargs from 'yargs';
+import {hideBin} from 'yargs/helpers'
+import {findPackageJson} from '../lib/utils.js';
+import Application from '../lib/application.js';
+import TemplateHelper from '../lib/template-helper.js';
+import Scaffolding from '../lib/scaffolding.js';
+import {rootLogger, createChild} from '../lib/logger.js';
 const logger = createChild('CLI');
 
 
@@ -191,36 +192,47 @@ class CLI {
 		});
 	}
 
-	/**
-	 * @return {Yargs}
-	 * @protected
-	 */
-	_setupYargs() {
-		// Disable built-in help to prevent early processing and unexpected process end.
-		// Will be enabled before the last argv call.
-		yargs.help(false);
-
+	_createYargsParserWithBaseOptions() {
 		/* eslint-disable newline-per-chained-call */
-		yargs
+		return Yargs(hideBin(process.argv))
+			.help(false)
 			.array('config').default('config', [])
 			.array('addon').default('addon', [])
 			.string('log-level')
 			.alias('log-level', 'l')
 			.default('log-level', 'info')
 			.choices('log-level', Object.keys(logger.levels));
+	}
 
-		rootLogger.level = yargs.argv.logLevel;
+	_createApplicationFromArgv() {
+		const argv = this._createYargsParserWithBaseOptions().parse();
+
+		rootLogger.level = argv.logLevel;
 
 		// @see {https://github.com/yargs/yargs/issues/1336}
-		const configs = Array.isArray(yargs.argv.config) ?
-			yargs.argv.config.reduce((flat, value) => flat.concat(value), []) :
-			[yargs.argv.config];
+		const configs = Array.isArray(argv.config) ?
+			argv.config.reduce((flat, value) => flat.concat(value), []) :
+			[argv.config];
 
-		const app = this._createApplication(configs, yargs.argv.addon);
+		return this._createApplication(configs, argv.addon);
+	}
+
+	/**
+	 * @return {Yargs}
+	 * @protected
+	 */
+	async _setupYargs() {
+		// Disable built-in help to prevent early processing and unexpected process end.
+		// Will be enabled before the last argv call.
+
+		const app = this._createApplicationFromArgv();
 		const buildTargets = [];
 		let projectConfig = null;
 
+		const yargs = this._createYargsParserWithBaseOptions();
+
 		if (app) {
+			await app.ready();
 			projectConfig = app.getConfig().project;
 			const platforms = app.getPlatforms();
 
@@ -337,7 +349,7 @@ class CLI {
 			.recommendCommands()
 			.strict(true)
 			.help()
-			.argv;
+			.parse();
 
 		/* eslint-enable newline-per-chained-call */
 	}
@@ -416,14 +428,6 @@ class CLI {
 		}
 	}
 }
-
-
-/**
- * @typedef {{
- *     argv: Array<*>
- * }}
- */
-let Yargs;
 
 
 new CLI();
