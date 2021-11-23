@@ -1,5 +1,11 @@
 # Change log
 
+## 2.7.12 (release date: 23.11.2021)
+
+### Tools
+* Closure compiler updated to `20211107`
+* Updated dependencies. 
+
 ## 2.7.11 (release date: 23.11.2021)
 
 ### Framework
