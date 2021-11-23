@@ -1,5 +1,20 @@
 # Change log
 
+## 2.7.11 (release date: 23.11.2021)
+
+### Framework
+* Added `zb/structures/data/random` utils for generating random data.
+
+## 2.7.10 (release date: 29.10.2021)
+
+### Framework
+* Moved utils and lists classes from extension-ui to zb core.
+
+## 2.7.9 (release date: 27.10.2021)
+
+### Framework
+* Fixed path parsing while serving dev server.
+
 ## 2.7.7 (release date: 11.10.2021)
 
 ### Framework

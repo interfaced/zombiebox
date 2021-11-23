@@ -7,13 +7,14 @@
  * file that was distributed with this source code.
  */
 
+import * as random from './structures/data/random';
 
 /**
  * @deprecated You should use the real data instead. But don`t delete stub from zombiebox.
  * @param {number=} probability
  * @return {boolean}
  */
-export const bool = (probability = 0.5) => Math.random() > probability;
+export const bool = (probability = 0.5) => random.bool(probability);
 
 
 /**
@@ -22,7 +23,16 @@ export const bool = (probability = 0.5) => Math.random() > probability;
  * @param {number} max
  * @return {number}
  */
-export const number = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+export const num = (min, max) => random.num(min, max);
+
+
+/**
+ * @deprecated Use num() instead.
+ * @param {number} min
+ * @param {number} max
+ * @return {number}
+ */
+export const number = (min, max) => num(min, max);
 
 
 /**
@@ -31,11 +41,7 @@ export const number = (min, max) => Math.floor(Math.random() * (max - min + 1)) 
  * @param {number=} maxLength
  * @return {Array}
  */
-export const array = (length, maxLength = length) => {
-	const calculatedLength = number(length, maxLength);
-
-	return Array(...new Array(calculatedLength));
-};
+export const array = (length, maxLength = length) => random.array(length, maxLength);
 
 
 /**
@@ -44,20 +50,16 @@ export const array = (length, maxLength = length) => {
  * @param {number=} maxLength
  * @return {string}
  */
-export const string = (length, maxLength = length) => {
-	const calculatedLength = number(length, maxLength);
+export const str = (length, maxLength = length) => random.str(length, maxLength);
 
-	const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-	let str = '';
-	let index;
 
-	for (let i = 0; i < calculatedLength; i++) {
-		index = number(0, chars.length - 1);
-		str += chars[index];
-	}
-
-	return str;
-};
+/**
+ * @deprecated Use str() instead.
+ * @param {number} length
+ * @param {number=} maxLength
+ * @return {string}
+ */
+export const string = (length, maxLength = length) => str(length, maxLength);
 
 
 /**
@@ -67,8 +69,6 @@ export const string = (length, maxLength = length) => {
  * @return {string}
  */
 export const lorem = (length, maxLength = length) => {
-	const calculatedLength = number(length, maxLength);
-
 	const chunk = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ' +
 		'Nunc lobortis in sapien nec sodales. Integer quis tortor dictum, aliquet arcu quis, dignissim neque. ' +
 		'Proin at tellus nibh. Quisque mollis quis velit quis viverra. ' +
@@ -77,15 +77,10 @@ export const lorem = (length, maxLength = length) => {
 		'Nulla tortor ex, tempor at bibendum eget, pellentesque vel lacus. ' +
 		'Nam molestie felis sed eros gravida, in vulputate turpis interdum. ' +
 		'Morbi a laoreet urna, eget feugiat elit. Nulla quam elit, rutrum quis luctus a, posuere vitae sapien.';
-	let str = '';
 
-	while (str.length < calculatedLength) {
-		str += chunk;
-	}
-
-	str = str.substr(0, calculatedLength);
-
-	return str;
+	const len = random.num(length, maxLength);
+	const count = Math.ceil(len / chunk.length);
+	return chunk.repeat(count).substr(0, len);
 };
 
 
