@@ -33,8 +33,8 @@ export const array = (length, maxLength = length) => Array.from(new Array(num(le
 
 /**
  * @template T
- * @param {IArrayLike<T>} source
- * @return {T}
+ * @param {IArrayLike<T>|string} source
+ * @return {T|string}
  */
 export const item = (source) => source[num(0, source.length - 1)];
 
