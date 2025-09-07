@@ -6,11 +6,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import app from 'generated/app';
 import Direction, {Value} from '../geometry/direction';
 import IFocusable from '../interfaces/i-focusable';
 import IKeyHandler from '../interfaces/i-key-handler';
-import InputDispatcher from '../input-dispatcher';
 import Key from '../device/input/key';
 import EventPublisher from '../events/event-publisher';
 import IStateful from '../history/interfaces/i-stateful';
@@ -274,11 +272,6 @@ export default class Container extends EventPublisher {
 		widget.on(widget.EVENT_WANT_FOCUS, this._onWidgetWantToFocus);
 		widget.on(widget.EVENT_INNER_FOCUS, this._onWidgetInnerFocus);
 
-		const widgetContainer = widget.getContainer();
-		if (widgetContainer) {
-			this._getInputDispatcher().addMouseHoverArea(widget, widgetContainer);
-		}
-
 		return true;
 	}
 
@@ -296,11 +289,6 @@ export default class Container extends EventPublisher {
 		this._navigation.removeWidget(widget);
 
 		widget.off(widget.EVENT_WANT_FOCUS, this._onWidgetWantToFocus);
-
-		const widgetContainer = widget.getContainer();
-		if (widgetContainer) {
-			this._getInputDispatcher().removeMouseHoverArea(widget, widgetContainer);
-		}
 
 		for (const name in this._namedWidgets) {
 			if (this._namedWidgets.hasOwnProperty(name)) {
@@ -485,14 +473,6 @@ export default class Container extends EventPublisher {
 				this.activateWidget(activeWidget);
 			}
 		};
-	}
-
-	/**
-	 * @return {InputDispatcher}
-	 * @protected
-	 */
-	_getInputDispatcher() {
-		return app.getInputDispatcher();
 	}
 
 	/**

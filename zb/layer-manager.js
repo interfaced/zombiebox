@@ -9,6 +9,9 @@
 import * as console from './console/console';
 import EventPublisher from './events/event-publisher';
 import IStateful from './history/interfaces/i-stateful';
+import IWidget from './widgets/interfaces/i-widget';
+import Container from './widgets/container';
+import InputDispatcher from './input-dispatcher';
 import Layer from './layers/layer';
 
 
@@ -19,8 +22,9 @@ import Layer from './layers/layer';
 export default class LayerManager extends EventPublisher {
 	/**
 	 * @param {HTMLDivElement} layerContainer
+	 * @param {InputDispatcher} inputDispatcher
 	 */
-	constructor(layerContainer) {
+	constructor(layerContainer, inputDispatcher) {
 		super();
 
 		/**
@@ -42,6 +46,12 @@ export default class LayerManager extends EventPublisher {
 		 * @protected
 		 */
 		this._currentLayer = null;
+
+		/**
+		 * @type {InputDispatcher}
+		 * @protected
+		 */
+		this._inputDispatcher = inputDispatcher;
 
 		/**
 		 * Fired with: Layer
@@ -90,9 +100,8 @@ export default class LayerManager extends EventPublisher {
 	 * @override
 	 */
 	takeSnapshot() {
-		return (function(activeLayer) {
-			return this.open(activeLayer);
-		}).bind(this, this._currentLayer);
+		const currentLayer = this._currentLayer;
+		return () => this.open(currentLayer);
 	}
 
 	/**
@@ -209,7 +218,9 @@ export default class LayerManager extends EventPublisher {
 		layer.blur();
 		layer.beforeDOMHide();
 
-		layer.getRoot().style.display = 'none';
+		const root = layer.getRoot();
+		root.style.display = 'none';
+		this._inputDispatcher.removeMouseListener(root);
 		layer.afterDOMHide();
 
 		this._fireEvent(this.EVENT_AFTER_HIDE, layer);
@@ -236,7 +247,9 @@ export default class LayerManager extends EventPublisher {
 				return layer.beforeDOMShow();
 			})
 			.then(() => {
-				layer.getRoot().style.display = '';
+				const root = layer.getRoot();
+				root.style.display = '';
+				this._inputDispatcher.addMouseListener(root);
 				layer.afterDOMShow();
 				layer.focus();
 

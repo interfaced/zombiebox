@@ -107,7 +107,7 @@ export default class AbstractApplication extends EventPublisher {
 		this._isSystemLayerShown = false;
 
 		/**
-		 * DOM ready and created all application nodes.
+		 * DOM ready and all application nodes created.
 		 * Fired with: nothing
 		 * @const {string}
 		 */
@@ -567,7 +567,7 @@ export default class AbstractApplication extends EventPublisher {
 	 * @protected
 	 */
 	_setupLayerManager() {
-		this._layerManager = new LayerManager(this._layerContainer);
+		this._layerManager = new LayerManager(this._layerContainer, this._inputDispatcher);
 		this._historyManager = new HistoryManager();
 
 		this._sceneOpener = new SceneOpener();

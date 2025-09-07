@@ -9,6 +9,7 @@
 import {updateClassName} from '../html';
 import Key from '../device/input/key';
 import Rect from '../geometry/rect';
+import InputDispatcher from '../input-dispatcher';
 import Container from './container';
 import IWidget from './interfaces/i-widget';
 
@@ -88,6 +89,7 @@ export default class Widget extends Container {
 	setContainer(container) {
 		this._container = container;
 		container.classList.add('zb-widget');
+		container[InputDispatcher.WIDGET_REF_KEY] = this;
 	}
 
 	/**

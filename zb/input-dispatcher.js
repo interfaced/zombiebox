@@ -30,11 +30,7 @@ export default class InputDispatcher {
 		 */
 		this._input = null;
 
-		/**
-		 * @type {Map<HTMLElement, function(Event)>}
-		 * @protected
-		 */
-		this._mouseHoverAreaMapElementToListener = new Map();
+		this._widgetMouseOverListener = this._widgetMouseOverListener.bind(this);
 	}
 
 	/**
@@ -52,49 +48,65 @@ export default class InputDispatcher {
 	}
 
 	/**
-	 * @param {IWidget} widget
 	 * @param {HTMLElement} element
 	 */
-	addMouseHoverArea(widget, element) {
-		if (this._input.isPointingDeviceSupported() && !this._mouseHoverAreaMapElementToListener.has(element)) {
-			const listener = this._widgetMouseOverListener.bind(this, widget);
-
-			element.addEventListener('mouseover', listener, false);
-			element.addEventListener('click', listener, false);
-			this._mouseHoverAreaMapElementToListener.set(element, listener);
-		}
-	}
-
-	/**
-	 * @param {IWidget} widget
-	 * @param {HTMLElement} element
-	 */
-	removeMouseHoverArea(widget, element) {
+	addMouseListener(element) {
 		if (this._input.isPointingDeviceSupported()) {
-			const listener = this._mouseHoverAreaMapElementToListener.get(element);
-			if (listener) {
-				element.removeEventListener('mouseover', listener, false);
-				element.removeEventListener('click', listener, false);
-				this._mouseHoverAreaMapElementToListener.delete(element);
-			}
+			element.addEventListener('mouseover', this._widgetMouseOverListener, false);
+			element.addEventListener('click', this._widgetMouseOverListener, false);
 		}
 	}
 
 	/**
-	 * @param {IWidget} widget
+	 * @param {HTMLElement} element
+	 */
+	removeMouseListener(element) {
+		if (this._input.isPointingDeviceSupported()) {
+			element.removeEventListener('mouseover', this._widgetMouseOverListener, false);
+			element.removeEventListener('click', this._widgetMouseOverListener, false);
+		}
+	}
+
+	/**
+	 * @param {HTMLElement} element
+	 * @return {?IWidget}
+	 * @protected
+	 */
+	_findWidgetFromElement(element) {
+		let el = element;
+		while (el && el.nodeType === 1) {
+			const w = el[InputDispatcher.WIDGET_REF_KEY];
+			if (w) {
+				return w;
+			}
+			el = el.parentElement;
+		}
+		return null;
+	}
+
+	/**
 	 * @param {Event} event
 	 * @protected
 	 */
-	_widgetMouseOverListener(widget, event) {
-		if (!this._input.isBlocked()) {
-			switch (event.type) {
-				case 'mouseover':
-					widget.mouseOver(/** @type {MouseEvent} */ (event));
-					break;
-				case 'click':
-					widget.mouseClick(/** @type {MouseEvent} */ (event));
-					break;
-			}
+	_widgetMouseOverListener(event) {
+		if (this._input.isBlocked()) {
+			return;
+		}
+		const target = event.target;
+		if (!(target instanceof HTMLElement)) {
+			return;
+		}
+		const widget = this._findWidgetFromElement(target);
+		if (!widget) {
+			return;
+		}
+		switch (event.type) {
+			case 'mouseover':
+				widget.mouseOver(/** @type {MouseEvent} */ (event));
+				break;
+			case 'click':
+				widget.mouseClick(/** @type {MouseEvent} */ (event));
+				break;
 		}
 	}
 
@@ -121,3 +133,11 @@ export default class InputDispatcher {
 		return true;
 	}
 }
+
+
+/**
+ * @type {string}
+ */
+InputDispatcher.WIDGET_REF_KEY = '__zbWidgetRef_' + Math.random()
+	.toString(36)
+	.slice(2);
